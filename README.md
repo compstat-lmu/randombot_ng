@@ -26,7 +26,14 @@
 ### Input Parameters
 
 - Set global parameters using `rbn.registerSetting()`
-- Parameter space is given as `.tsv` (tab-separated) file.
+- Parameter space is given as `.tsv` (tab-separated) file. Can easily be edited with Excel or Calc. Following columns:
+  - **`learner`**: Learner name, as can be found in `mlr` or registered using `rbn.registerLearner()`.
+  - **`parameter`**: Parameter name, ID in the `Learner`'s ParamSet. Can also include a CPO parameter if a CPO gets attached in custom learner or through `"MODIFIER"`.
+  - **`values`**: If the parameter is discrete (not logical), list of values to try, comma-separated. This may be a single value (independent of type) to set the parameter to that value
+  - **`lower`**, **`upper`**: lower and upper bound for numeric / integer parameters, pre-transformation
+  - **`trafo`**; transformation function. An expression that gets pasted inside `function(x) { ... }`, so should be an expression of `x`.
+  - **`requires`**: Parameter requirement. Gets converted using `BBmisc::asQuoted`.
+  - **`condition`**: Optional expression that gets evaluated inside `function(x, n, p) { ... }`, where `x` is the sampled parameter value, `n` is the number of rows and `p` the number of features of a task (maybe we have to think about CPO trafos that change column number). If this returns `FALSE`, the point is not evaluated. Can for example be used if something must not be greater than half the number of features.
 - Custom learners can be registered using 'rbn.registerLearner'.
 - Custom learner "MODIFIER" is a unary function that can attach CPOs.
 
