@@ -1,0 +1,11 @@
+.Rhistory
+.RData
+*~
+*.swp
+*.swo
+\#*#
+.#*
+.ipynb_checkpoints
+*.Rsv
+.pydevproject
+__pycache__
