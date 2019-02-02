@@ -1,0 +1,21 @@
+
+
+
+
+
+* Global settings:
+Some of these may be environment-dependent, e.g. NODE_ID, others are global settings that change run behaviour (e.g. SCHEDULING_MODE) or even results (SAMPLING_TRAFO)
+- BASEDIR :: base directory from which to work
+- NODE_ID :: [integer] physical node, used for filesystem locality. between 0 and 1e6-1 inclusive
+- RUN_ID ::  [integer] number of the run. Between 0 and 2^31-1 inclusive. used for seeding / indexing into table
+- LEARNER :: [character(1)] learner name to be evaluated in this instance
+- DATASET :: [character(1)] dataset name to be evaluated in this instance
+- SCHEDULING_MODE :: [string] "watchdog", "single": watchdog scheduling: one job-step per node. single scheduling: one job-step per evaluation
+  - STEPSIZE :: if SCHEDULING_MODE is "watchdog": how much to increase RUN_ID each execution. Should be roughly NUMBER_OF_CPUS / ( NUMBER_OF_TASKS * NUMBER_OF_LEARNERS )
+  - INIT_ID ::  if SCHEDULING_MODE is "watchdog": at what RUN_ID to start. should be between 0 and STEPSIZE
+- SUPERRATE :: [numeric 0..1] fraction of evaluation points that have supererogatory evaluations
+- SAMPLING_TRAFO :: "none", "default", "default+norm"
+  - "none" :: transformations given in paramspace csv are not performed (although the given parameter limits are transformed)
+  - "default" :: transformations as given in paramspace csv
+  - "default+norm" :: transformation as given, prepended by an inverse error function; parameter bounds as given are instead the inflection points of the normal distribution (i.e. each 1 std-dev from center)
+

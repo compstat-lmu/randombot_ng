@@ -1,0 +1,20 @@
+
+* Pre-Flight Checklist [0/2]
+  - [ ] prepare libraries to be installed
+    - [ ] collect libraries in tar files
+    - [ ] write installation script
+    - [ ] test installation script (using R_LIBS_USER)
+  - [ ] prepare data
+  - [ ] check that all learners run with all data and all resampling splits at least once
+  - [ ] run learners that fail on some parameters (error, or even segfault) to check for resiliency
+
+
+* SuperMUC NG Flight Test Checklist [0/4]
+  - [ ] Copy Files
+    - [ ] randombot_ng directory
+    - [ ] mlr libraries
+    - [ ] OpenML Data
+  - [ ] Create Directories
+    - Using make_dirs.sh script
+  - [ ] Install libraries
+  - [ ] check parameter table using rbn.checkParamTbl
