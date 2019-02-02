@@ -1,0 +1,9 @@
+learner	parameter	values	lower	upper	trafo	requires	condition
+classif.xgboost	booster	gbtree, gblinear, dart					
+classif.xgboost	eta		-10	0	exp(x)	booster %in% c("gbtree", "dart")	
+classif.xgboost	gamma		-10	0	exp(x)	booster %in% c("gbtree", "dart")	
+classif.xgboost	max_depth		1	14		booster %in% c("gbtree", "dart")	
+classif.svm	type	C-classification, nu-classification					
+classif.svm	cost		-7	2	exp(x)	type == "C-classification"	
+classif.ranger	num.trees		3	7	round(exp(x))		
+classif.ranger	mtry		0	7	round(exp(x))		x <= p
