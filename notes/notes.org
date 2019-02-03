@@ -5,7 +5,7 @@
 
 * Global settings:
 Some of these may be environment-dependent, e.g. NODE_ID, others are global settings that change run behaviour (e.g. SCHEDULING_MODE) or even results (SAMPLING_TRAFO)
-- BASEDIR :: base directory from which to work
+- WORKDIR :: base directory from which to work
 - NODE_ID :: [integer] physical node, used for filesystem locality. between 0 and 1e6-1 inclusive
 - RUN_ID ::  [integer] number of the run. Between 0 and 2^31-1 inclusive. used for seeding / indexing into table
 - LEARNER :: [character(1)] learner name to be evaluated in this instance

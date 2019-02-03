@@ -20,7 +20,7 @@ rbn.checkParamTbl(table)
 # --------- independent of scheduling mode
 
 # the values are probably all to be configured from cmdline
-rbn.registerSetting("BASEDIR", getwd())  # this would be the run / output dir
+rbn.registerSetting("WORKDIR", getwd())  # this would be the run / output dir
 rbn.registerSetting("NODE_ID", 0)  # ranges from 0 to X, for node-local directory
 rbn.registerSetting("LEARNER", get_learner_name_from_cmdline())
 prbn.registerSetting("DATASET", get_task_name_from_cmdline())
