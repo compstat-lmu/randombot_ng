@@ -1,8 +1,4 @@
 
-
-
-
-
 * Global settings:
 Some of these may be environment-dependent, e.g. NODE_ID, others are global settings that change run behaviour (e.g. SCHEDULING_MODE) or even results (SAMPLING_TRAFO)
 - WORKDIR :: base directory from which to work
@@ -18,4 +14,4 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
   - "none" :: transformations given in paramspace csv are not performed (although the given parameter limits are transformed)
   - "default" :: transformations as given in paramspace csv
   - "default+norm" :: transformation as given, prepended by an inverse error function; parameter bounds as given are instead the inflection points of the normal distribution (i.e. each 1 std-dev from center)
-
+- RESAMPLINGTIMEOUTS :: [numeric] seconds to wait for each resampling. Violating the time constraint kills the R session if the watchdog is running.

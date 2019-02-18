@@ -6,12 +6,13 @@ if (!exists(".custom.learner.register")) {
   .custom.learner.register$MODIFIER = identity
 }
 
-# get a learner that was previously registered with `rbn.registerLearner`
+# get a learner that was previously registered with `rbn.registerLearner`.
+# Learner is automatically wrapped as a Watchdog Learner
 # @param learner [character(1)] the name of the custom learner to get
 # @return [Learner]
 rbn.getCustomLearner <- function(learner) {
   assertString(learner)
-  .custom.learner.register[[learner]]()
+  makeWatchedLearner(.custom.learner.register[[learner]](), rbn.getSetting("RESAMPLINGTIMEOUTS"), TRUE)
 }
 
 # register a custom learner (using a creator function)
