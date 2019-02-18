@@ -25,8 +25,31 @@ rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramt
 # - 'requires' can be evaluated within parameter set and gives TRUE / FALSE
 # - learner's ParamSet has no unfulfilled requires where given paramset doesn't
 rbn.checkParamTbl <- function(table) {
-  stop("TODO")
 
+  checkParamLearner <- function(lrn, param.lrn, param.given) {
+    assertDataFrame(param.given, nrows = 1)  # parameter only named once
+    ptype <- gsub("vector$", "", param.lrn$type)
+    if (ptype %in% c("integer", "numeric")) {
+      if (length(param.given$values)) {
+        val <- as.numeric(param.given$values)
+        assertNumeric(val, len = 1, any.missing = FALSE)
+        assert(is.na(param.given$lower) && is.na(param.given$upper))
+        param.given$lower <- param.given$upper <- val
+      }
+      if (
+    }
+
+
+  }
+
+  for (lrn.name in unique(table$learner)) {
+    lrn <- rbn.getLearner(lrn.name)
+    subtbl <- table[table$learner == lrn.name, ]
+    assertSubset(subtbl$parameter, getParamIds(getParamSet(lrn)))
+    for (param.name in subtbl$parameter) {
+      checkParamLearner(lrn, getParamSet(lrn)$pars[[parameter]], subtbl[subtbl$parameter == param.name])
+    }
+  }
 }
 
 # compile parameter table (turn strings into expressions etc.)
@@ -76,6 +99,8 @@ rbn.compileParamTbl <- function(table, ...) {
   table$condition <- lapply(as.character(table$condition), function(x) {
     if (!is.na(x) && !grepl("^\\s*$", x)) {
       eval(parse(text = sprintf("function(x, n, p) { %s }", x)))
+    } else {
+      function(x, n, p) TRUE
     }
   })
   table
