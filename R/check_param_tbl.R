@@ -1,3 +1,9 @@
+rbn.getParamLengthOrOne <- function(param) {
+  x <- getParamLengths(param)
+  x[is.na(x)] <- 1
+  x
+}
+
 
 # test that parameter table is good. This is "expensive" and should not be done
 # in each individual evaluation, only whenever table (or the underlying system)
@@ -11,11 +17,6 @@
 # - 'requires' can be evaluated within parameter set and gives TRUE / FALSE
 # - learner's ParamSet has no unfulfilled requires where given paramset doesn't
 rbn.checkParamTbl <- function(table) {
-  getParamLengthOrOne <- function(param) {
-    x <- getParamLengths(param)
-    x[is.na(x)] <- 1
-    x
-  }
   convertToParamType <- function(value, param, trafo) {
     if (isNumeric(param)) {
       val <- as.numeric(value)
@@ -23,15 +24,15 @@ rbn.checkParamTbl <- function(table) {
         val <- trafo(val)
       }
       if (length(val) == 1) {
-        val <- rep_len(val, getParamLengthOrOne(param))
+        val <- rep_len(val, rbn.getParamLengthOrOne(param))
       }
       val
     } else if (isLogical(param)) {
-      rep_len(as.logical(value), getParamLengthOrOne(param))
-    } else if (isDiscrete(param)) {
+      rep_len(as.logical(value), rbn.getParamLengthOrOne(param))
+    } else if (isDiscrete(param, include.logical = FALSE)) {
       val <- getValues(param)[[value]]
       if (isVector(param)) {
-        rep_len(list(val), getParamLengthOrOne(param))
+        rep_len(list(val), rbn.getParamLengthOrOne(param))
       }
       val
     } else {
@@ -39,6 +40,7 @@ rbn.checkParamTbl <- function(table) {
     }
   }
   checkParamLearner <- function(lrn, param.lrn, param.given) {
+    assertCharacter(getParamIds(param.lrn), len = 1, any.missing = FALSE, pattern = "^[^][,\"\' \t\n=]*$")
     ptype <- gsub("vector$", "", param.lrn$type)
     if (isNumeric(param.lrn)) {
       if (length(param.given$values)) {  # for numeric params, the $values can hold a constant
@@ -57,30 +59,26 @@ rbn.checkParamTbl <- function(table) {
             runif(10, min = param.given$lower, param.given$upper),
             param.given$upper)
         }
-        somevals <- lapply(somevals, rep_len, length.out = getParamLengthOrOne(param.lrn))
+        somevals <- lapply(somevals, rep_len, length.out = rbn.getParamLengthOrOne(param.lrn))
       } else {
         somevals <- c(param.given$lower,
           runif(10, min = param.given$lower, param.given$upper),
           param.given$upper)
         somevals <- lapply(sort(somevals), function(val) {
-          val <- param.given$trafo(val)
-          if (length(val) == 1) {
-            val <- rep_len(val, getParamLengthOrOne(param.lrn))
-          } else {
-            assert(!isVector(param.lrn))
-          }
-          val
+          val <- rep_len(val, rbn.getParamLengthOrOne(param.lrn))
+          param.given$trafo(val)
         })
       }
-    } else if (isDiscrete(param.lrn)) {
+    } else if (isDiscrete(param.lrn, include.logical = FALSE)) {
       assert(is.na(param.given$lower) && is.na(param.given$upper))
-      assertCharacter(param.given$values, min.len = 1, any.missing = FALSE, unique = TRUE)
+      assertCharacter(param.given$values, min.len = 1, any.missing = FALSE, unique = TRUE, pattern = "^[^][,\"\' \t\n=]*$")
       assertNull(param.given$trafo)
       pvals <- getValues(param.lrn)
+      somevals <- param.given$values
       assertSubset(somevals, names(pvals))
       somevals <- pvals[somevals]
       if (isVector(param.lrn)) {
-        somevals <- lapply(somevals, function(x) rep_len(list(x), getParamLengthOrOne(param.lrn)))
+        somevals <- lapply(somevals, function(x) rep_len(list(x), rbn.getParamLengthOrOne(param.lrn)))
       }
     } else if (isLogical(param.lrn)) {
       assert(is.na(param.given$lower) && is.na(param.given$upper))
@@ -88,7 +86,7 @@ rbn.checkParamTbl <- function(table) {
       assertNull(param.given$trafo)
       assertLogical(somevals, any.missing = FALSE, min.len = 1, unique = TRUE)
       if (isVector(param.lrn)) {
-        somevals <- lapply(somevals, rep_len, length.out = getParamLengthOrOne(param.lrn))
+        somevals <- lapply(somevals, rep_len, length.out = rbn.getParamLengthOrOne(param.lrn))
       }
     } else {
       stopf("Param of type %s not supported.", getParamTypes(param.lrn))
@@ -105,7 +103,7 @@ rbn.checkParamTbl <- function(table) {
     arbitrary.values <- list()  # collect any value
 
     for (param.name in subtbl$parameter) {
-      param.lrn <- getParamSet(lrn)$pars[[parameter]]
+      param.lrn <- getParamSet(lrn)$pars[[param.name]]
       entry <- which(subtbl$parameter == param.name)
       assert(length(entry) == 1)
       param.given <- lapply(subtbl, `[[`, entry)
@@ -113,7 +111,8 @@ rbn.checkParamTbl <- function(table) {
 
       if (length(param.given$values) == 1) {
         fixed.values <- c(fixed.values,
-          namedList(param.name, convertToParamType(param.given$values, param.lrn)))
+          namedList(param.name,
+            convertToParamType(param.given$values, param.lrn, param.given$trafo)))
       } else {
         if (isNumeric(param.lrn)) {
           val <- param.given$lower
@@ -121,12 +120,13 @@ rbn.checkParamTbl <- function(table) {
           val <- param.given$values[1]
         }
         arbitrary.values <- c(arbitrary.values,
-          namedList(param.name, convertToParamType(val, param.lrn)))
+          namedList(param.name,
+            convertToParamType(val, param.lrn, param.given$trafo)))
       }
     }
     true.requires <- getRequirements(getParamSet(lrn))
     for (param.name in subtbl$parameter) {
-      param.lrn <- getParamSet(lrn)$pars[[parameter]]
+      param.lrn <- getParamSet(lrn)$pars[[param.name]]
       entry <- which(subtbl$parameter == param.name)
       param.given <- lapply(subtbl, `[[`, entry)
       if (hasRequires(param.lrn) && is.null(param.given$requires)) {
@@ -134,12 +134,17 @@ rbn.checkParamTbl <- function(table) {
         assert(isTRUE(eval(true.requires[[param.name]],
           envir = fixed.values, enclos = .GlobalEnv)))
       } else {
-        assert(hasRequires(param.lrn) == !is.null(param.given$requires))
         if (!is.null(param.given$requires)) {
-          reqeval = eval(true.requires[[param.name]],
+          reqeval <- eval(param.given$requires,
             envir = c(fixed.values, arbitrary.values), enclos = .GlobalEnv)
           assert(isTRUE(reqeval) || isFALSE(reqeval))
         }
+      }
+      condeval <- mapply(param.given$condition,
+        MoreArgs = list(x = c(fixed.values, arbitrary.values)[[param.name]]),
+        rep((1:10) * 100, 10), rep((1:10) * 100, each = 10))
+      for (cx in condeval) {
+        assert(isTRUE(cx) || isFALSE(cx))
       }
     }
   }

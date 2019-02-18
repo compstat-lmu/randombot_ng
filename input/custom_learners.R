@@ -13,3 +13,7 @@ rbn.registerLearner("classif.svm", function() {
   cpoCbind(NULLCPO, cpoSelect("numeric") %>>% cpoPca(rank = 3)) %>>%
     makeLearner("classif.svm")
 })
+
+rbn.registerLearner("classif.xgboost", function() {
+  cpoDummyEncode(TRUE) %>>% makeLearner("classif.xgboost")
+})

@@ -13,7 +13,7 @@
 #' @param kill.on.error [logical(1)] kill R process if writing the watchfile fails
 #' @export
 makeWatchedLearner = function(learner, timeouts, kill.on.error = FALSE) {
-  learner = checkLearner(learner)
+  learner = mlr:::checkLearner(learner)
   assertNumeric(timeouts, lower = 0, finite = TRUE, any.missing = FALSE, min.len = 1)
   assertFlag(kill.on.error)
   learner$timeouts = timeouts

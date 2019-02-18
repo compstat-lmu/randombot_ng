@@ -6,13 +6,13 @@ if (!exists(".custom.learner.register")) {
   .custom.learner.register$MODIFIER = identity
 }
 
-# get a learner that was previously registered with `rbn.registerLearner`.
-# Learner is automatically wrapped as a Watchdog Learner
+# get a learner constructor that was previously registered with
+# `rbn.registerLearner` or NULL
 # @param learner [character(1)] the name of the custom learner to get
 # @return [Learner]
-rbn.getCustomLearner <- function(learner) {
+rbn.getCustomLearnerConstructor <- function(learner) {
   assertString(learner)
-  makeWatchedLearner(.custom.learner.register[[learner]](), rbn.getSetting("RESAMPLINGTIMEOUTS"), TRUE)
+  .custom.learner.register[[learner]]
 }
 
 # register a custom learner (using a creator function)
@@ -25,11 +25,18 @@ rbn.registerLearner <- function(learner, creator) {
 }
 
 # get a learner by name; may be custom or mlr learner; custom is preferred.
+# Learner is automatically wrapped by MODIFIER and Watchdog Learner
 # @param learner [character(1)] name of the learner to get.
 # @return [Learner]
 rbn.getLearner <- function(learner) {
-  lrn = rbn.getCustomLearner(learner) %??%
-    makeLearner(learner, predict.type = "prob")
-  rbn.getCustomLearner("MODIFIER")(lrn)
+  assertString(learner)
+  lrn <-  rbn.getCustomLearnerConstructor(learner) %??%
+    function() makeLearner(learner, predict.type = "prob")
+  lrn <- lrn()
+  wrapper <- rbn.getCustomLearnerConstructor("MODIFIER")
+  if (!is.null(wrapper)) {
+    lrn <- wrapper(lrn)
+  }
+  makeWatchedLearner(lrn, rbn.getSetting("RESAMPLINGTIMEOUTS"), TRUE)
 }
 

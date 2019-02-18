@@ -1,6 +1,8 @@
 
 # This script is supposed to give an idea how things should be run.
 
+rm(list=ls(all.names = TRUE))  ; scriptdir <- "."
+
 scriptdir <- Sys.getenv("MUC_R_HOME")
 inputdir <- file.path(scriptdir, "input")
 
@@ -10,9 +12,12 @@ source(file.path(scriptdir, "load_all.R"), chdir = TRUE)
 # load custom learners & learner modifier
 source(file.path(inputdir, "custom_learners.R"), chdir = TRUE)
 
+# load constants
+source(file.path(inputdir, "constants.R"), chdir = TRUE)
+
 
 # --------- during development: check the table
-table <- rbn.compileParamTbl(file.path(inputdir, "spaces.csv"), sep = "\t")
+table <- rbn.compileParamTbl(file.path(inputdir, "spaces.csv"), sep = "\t", quote = "")
 rbn.checkParamTbl(table)
 
 
