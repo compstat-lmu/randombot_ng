@@ -30,12 +30,14 @@ rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramt
       values
     },
     default = function(values, trafo, lower, upper, is.int) {
-      values <- values * (upper - lower + as.numeric(is.int && is.null(trafo)))
+      values <- values * (upper - lower + as.numeric(is.int && is.null(trafo))) + lower
       if (!is.null(trafo)) {
         values <- vnapply(values, trafo)
         if (is.int) {
           values <- assertIntegerish(values, coerce = TRUE)
         }
+      } else if (is.int) {
+        values <- as.integer(floor(values))
       }
       values
     },
@@ -52,6 +54,8 @@ rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramt
             tryCatch(trafo(x), error = function(e) NA)
           })
         }
+      } else if (is.int) {
+        values <- as.integer(floor(values))
       }
       values
     },
@@ -72,10 +76,16 @@ rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramt
     if (isNumeric(param.lrn) && !is.na(param.given$lower)) {
       assert(!is.na(param.given$upper))
       assert(length(param.given$values) == 0)
+      cnt <- 0
       repeat {
         val <- trafofun(randval, param.given$trafo, param.given$lower, param.given$upper, isInteger(param.lrn))
         if (!any(is.na(val)) && isFeasible(param.lrn, val)) {
           break
+        }
+        randval <- runif(len)
+        cnt <- cnt + 1
+        if (cnt > 1e5) {
+          stopf("Giving up on parameter %s", param.name)
         }
       }
       # be extra cautious with the 'format' call
@@ -97,8 +107,24 @@ rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramt
     if (length(val) != 1) {
       val <- sprintf("c(%s)", collapse(val, ","))
     }
+    val
   })
-  wholestring <- paste(paramtbl$parameter, vals, sep = "=", collapse = ",")
+
+  # filter out by requirements
+  # This is a bit tedious, but we are not taking chances: build string, parse string, delete values that don't
+  # fulfill requirements, build the string again
+  names(vals) <- paramtbl$parameter
+  wholestring <- paste(names(vals), vals, sep = "=", collapse = ",")
+  parsed <- rbn.parseEvalPoint(paste0("list(", wholestring, ")"), learner.object, multiple = FALSE)
+  assertSetEqual(names(parsed), names(vals))
+  delendum <- Filter(function(param.name) {
+    requires.given <- paramtbl$requires[[which(param.name == paramtbl$parameter)]]
+    !is.null(requires.given) &&
+      !isTRUE(eval(requires.given, envir = parsed, enclos = .GlobalEnv))
+  }, names(parsed))
+  vals <- vals[names(vals) %nin% delendum]
+  wholestring <- paste(names(vals), vals, sep = "=", collapse = ",")
+
   set.seed(seed)
   if (runif(1) < superrate) {
     supertail <- c(FALSE, TRUE)
@@ -142,7 +168,7 @@ rbn.compileParamTbl <- function(table, ...) {
 
   table$trafo <- lapply(as.character(table$trafo), function(x) {
     if (!is.na(x) && !grepl("^\\s*$", x)) {
-      eval(parse(text = sprintf("function(x) { %s }", x)))
+      eval(parse(text = sprintf("function(x) { %s }", x)), envir = .GlobalEnv)
     }
   })
 
@@ -154,7 +180,7 @@ rbn.compileParamTbl <- function(table, ...) {
 
   table$condition <- lapply(as.character(table$condition), function(x) {
     if (!is.na(x) && !grepl("^\\s*$", x)) {
-      eval(parse(text = sprintf("function(x, n, p) { %s }", x)))
+      eval(parse(text = sprintf("function(x, n, p) { %s }", x)), envir = .GlobalEnv)
     } else {
       function(x, n, p) TRUE
     }

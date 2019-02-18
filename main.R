@@ -20,6 +20,32 @@ source(file.path(inputdir, "constants.R"), chdir = TRUE)
 table <- rbn.compileParamTbl(file.path(inputdir, "spaces.csv"), sep = "\t", quote = "")
 rbn.checkParamTbl(table)
 
+# --------- PURELY TESTING
+
+lrn <- rbn.getLearner("classif.xgboost")
+
+rbn.registerSetting("SAMPLING_TRAFO", "default")
+cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 9, table), "\n")
+cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 10, table), "\n")
+cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 11, table), "\n")
+cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 12, table), "\n")
+cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 13, table), "\n")
+cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 14, table), "\n")
+cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 15, table), "\n")
+cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 531, table), "\n")
+
+vx <- rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 9, table)
+rbn.parseEvalPoint(vx, lrn)
+xx <- rbn.parseEvalPoint(vx, lrn, multiple = FALSE)
+
+
+
+
+rbn.registerSetting("SAMPLING_TRAFO", "none")
+
+rbn.registerSetting("SAMPLING_TRAFO", "norm")
+
+# --------- END PURELY TESTING
 
 # --------- the following should always be at the head of an SRUN script
 # --------- independent of scheduling mode
