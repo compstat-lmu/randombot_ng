@@ -36,7 +36,16 @@ rbn.checkParamTbl <- function(table) {
         assert(is.na(param.given$lower) && is.na(param.given$upper))
         param.given$lower <- param.given$upper <- val
       }
-      if (
+      if (is.null(param.given$trafo)) {
+        if (ptype == "integer") {
+          somevals <- c(param.given$lower,
+            unique(round(runif(10, min = param.given$lower, max = param.given$upper))),
+            param.given$upper)
+        } else {
+          somevals <- c(param.given$lower, runif(10, min = param.given$lower, param.given$upper), param.given$upper)
+        }
+
+      }
     }
 
 
