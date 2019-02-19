@@ -10,7 +10,7 @@
 if [ "$1" = "watchdog" ] ; then
     export SCHEDULING_MODE=watchdog
     if ! [ -z "$4" ] ; then
-	echo "Scheduling mode watchdog only should have three 
+	echo "Scheduling mode watchdog only should have three arguments"
        
 elif [ "$1" = "single" ] ; then
     export SCHEDULING_MODE=single

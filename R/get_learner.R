@@ -30,13 +30,15 @@ rbn.registerLearner <- function(learner, creator) {
 # @return [Learner]
 rbn.getLearner <- function(learner) {
   assertString(learner)
-  lrn <-  rbn.getCustomLearnerConstructor(learner) %??%
-    function() makeLearner(learner, predict.type = "prob")
+  lrn <-  suppressWarnings(rbn.getCustomLearnerConstructor(learner) %??%
+    function() makeLearner(learner, predict.type = "prob"))
   lrn <- lrn()
   wrapper <- rbn.getCustomLearnerConstructor("MODIFIER")
   if (!is.null(wrapper)) {
     lrn <- wrapper(lrn)
   }
-  makeWatchedLearner(lrn, rbn.getSetting("RESAMPLINGTIMEOUTS"), TRUE)
+  lrn <- makeWatchedLearner(lrn, rbn.getSetting("RESAMPLINGTIMEOUTS"), TRUE)
+  lrn$id <- learner
+  lrn
 }
 

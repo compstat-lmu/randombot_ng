@@ -13,7 +13,7 @@
 #' @param kill.on.error [logical(1)] kill R process if writing the watchfile fails
 #' @export
 makeWatchedLearner = function(learner, timeouts, kill.on.error = FALSE) {
-  learner = mlr:::checkLearner(learner)
+  learner = checkLearner(learner)
   assertNumeric(timeouts, lower = 0, finite = TRUE, any.missing = FALSE, min.len = 1)
   assertFlag(kill.on.error)
   learner$timeouts = timeouts
@@ -29,8 +29,8 @@ trainLearner.WatchedLearner = function(.learner, ...) {
     assertInt(iter, lower = 1)  # debug check
     timeout = .learner$timeouts[iter]
     catf("Timeout: %s", timeout)
-    watchfile = Sys.getenv("WATCHFILE")
-    if (watchfile == "") {
+    watchfile = rbn.getSetting("WATCHFILE")
+    if (!testString(watchfile)) {
       cat("No WATCHFILE given in environment.\n")
       stop("No WATCHFILE given in environment.")
     }

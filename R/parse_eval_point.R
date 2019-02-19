@@ -1,11 +1,13 @@
 
 # @param eval.point [character(1)] string to parse
 # @param learner.object [Learner]: actual learner object.
-# @param multiple [logical(1)] whether to accept multiple lines
+# @param multiple [logical(1)] whether to accept multiple lines, divided by "\n"
 # @return [list of named list] a list of points to evaluate if multiple is TRUE
 #   otherwise [named list] point to evaluate
-rbn.parseEvalPoint <- function(eval.point, learner.object, multiple = TRUE) {
+rbn.parseEvalPoint <- function(eval.point, learner.object, multiple = FALSE) {
   assertString(eval.point)
+
+  eval.point <- gsub("^\\s+|\\s+$", "", eval.point)
 
   ps.orig <- getLearnerParamSet(learner.object)
 

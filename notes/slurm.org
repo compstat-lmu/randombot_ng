@@ -28,7 +28,7 @@
 - SLURM_CPUS_ON_NODE number of CPUs that were *allocated* for the job step (?)
 - SLURM_NTASKS: allocated tasks for job step
 - SLURM_NNODES: allocated nodes for job step
-- SLURMD_NODENAME: be aware of the "D" ( ͡° ͜ʖ ͡°) : canonical host name of running task
+- SLURMD_NODENAME: (note the "D"): canonical host name of running task
 
 ** Example =env= call on mpp3 in lrz:
 *** Within SBATCH script

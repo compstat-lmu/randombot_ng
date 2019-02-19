@@ -4,11 +4,14 @@
 #   rbn.getLearner, but we don't waste time with that
 # @param data [Task] The dataset. Used to check paramtbl 'condition's
 # @param paramtbl [data.frame] parameter table generated with rbn.compileParamTbl
-# @return [character(1)] a single string per eval point that can be parsed with
+# @return [character] a single string per eval point that can be parsed with
 #   `rbn.parseEvalPoint()`. Is of the form `list(<param.name>=c(<param.values>),...)`.
-#   It is possible that multiple points are returned, divided by newline '\n'.
+#   It is possible that zero, one, or two strings are returned.
 rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramtbl) {
   assertChoice(learner.name, paramtbl$learner)
+
+  task.p <- getTaskNFeats(data)
+  task.n <- getTaskSize(data)
 
   paramtbl <- paramtbl[learner.name == paramtbl$learner, , drop = FALSE]
 
@@ -61,7 +64,12 @@ rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramt
     },
     stop("bad SAMPLING_TRAFO setting"))
 
+  condition.violated <- FALSE
+
   vals <- lapply(seq_len(nrow(paramtbl)), function(entry) {
+    if (condition.violated) {
+      return(NULL)
+    }
     param.given <- lapply(paramtbl, `[[`, entry)
     param.name <- param.given$parameter
     param.lrn <- ps.orig$pars[[param.name]]
@@ -92,23 +100,42 @@ rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramt
       val <- format(val, trim = TRUE, digits = 6, scientific = TRUE,
         nsmall = 0, justify = "none", width = 0, big.mark = "",
         small.mark = "", decimal.mark = ".", drop0trailing = FALSE)
+      trueval <- eval(parse(text = val))
     } else {
       assert(is.na(param.given$lower) && is.na(param.given$upper))
       if (isLogical(param.lrn) && !length(param.given$values)) {
         param.given$values = c("FALSE", "TRUE")
       }
-      if (isDiscrete(param.lrn)) {
-        param.given$values = paste0('"', param.given$values, '"')
-      }
       assert(length(param.given$values) > 0)
       choice <- floor(randval * length(param.given$values)) + 1
       val <- param.given$values[choice]
+      if (isVector(param.lrn)) {
+        trueval <- getValues(param.lrn)[val]
+        if (isLogical(param.lrn)) {
+          trueval <- unlist(trueval, recursive = FALSE, use.names = FALSE)
+        }
+      } else {
+        trueval <- getValues(param.lrn)[[val]]
+      }
+
+      if (isDiscrete(param.lrn)) {
+        val = paste0('"', val, '"')
+      }
     }
     if (length(val) != 1) {
       val <- sprintf("c(%s)", collapse(val, ","))
     }
+    # check condition
+    if (!param.given$condition(trueval, n = task.n, p = task.p)) {
+      condition.violated <<- TRUE
+      return(NULL)
+    }
     val
   })
+
+  if (condition.violated) {
+    return(character(0))
+  }
 
   # filter out by requirements
   # This is a bit tedious, but we are not taking chances: build string, parse string, delete values that don't
@@ -131,7 +158,7 @@ rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramt
   } else {
     supertail <- FALSE
   }
-  paste0("list(", wholestring, ",SUPEREVAL=", supertail, ")", collapse = "\n")
+  "list(", wholestring, ",SUPEREVAL=", supertail, ")"
 }
 
 # compile parameter table (turn strings into expressions etc.)
