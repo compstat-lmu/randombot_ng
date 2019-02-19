@@ -7,7 +7,8 @@
 # @return [character] a single string per eval point that can be parsed with
 #   `rbn.parseEvalPoint()`. Is of the form `list(<param.name>=c(<param.values>),...)`.
 #   It is possible that zero, one, or two strings are returned.
-rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramtbl) {
+rbn.sampleEvalPoint <- function(learner.object, data, seed, paramtbl) {
+  learner.name <- learner.object$id
   assertChoice(learner.name, paramtbl$learner)
 
   task.p <- getTaskNFeats(data)

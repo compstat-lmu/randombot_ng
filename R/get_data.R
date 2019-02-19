@@ -5,7 +5,6 @@
 #   Either a data.frame or a file to be loaded with `read.csv`
 # @param ... additional arguments to read.csv if `table` is a [character(1)].
 rbn.retrieveData <- function(table, ...) {
-  required.names <- c("name", "task.id", "data.id")
 
   assert(
       checkDataFrame(table),
@@ -13,19 +12,8 @@ rbn.retrieveData <- function(table, ...) {
   )
 
   if (testString(table)) {
-    table <- read.csv(table, ...)
-    assertDataFrame(table)
+    table <- rbn.loadDataTable(table, ...)
   }
-  assertNames(colnames(table), must.include = required.names)
-
-  table <- data.frame(
-      name = as.character(table$name),
-      task.id = as.integer(table$task.id),
-      data.id = as.integer(table$data.id))
-
-  table$name <- paste(make.names(table$name), table$task.id, sep = ".")
-  assertCharacter(table$name, unique = TRUE)
-  assertInteger(table$data.id, unique = TRUE)
 
   for (line in seq_len(nrow(table))) {
 
@@ -53,15 +41,12 @@ rbn.retrieveData <- function(table, ...) {
       stratify = strat.tag)
 
     set.seed(1)
-    super.resampling <- replicate(rbn.getSetting("SUPERCV_REPS"),
-      makeResampleInstance(super.rdesc, task = task$mlr.task))
-
-    super.resampling <- c(super.resampling,
-      lapply(rbn.getSetting("SUPERCV_PROPORTIONS", function(frac) {
-        rbn.reduceCrossval(resampling, task, frac)
-      })))
-
-    super.resampling <- rbn.unionResample(super.resampling)
+    super.resampling <- rbn.unionResample(c(
+        replicate(rbn.getSetting("SUPERCV_REPS"),
+          makeResampleInstance(super.rdesc, task = task$mlr.task), simplify = FALSE),
+        lapply(sort(rbn.getSetting("SUPERCV_PROPORTIONS"), decreasing = TRUE),
+          rbn.reduceCrossval, task = task$mlr.task, cvinst = resampling)
+    ))
 
     data <- list(
       task = task$mlr.task,
@@ -74,3 +59,32 @@ rbn.retrieveData <- function(table, ...) {
   }
 }
 
+# Read dataset that was saved in DATADIR
+# @param dataname the canonical name, as in `rbn.loadDataTable()`
+rbn.getData <- function(dataname) {
+  readRDS(file.path(rbn.getSetting("DATADIR"), paste0(dataname, ".rds.gz")))
+}
+
+# Load the dataset info table
+# @param file [data.frame] task information table file path
+# @param ... additional arguments to read.csv
+rbn.loadDataTable <- function(file, ...) {
+  required.names <- c("name", "task.id", "data.id")
+
+  assertString(file)
+  table <- read.csv(file, ...)
+  assertDataFrame(table)
+
+  assertNames(colnames(table), must.include = required.names)
+
+  table <- data.frame(
+      name = as.character(table$name),
+      task.id = as.integer(table$task.id),
+      data.id = as.integer(table$data.id))
+
+  table$name <- paste(make.names(table$name), table$task.id, sep = ".")
+  assertCharacter(table$name, unique = TRUE)
+  assertInteger(table$data.id, unique = TRUE)
+
+  table
+}

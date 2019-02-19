@@ -9,7 +9,7 @@ inputdir <- file.path(scriptdir, "input")
 # load scripts & functions
 source(file.path(scriptdir, "load_all.R"), chdir = TRUE)
 
-rbn.registerSetting("MUC_R_HOME", getwd())
+rbn.registerSetting("MUC_R_HOME", scriptdir)
 
 # load custom learners & learner modifier
 source(file.path(inputdir, "custom_learners.R"), chdir = TRUE)
@@ -22,7 +22,39 @@ source(file.path(inputdir, "constants.R"), chdir = TRUE)
 table <- rbn.compileParamTbl(file.path(inputdir, "spaces.csv"), sep = "\t", quote = "")
 rbn.checkParamTbl(table)
 
-# --------- PURELY TESTING
+
+# --------- PURELY TESTING: data
+
+rbn.registerSetting("WATCHFILE", "/tmp/watchfile.txt")
+
+datatable <- rbn.loadDataTable(file.path(inputdir, "tasks_test.csv"))
+
+rbn.retrieveData(datatable)
+
+data <- rbn.getData(datatable$name[2])
+
+rbn.registerSetting("SAMPLING_TRAFO", "norm")
+
+lrn <- rbn.getLearner("classif.ranger")
+
+eps <- rbn.sampleEvalPoint(lrn, data$task, 3, table)
+point <- rbn.parseEvalPoint(eps, lrn)
+
+evalres <- rbn.evaluatePoint(lrn, eps, data)
+
+evalres
+
+epssuper <- gsub("SUPEREVAL=FALSE", "SUPEREVAL=TRUE", eps, fixed = TRUE)
+
+evalressuper <- rbn.evaluatePoint(lrn, epssuper, data)
+
+cvparts <- rbn.splitResamplingResult(evalressuper)
+
+plot(sapply(cvparts, function(cvx) performance(cvx$pred, list(mmce))))
+
+
+
+# --------- PURELY TESTING: parameters
 
 lrn <- rbn.getLearner("classif.xgboost")
 
@@ -32,28 +64,28 @@ rbn.registerSetting("SAMPLING_TRAFO", "none")
 
 rbn.registerSetting("SAMPLING_TRAFO", "norm")
 
-cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 9, table), "\n")
-cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 10, table), "\n")
-cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 11, table), "\n")
-cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 12, table), "\n")
-cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 13, table), "\n")
-cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 14, table), "\n")
-cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 15, table), "\n")
-cat(rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 531, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 9, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 10, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 11, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 12, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 13, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 14, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 15, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 531, table), "\n")
 
 
 
 lrn <- rbn.getLearner("classif.ranger")
 
-cat(rbn.sampleEvalPoint("classif.ranger", lrn, iris.task, 1, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 1, table), "\n")
 
-cat(collapse(vcapply(1:1000, function(i) rbn.sampleEvalPoint("classif.ranger", lrn, iris.task, i, table)), ""))
+cat(collapse(vcapply(1:1000, function(i) rbn.sampleEvalPoint(lrn, iris.task, i, table)), ""))
 
 
-cat(rbn.sampleEvalPoint("classif.ranger", lrn, iris.task, 2, table), "\n")
-cat(rbn.sampleEvalPoint("classif.ranger", lrn, iris.task, 531, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 2, table), "\n")
+cat(rbn.sampleEvalPoint(lrn, iris.task, 531, table), "\n")
 
-vx <- rbn.sampleEvalPoint("classif.xgboost", lrn, iris.task, 9, table)
+vx <- rbn.sampleEvalPoint(lrn, iris.task, 9, table)
 rbn.parseEvalPoint(vx, lrn)
 xx <- rbn.parseEvalPoint(vx, lrn, multiple = FALSE)
 
@@ -91,7 +123,7 @@ rbn.registerSetting("LEARNER", get_learner_name_from_cmdline())
 prbn.registerSetting("DATASET", get_task_name_from_cmdline())
 
 ####################################################################################
-# --------- watchdog mode: all of this on a compute node --------------------------#
+# --------- watchdog mode: all of this on a compute node ------------------------- #
 ####################################################################################
 
 rbn.registerSetting("SCHEDULING_MODE", "watchdog")
@@ -132,7 +164,7 @@ repeat {
 }
 
 ####################################################################################
-# --------- "single" mode: each eval in its own srun ------------------------------#
+# --------- "single" mode: each eval in its own srun ----------------------------- #
 ####################################################################################
 
 #################################################################################

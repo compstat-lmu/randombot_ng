@@ -29,9 +29,27 @@ rbn.reduceCrossval <- function(cvinst, task, fraction) {
     cum.itertable <- classfractions * 0
     drop.per.iter <- lapply(seq_len(cvinst$desc$iters), function(iter) {
       # build "itertable"
-      needed <- sum(new.size.iters[seq_len(iter)])
-      itertable.dbl <- classfractions * needed
-      itertable <- pmax(cum.itertable + 1, floor(itertable.dbl))
+      needed <- sum(new.size.iters[seq_len(iter)])  # how many entries do we want in this iteration?
+      itertable.offset <- classfractions * 0  # rounding down itertable sometimes gives us 0; in that case we add an offset of 1
+      repeat {
+        # how many are still needed additionally to the ones in offset?
+        needed.after.offset <- needed - sum(itertable.offset)
+        if (needed.after.offset <= 0) {
+          # if we have more in 'itertable.offset' than we want in this iteration, we just take 1 of each class.
+          itertable[TRUE] <- 1
+          needed <- sum(itertable)
+          break
+        }
+
+        itertable.dbl <- classfractions * needed.after.offset + itertable.offset
+        itertable <- floor(itertable.dbl)
+        if (any(itertable == 0)) {
+          itertable.offset[itertable == 0] = 1
+        } else {
+          break
+        }
+      }
+
       missing <- needed - sum(itertable)
       assertTRUE(missing >= 0 && missing <= length(itertable))
       rest <- itertable.dbl - itertable
