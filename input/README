@@ -1,0 +1,4 @@
+This directory contains run-information that is somewhat variable but kept in the repository.
+This includes e.g. super-evaluation rate / other global settings, learner and task names / IDs
+to use, learner definitions, but not the tasks themselves.
+

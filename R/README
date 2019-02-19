@@ -1,0 +1,2 @@
+This directory contains .R files that form a library to be used by the actual run scripts.
+Most things in these files should be functions of the form `rbn.XXX`.
