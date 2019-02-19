@@ -1,13 +1,15 @@
 
 # This script is supposed to give an idea how things should be run.
 
-rm(list=ls(all.names = TRUE))  ; scriptdir <- "."
+rm(list=ls(all.names = TRUE))  ; scriptdir <- "." ;
 
 scriptdir <- Sys.getenv("MUC_R_HOME")
 inputdir <- file.path(scriptdir, "input")
 
 # load scripts & functions
 source(file.path(scriptdir, "load_all.R"), chdir = TRUE)
+
+rbn.registerSetting("MUC_R_HOME", getwd())
 
 # load custom learners & learner modifier
 source(file.path(inputdir, "custom_learners.R"), chdir = TRUE)

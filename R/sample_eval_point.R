@@ -158,7 +158,7 @@ rbn.sampleEvalPoint <- function(learner.name, learner.object, data, seed, paramt
   } else {
     supertail <- FALSE
   }
-  "list(", wholestring, ",SUPEREVAL=", supertail, ")"
+  paste0("list(", wholestring, ",SUPEREVAL=", supertail, ")")
 }
 
 # compile parameter table (turn strings into expressions etc.)
