@@ -1,10 +1,13 @@
 
-
-# evaluate point with learner object and data
-# learner.object [Learner] Learner to evaluate
-# point.value [named list] list of parameter values, also with SUPEREVAL entry TRUE/FALSE
-# data [list(Task, ResamplingInstance)] Task '$task', resampling instances '$resampling'
+# Evaluate learner on data at point
+#
+# This does not save the result or redirect the output!
+#
+# @param learner.object [Learner] Learner to evaluate
+# @param point.string [character(1)] parameter values, also with SUPEREVAL entry TRUE/FALSE, as given by rbn.sampleEvalPoint
+# @param data [list(Task, ResamplingInstance)] Task '$task', resampling instances '$resampling'
 #   and '$super.resampling'
+# @return [ResampleResult]
 rbn.evaluatePoint <- function(learner.object, point.string, data) {
   point.value <- rbn.parseEvalPoint(point.string, learner.object)
 
