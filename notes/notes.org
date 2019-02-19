@@ -1,13 +1,17 @@
 
 * Global settings:
 Some of these may be environment-dependent, e.g. NODE_ID, others are global settings that change run behaviour (e.g. SCHEDULING_MODE) or even results (SAMPLING_TRAFO)
-- WORKDIR :: base directory from which to work
+- NODEDIR :: node-local directory. Set by *runscript.sh* to form =PWD/xx/nodename/work=, where =xx= is the first two characters of =md5sum $nodename=.
+- WORKDIR :: base directory from which to work. Set by *runscript.sh* to a random subdirectory of NODEDIR
+- MUC_R_HOME :: base directory of this repository, has subdirectories =scripts/=, =R/=. Set/inferred by *runscript.sh* and others.
+- DATADIR :: directory where data files are stored, set by *constants.R* to =MUC_R_HOME/data=
 - RUN_ID ::  [integer] number of the run. Between 0 and 2^31-1 inclusive. used for seeding / indexing into table
 - LEARNER :: [character(1)] learner name to be evaluated in this instance
 - DATASET :: [character(1)] dataset name to be evaluated in this instance
 - SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself.
-  - STEPSIZE :: if SCHEDULING_MODE is "percpu": how much to increase RUN_ID each execution. Should be roughly NUMBER_OF_CPUS / ( NUMBER_OF_TASKS * NUMBER_OF_LEARNERS )
-  - INIT_ID ::  if SCHEDULING_MODE is "percpu": at what RUN_ID to start.
+  - SEED_STEPSIZE :: if SCHEDULING_MODE is "percpu": how much to increase RUN_ID each execution. Should be roughly NUMBER_OF_CPUS / ( NUMBER_OF_TASKS * NUMBER_OF_LEARNERS )
+  - SEED_OFFSET :: if SCHEDULING_MODE is "percpu": at what RUN_ID to start at first; should be between 0 and SEED_STEPSIZE.
+  - SEED_INIT_ID ::  if SCHEDULING_MODE is "percpu": at what RUN_ID to start the current loop; used to communicate from =.sh= to =.R=.
 - SUPERRATE :: [numeric 0..1] fraction of evaluation points that have supererogatory evaluations
 - SAMPLING_TRAFO :: "none", "default", "default+norm"
   - "none" :: transformations given in paramspace csv are not performed (although the given parameter limits are transformed)
@@ -18,13 +22,18 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
 
 * Directory structure
 
+* Scripts
+- scripts
+  - scripts/runscript.sh :: to be called by =srun=, takes important
+
+
 * scheduling
 ** "percpu" scheduling
  - Have a directory hierarchy that maps from "task, learner, INIT_ID" to the path where the checkpoint file is written
  - run each srun in the form =(while true ; do srun TASK LEARNER INIT_ID ; done) &=
  - srun call looks up directory, looks up checkpoint, copies checkpoint to its own directory, overwrites lookup file, runs
 ** "perseed" scheduling
- - sequentially go along seeds
+ - sequentially go along seeds, learners, tasks
  - executed using GNU Parallel
 ** "perparam" scheduling
  - parameters are in a text file

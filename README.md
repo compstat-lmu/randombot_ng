@@ -8,7 +8,7 @@
 - Possible "Supererogatory" evaluations: More evaluation on the *same* point, with variations:
   - Different resampling splits ("RepCV").
   - Smaller training sets for "lerning curve".
-  - Evaluation of the same point with only a single parameter changed.
+  - All this is captured by just creating a big resampling instance
 - The learner and task are chosen deterministically which could make estimated needs based memory alocation possible.
 - The SAME parameter configurations are all tried on different datasets to make dataset results comparable
 

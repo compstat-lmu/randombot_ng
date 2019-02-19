@@ -48,3 +48,4 @@ export NODEDIR
 # workdir: 
 WORKDIR="${NODEDIR}/$(printf "%02d\n" "$((RANDOM%100))")/$(printf "%02d\n" "$((RANDOM%100))")"
 
+mkdir -p "$WORKDIR"
