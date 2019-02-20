@@ -23,13 +23,16 @@ if ! [ -d "$BASEDIR" ] ; then
     exit 4
 fi
 
+if [ -z "${USE_PARALLEL}" ] ; then
+    export USE_PARALLEL=TRUE
+fi
 if ! [[ "${USE_PARALLEL}" =~ ^(TRUE|FALSE)$ ]] ; then
     echo "No valid USE_PARALLEL: $USE_PARALLEL"
     exit 5
 fi
 
 if [ -z "$INDEXSTEPSIZE" ] ; then
-    INDEXSTEPSIZE=20
+    export INDEXSTEPSIZE=20
 fi
 if ! [ "$INDEXSTEPSIZE" -gt 0 ] 2>/dev/null ; then
     echo "No valid INDEXSTEPSIZE: $INDEXSTEPSIZE"

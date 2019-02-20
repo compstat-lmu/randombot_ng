@@ -40,7 +40,7 @@ vim "$WORK/randombot_ng/sbatch.cmd"
 
 # run
 export SCHEDULING_MODE=XXXX  # percpu, perparam, perseed
-export USE_PARALLEL=TRUE # TRUE or FALSE
+export USE_PARALLEL=TRUE # not necessary, default is TRUE; must be TRUE or FALSE
 export INDEXSTEPSIZE=20  # not necessary, default is 20, but set this to something else on LRZ
 # must also exported: BASEDIR, MUC_R_HOME
 "${MUC_R_HOME}/invoke_sbatch.sh" --partition=general
