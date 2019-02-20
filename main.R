@@ -1,7 +1,7 @@
 
 # This script is supposed to give an idea how things should be run.
 
-rm(list=ls(all.names = TRUE))  ; scriptdir <- "." ;
+rm(list=ls(all.names = TRUE))  ; Sys.setenv(MUC_R_HOME = ".")
 
 scriptdir <- Sys.getenv("MUC_R_HOME")
 inputdir <- file.path(scriptdir, "input")
@@ -9,19 +9,16 @@ inputdir <- file.path(scriptdir, "input")
 # load scripts & functions
 source(file.path(scriptdir, "load_all.R"), chdir = TRUE)
 
-rbn.registerSetting("MUC_R_HOME", scriptdir)
-
 # load custom learners & learner modifier
 source(file.path(inputdir, "custom_learners.R"), chdir = TRUE)
 
 # load constants
 source(file.path(inputdir, "constants.R"), chdir = TRUE)
 
+# --------- during development: check learner table, fill data directory
+rbn.setupDataDir()
 
-# --------- during development: check the table
-table <- rbn.compileParamTbl(file.path(inputdir, "spaces.csv"), sep = "\t", quote = "")
-rbn.checkParamTbl(table)
-
+table <- rbn.compileParamTblConfigured()
 
 # --------- PURELY TESTING: data
 
@@ -237,7 +234,7 @@ point.strings <- rbn.sampleEvalPoint(
     paramtbl = table)
 # this can be multiple, for supererogatory evaluation
 for (single.point.string in point.strings) {
-  point.value = rbn.parseEvalPoint(single.point.string)  # function to be defined
+  point.value <- rbn.parseEvalPoint(single.point.string)  # function to be defined
   rbn.evaluatePoint(learner.object, point.value, data)  # obvious TODO here
 }
 

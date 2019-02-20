@@ -1,4 +1,23 @@
 
+# Prepare inputs
+# - load data and learner tables as configured in constants.R
+# - check learner table
+# - retrieve data
+# - write LEARNERS and TASKS file into DATADIR
+# Expects custom learners to already have been loaded
+rbn.setupDataDir <- function() {
+  table <- rbn.compileParamTblConfigured()
+  rbn.checkParamTbl(table)
+
+  datatable <- rbn.loadDataTableConfigured()
+  rbn.retrieveData(datatable)
+
+  fname <- file.path(rbn.getSetting("DATADIR"), "LEARNERS")
+  cat(table$learner, sep = "\n", file = fname)
+
+  fname <- file.path(rbn.getSetting("DATADIR"), "TASKS")
+  cat(datatable$name, sep = "\n", file = fname)
+}
 
 # Download the dataset and task from OpenML and save to DATADIR
 # @param table [character(1) | data.frame] task information table

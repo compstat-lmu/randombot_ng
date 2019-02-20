@@ -1,4 +1,8 @@
 
+
+rbn.setEnvToLoad(c("NODEDIR", "WORKDIR", "MUC_R_HOME", "WATCHFILE"))
+
+
 PERCVTIME = 300
 rbn.registerSetting("RESAMPLINGTIMEOUTS",
   c(0.8, 0.9, 0.9, 1.0, 1.0,
@@ -10,12 +14,22 @@ rbn.registerSetting("SUPERRATE", 0.01)
 
 rbn.registerSetting("SAMPLING_TRAFO", "default")
 
+rbn.registerSetting("SEARCHSPACE_TABLE", file.path(getwd(), "spaces.csv"))
+rbn.registerSetting("SEARCHSPACE_TABLE_OPTS", 'list(sep = "\\t", quote = "")')
+
+rbn.setOutputDir <- function() {
+  rbn.registerSetting("OUTPUTDIR", overwrite = TRUE,
+    file.path(rbn.getSetting("WORKDIR"), format(Sys.time(), "%F_%H")))
+}
 
 
 # WARNING: ALL OF the following changes the data which is cached
 # in the DATADIR folder. Be sure to call rbn.retrieveData() when this changes.
 rbn.registerSetting("DATADIR",
   file.path(rbn.getSetting("MUC_R_HOME"), "data"))
+
+rbn.registerSetting("DATA_TABLE", file.path(getwd(), "tasks_test.csv"))
+rbn.registerSetting("DATA_TABLE_OPTS", 'list()')
 
 rbn.registerSetting("SUPERCV_REPS", 30)
 rbn.registerSetting("SUPERCV_PROPORTIONS",

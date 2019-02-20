@@ -13,6 +13,10 @@ rbn.registerSetting <- function(name, value, overwrite = FALSE) {
   assertString(name)
   assertAtomic(value)
   assertFlag(overwrite)
+  assertTRUE(name != "ENV.TO.LOAD")
+  if (name %in% .setting.register$ENV.TO.LOAD) {
+    stopf("Setting %s is loaded from environment.", name)
+  }
   if (name %in% names(.setting.register) && !overwrite) {
     warningf("Replacing setting %s value %s -> value %s",
       name, collapse(.setting.register[[name]], ","), collapse(value, ","))
@@ -25,8 +29,25 @@ rbn.registerSetting <- function(name, value, overwrite = FALSE) {
 # @return [any]
 rbn.getSetting <- function(name) {
   assertString(name)
+  if (name %in% .setting.register$ENV.TO.LOAD) {
+    ret <- Sys.getenv(name)
+    if (ret == "") {
+      stopf("Environment setting name %s not given.", name)
+    }
+    return(ret)
+  }
   if (name %nin% names(.setting.register)) {
     stopf("Setting name %s not registered.", name)
   }
   .setting.register[[name]]
+}
+
+# set up configuration names to load from Sys.getenv
+rbn.setEnvToLoad <- function(ns) {
+  assertCharacter(ns, any.missing = FALSE)
+  already <- intersect(ns, names(.setting.register))
+  if (length(already)) {
+    stopf("Name(s) %s are already defined as settings.", collapse(already))
+  }
+  .setting.register$ENV.TO.LOAD <- ns
 }
