@@ -29,30 +29,30 @@ fi
 
 if [ -z "${SBATCH_INDEX}" ] || ! [ "$SBATCH_INDEX" -lt "$INDEXSTEPSIZE" -a "$SBATCH_INDEX" -ge 0 ] 2>/dev/null ; then
     echo "No valid SBATCH_INDEX: $SBATCH_INDEX"
-    exit 1
+    exit 2
 fi
 
 if ! [[ "${SCHEDULING_MODE}" =~ ^per(seed|param|cpu)$ ]] ; then
     echo "No valid SCHEDULING_MODE: $SCHEDULING_MODE"
-    exit 2
+    exit 3
 fi
 
 if ! [ -d "$MUC_R_HOME" ] ; then
     echo "MUC_R_HOME Not a directory: $MUC_R_HOME"
-    exit 3
+    exit 4
 fi
 
 if ! [ -d "$BASEDIR" ] ; then
     echo "BASEDIR Not a directory: $BASEDIR"
-    exit 4
+    exit 5
 fi
 
 if ! [[ "${USE_PARALLEL}" =~ ^(TRUE|FALSE)$ ]] ; then
     echo "No valid USE_PARALLEL: $USE_PARALLEL"
-    exit 5
+    exit 6
 fi
 
-
+MAXINDEX=10000000000  # maximum seed
 
 DATADIR=$(Rscript -e " \
   scriptdir <- '$MUC_R_HOME'; \
@@ -67,10 +67,10 @@ SCRIPTDIR="${MUC_R_HOME}/scripts"
 
 if ! [ -d "$DATADIR" ] ; then
     echo "Inferred DATADIR Not a directory: $DATADIR"
-    exit 5
+    exit 6
 fi
 
-MAXINDEX=10000000000
+
 
 
 call_srun() {  # arguments: <seed/line> <task> <learner>
@@ -81,7 +81,7 @@ call_srun() {  # arguments: <seed/line> <task> <learner>
     memreq=1G  # TODO
 
     srun \
-	--mem="${memreq}" --nnodes=1 --ntask=1 --exclusive \
+	--mem="${memreq}" --nodes=1 --ntask=1 --exclusive \
 	"${SCRIPTDIR}/runscript.sh" \
 	"$SCHEDULING_MODE" "$task" "$learner" "$argument" | \
 	sed -u "s'^'[${task},${learner},${argument}]: '"

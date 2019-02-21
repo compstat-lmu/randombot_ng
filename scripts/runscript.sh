@@ -4,48 +4,64 @@
 # - This file is not copied somewhere else, but instead ran from its path
 #   in the randombot_ng/scripts directory
 # - start path is the base output directory, the same one 
-# - command line is $0 <MODE> <TASKNAME> <LEARNERNAME> <PARAMS/RUNID (if single)>
-#   - mode: one of 'watchdog' or 'single'
+# - command line is $0 <MODE> <TASKNAME> <LEARNERNAME> <PARAMS/SEED/STARTINDEX>
+# - <MODE> one of percpu, perseed, perparam
+# - if <MODE> is percpu, the PERCPU_STEPSIZE env var must be set
 
-if [ "$1" = "watchdog" ] ; then
-    export SCHEDULING_MODE=watchdog
-    if ! [ -z "$4" ] ; then
-	echo "Scheduling mode watchdog only should have three arguments"
-       
-elif [ "$1" = "single" ] ; then
-    export SCHEDULING_MODE=single
-else
-    echo "Bad scheduling mode '$1'" >&2
+SCHEDULING_MODE="$1"
+TASKNAME="$2"
+LEARNERNAME="$3"
+ARGUMENT="$4"
+
+TOKEN="$((date +"%F_%T"))_${RANDOM}"
+
+if [ -z "$ARGUMENT" ]; then
+    echo "Bad Command line: $*" >&2
     exit 100
 fi
+if [ "$SCHEDULING_MODE" = percpu ] && ! [ "$PERCPU_STEPSIZE" -gt 0 ] ; then
+    echo "Missing or invalid PERCPU_STEPSIZE: $PERCPU_STEPSIZE" >&2
+    exit 101
+fi
 
+if ! [[ "${SCHEDULING_MODE}" =~ ^per(seed|param|cpu)$ ]] ; then
+    echo "No valid SCHEDULING_MODE: $SCHEDULING_MODE"
+    exit 102
+fi
 
-    
+if ! [ -d "$MUC_R_HOME" ] ; then
+    echo "MUC_R_HOME Not a directory: $MUC_R_HOME"
+    exit 103
+fi
 
-
-
-# get parent directory
-path="${BASH_SOURCE[0]}"
-while [ -h "$path" ] ; do
-    linkpath="$(readlink "$path")"
-    if [[ "$linkpath" != /* ]] ; then
-	path="$(dirname "$path")/$linkpath"
-    else
-	path="$linkpath"
-    fi
-done
-MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
-
-# MUC_R_HOME: directory of `load_all.R` script etc.
-export MUC_R_HOME
+if ! [ -d "$BASEDIR" ] ; then
+    echo "BASEDIR Not a directory: $BASEDIR"
+    exit 104
+fi
 
 cd -P "$(echo "$SLURMD_NODENAME" | md5sum | cut -c -2)/${SLURMD_NODENAME}/work" || \
-    exit 101
+    exit 105
 NODEDIR="$(pwd)"
 # NODEDIR: node-local directory, for file system reasons
 export NODEDIR
 
 # workdir: 
 WORKDIR="${NODEDIR}/$(printf "%02d\n" "$((RANDOM%100))")/$(printf "%02d\n" "$((RANDOM%100))")"
-
 mkdir -p "$WORKDIR"
+
+# watchfile:
+# delete old watchfiles first
+comm -23 \
+     <(ls WATCHFILE_* | sort) \
+     <(ps -eo "%p" --no-headers | sed 's/^ */WATCHFILE_/' | sort) | \
+    xargs rm
+# create new watchfile
+export WATCHFILE=WATCHFILE_$$
+touch "$WATCHFILE"
+
+if [ "$SCHEDULING_MODE" = percpu ] ; then
+    TODO
+else
+    /usr/bin/time -f "----[$RANDOM] E %E K %Ss U %Us P %P M %MkB O %O" Rscript "$MUC_R_HOME/eval_single.R"
+    echo "----[${TOKEN}] eval_single.R exited with status $?"
+fi

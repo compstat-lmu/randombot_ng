@@ -17,8 +17,9 @@
 * Things to keep in mind
 
 - --mem= is PER NODE, but srun *inherits* the value, so srun must be started with --ntask=1, --mem=<less than in sbatch header>
-- also --nnodes should be set to 1 to avoid a deluge of warnings
+- also --nodes should be set to 1 to avoid a deluge of warnings
 - question: does '--mem=MaxMemPerNode' work? Answer: Yes
+- max step count for LRZ is 40'000
 
 * Environment
 ** Info

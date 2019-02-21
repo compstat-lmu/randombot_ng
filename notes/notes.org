@@ -4,11 +4,12 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
 ** Environment only
 - SBATCH_INDEX :: set while calling sbatch, see *setup.recipe*.
 ** Environment AND R setting
-- NODEDIR :: node-local directory. Set by *runscript.sh* to form =PWD/xx/nodename/work=, where =xx= is the first two characters of =md5sum $nodename=.
-  - WORKDIR :: base directory from which to work. Set by *runscript.sh* to a subdirectory of NODEDIR, depending on SLURM_STEP_ID
-    - OUTPUTDIR :: directory where the output is written. set using *rbn.setOutputDir()* in *constants.R* to a subdir in WORKDIR. Should be called before each new output file is opened.
-  - WATCHFILE :: watchdog file. Set by *runscript.sh* to a file identified by PID in NODEDIR
-- MUC_R_HOME :: base directory of this repository, has subdirectories =scripts/=, =R/=. Set/inferred by *runscript.sh* and others.
+- MUC_R_HOME :: base directory of this repository, has subdirectories =scripts/=, =R/=. Set/inferred by most *.sh* files.
+- BASEDIR :: the directory in which all results are written, probably a subdirectory of =$WORK=, see *setup.recipe*
+  - NODEDIR :: node-local directory. Set by *runscript.sh* to form =BASEDIR/xx/nodename/work=, where =xx= is the first two characters of =md5sum $nodename=.
+    - WORKDIR :: base directory from which to work. Set by *runscript.sh* to a subdirectory of NODEDIR, depending on SLURM_STEP_ID
+      - OUTPUTDIR :: directory where the output is written. set using *rbn.setOutputDir()* in *constants.R* to a subdir in WORKDIR. Should be called before each new output file is opened.
+  - WATCHFILE :: watchdog file. Set by *runscript.sh* to a file identified by WATCHFILE_$$ (where $$ is the bash process PID) in NODEDIR
 ** R setting only
 - DATADIR :: directory where data files are stored, set by *constants.R* to =MUC_R_HOME/data=
   - DATA_TABLE :: filename of data info csv. set by *constants.R*
@@ -19,7 +20,7 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
 - LEARNER :: [character(1)] learner name to be evaluated in this instance. Taken from command line.
 - DATASET :: [character(1)] dataset name to be evaluated in this instance. Taken from command line.
 
-- SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself. set while calling sbatch, see *setup.recipe*.
+- SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself. set and exported before calling sbatch, see *setup.recipe*.
   - SEED_STEPSIZE :: if SCHEDULING_MODE is "percpu": how much to increase RUN_ID each execution. Should be roughly NUMBER_OF_CPUS / ( NUMBER_OF_TASKS * NUMBER_OF_LEARNERS )
   - SEED_OFFSET :: if SCHEDULING_MODE is "percpu": at what RUN_ID to start at first; should be between 0 and SEED_STEPSIZE.
   - SEED_INIT_ID ::  if SCHEDULING_MODE is "percpu": at what RUN_ID to start the current loop; used to communicate from =.sh= to =.R=.
@@ -29,7 +30,7 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
   - "default" :: transformations as given in paramspace csv
   - "norm" :: transformation as given, prepended by an inverse error function; parameter bounds as given are instead the inflection points of the normal distribution (i.e. each 1 std-dev from center)
 - RESAMPLINGTIMEOUTS :: [numeric] seconds to wait for each resampling. Violating the time constraint kills the R session if the watchdog is running.
-- WATCHFILE :: [character(1)] path to file that is watched by the watchdog script
+
 
 
 * Directory structure

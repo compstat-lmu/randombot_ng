@@ -18,8 +18,10 @@ rbn.registerSetting("SEARCHSPACE_TABLE", file.path(getwd(), "spaces.csv"))
 rbn.registerSetting("SEARCHSPACE_TABLE_OPTS", 'list(sep = "\\t", quote = "")')
 
 rbn.setOutputDir <- function() {
-  rbn.registerSetting("OUTPUTDIR", overwrite = TRUE,
+  dir <- rbn.registerSetting("OUTPUTDIR", overwrite = TRUE,
     file.path(rbn.getSetting("WORKDIR"), format(Sys.time(), "%F_%H")))
+  dir.create(file.path(dir), showWarnings = FALSE)
+  dir
 }
 
 
