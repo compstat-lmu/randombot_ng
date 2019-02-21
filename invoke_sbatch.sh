@@ -41,5 +41,5 @@ fi
 
 
 for ((i=0;i<"$INDEXSTEPSIZE";i++)) ; do
-    sbatch "${MUC_R_HOME}/sbatch.cmd" --export=BASEDIR,MUC_R_HOME,SCHEDULING_MODE,USE_PARALLEL,SBATCH_INDEX=${i} "$@"
+    sbatch "${MUC_R_HOME}/sbatch.cmd" --export=BASEDIR,MUC_R_HOME,SCHEDULING_MODE,USE_PARALLEL,INDEXSTEPSIZE,SBATCH_INDEX=${i} "$@"
 done

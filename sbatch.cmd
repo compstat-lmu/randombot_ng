@@ -53,6 +53,14 @@ if ! [[ "${USE_PARALLEL}" =~ ^(TRUE|FALSE)$ ]] ; then
 fi
 
 MAXINDEX=10000000000  # maximum seed
+JOBLOGFILE=TODO # TODO 
+CONCURRENCY=TODO  # TODO
+export PERCPU_STEPSIZE=TODO # TODO
+get_mem_req() {
+    # arguments: learner, task
+    # TODO
+    echo 1G
+}
 
 DATADIR=$(Rscript -e " \
   scriptdir <- '$MUC_R_HOME'; \
@@ -75,7 +83,7 @@ call_srun() {  # arguments: <seed/line> <task> <learner>
     task="$2"
     argument="$3"
     # TODO: infer memory requirement from $1 and $2
-    memreq=1G  # TODO
+    memreq="$(get_mem_req "$learner" "$task")"  # TODO
 
     srun \
 	--mem="${memreq}" --nodes=1 --ntasks=1 --exclusive \
@@ -86,8 +94,6 @@ call_srun() {  # arguments: <seed/line> <task> <learner>
 
 export -f call_srun
 
-JOBLOGFILE=TODO # TODO 
-CONCURRENCY=TODO  # TODO
 
 if [ "$SCHEDULING_MODE" = perseed ] ; then
     
@@ -103,7 +109,7 @@ if [ "$SCHEDULING_MODE" = perseed ] ; then
 		:::: "${DATADIR}/TASKS" \
 		:::: "${DATADIR}/LEARNERS"
     else
-	for ((i="$SBATCH_INDEX";i<="$MAXINDEX";i++)) ; do
+	for ((i="$SBATCH_INDEX";i<="$MAXINDEX";i+="$INDEXSTEPSIZE")) ; do
 	    while read -u 5 task ; do
 		while read -u 6 learner ; do
 		    call_srun "${i}" "${task}" "${learner}"
@@ -113,6 +119,7 @@ if [ "$SCHEDULING_MODE" = perseed ] ; then
 		sleep 0.1
 	    done
 	done
+	wait
     fi
 elif [ "$SCHEDULING_MODE" = perparam ] ; then
     if [ "$USE_PARALLEL" = "TRUE" ] ; then
@@ -138,9 +145,50 @@ elif [ "$SCHEDULING_MODE" = perparam ] ; then
 		done
 	    fi
 	done <"${DATADIR}/INPUTS"
+	wait
     fi
 elif [ "$SCHEDULING_MODE" = percpu ] ; then
-    TODO TODO TODO
+    while read -u 5 TASKNAME ; do
+	while read -u 6 LEARNERNAME ; do
+	    for ((i="$BATCH_INDEX";i<="$PERCPU_STEPSIZE";i+="$INDEXSTEPSIZE")) ; do
+	        (
+		    while true ; do
+			PROGRESSSOURCE="${BASEDIR}/joblookup/${LEARNERNAME}/${TASKNAME}"
+			PROGRESSPOINTER="${PROGRESSSOURCE}/PROGRESSPOINTER_${i}"
+			NEWPF="${PROGRESSSOURCE}/PROGRESSFILE_${i}"
+
+
+			if [ -f "$NEWPF" ] ; then
+			    PROGRESS="$(cat "$NEWPF")"
+			fi
+			if ! [ "$PROGRESS" -ge 0 ] 2>/dev/null ; then
+			    PROGRESS="$i"
+			fi
+			if [ -f "$PROGRESSPOINTER" ] ; then
+			    OLDPF="$(cat "$PROGRESSPOINTER")"
+			    if mv -f "$OLDPF" "${NEWPF}.tmp" ; then
+				for ((i=0;i<180;i++)) ; do
+				    if [ -f "${NEWPF}.tmp" ] ; then break ; fi
+				    sleep 1
+				done
+			    fi
+			    NEWPROGRESS="$(cat "${NEWPF}.tmp")"
+
+			    if ! [ "$NEWPROGRESS" -ge "$PROGRESS" ] 2>/dev/null ; then
+				rm -f "${NEWPF}.tmp"
+			    else
+				mv -f "${NEWPF}.tmp" "$NEWPF"
+				PROGRESS="$NEWPROGRESS"
+			    fi
+			fi
+			sleep 60  # wait for file changes to propagate; let's hope this is enough...
+			call_srun "${i}" "${TASKNAME}" "${LEARNERNAME}"
+		    done
+		) &
+	    done
+	done 6<"${DATADIR}/TASKS"
+    done 5<"${DATADIR}/LEARNERS"
+    wait
 else
     # should never happen
     echo "Scheduling mode $SCHEDULING_MODE dispatch error"

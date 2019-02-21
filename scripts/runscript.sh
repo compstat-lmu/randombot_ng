@@ -7,6 +7,10 @@
 # - command line is $0 <MODE> <TASKNAME> <LEARNERNAME> <PARAMS/SEED/STARTINDEX>
 # - <MODE> one of percpu, perseed, perparam
 # - if <MODE> is percpu, the PERCPU_STEPSIZE env var must be set
+# - if <MODE> is percpu, the PROGRESS env var must be set to a number
+# - if <MODE> is percpu, the
+#     BASEDIR/joblookup/<LEARNERNAME>/<TASKNAME>/PROGRESSPOINTER_<STARTINDEX>
+#   is written to and contains the "progress file" path.
 
 SCHEDULING_MODE="$1"
 TASKNAME="$2"
@@ -21,6 +25,10 @@ if [ -z "$ARGUMENT" ]; then
 fi
 if [ "$SCHEDULING_MODE" = percpu ] && ! [ "$PERCPU_STEPSIZE" -gt 0 ] ; then
     echo "Missing or invalid PERCPU_STEPSIZE: $PERCPU_STEPSIZE" >&2
+    exit 101
+fi
+if [ "$SCHEDULING_MODE" = percpu ] && ! [ "$PROGRESS" -ge 0 ] ; then
+    echo "Missing or invalid PROGRESS: $PROGRESS" >&2
     exit 101
 fi
 
@@ -60,14 +68,20 @@ export WATCHFILE=WATCHFILE_$$
 touch "$WATCHFILE"
 
 if [ "$SCHEDULING_MODE" = percpu ] ; then
-    TODO
+    export PROGRESSFILE="$NODEDIR/PROGRESSFILE_${ARGUMENT}"
+    echo "$PROGRESS" > "$PROGRESSFILE"
+    echo "$PROGRESSFILE" > "${BASEDIR}/joblookup/${LEARNERNAME}/${TASKNAME}/PROGRESSPOINTER_${ARGUMENT}"
+    
+    evalfile="eval_multiple.R"
 else
-    /usr/bin/time -f "----[$RANDOM] E %E K %Ss U %Us P %P M %MkB O %O" Rscript "$MUC_R_HOME/eval_single.R" &
-    pid=$!
-    "$MUC_R_HOME/scripts/watchdog.sh" $pid "$WATCHFILE"
-    wait $pid
-    result=$?
-    echo "----[${TOKEN}] eval_single.R exited with status $result"
+    evalfile="eval_single.R"
 fi
+
+/usr/bin/time -f "----[$RANDOM] E %E K %Ss U %Us P %P M %MkB O %O" Rscript "$MUC_R_HOME/${evalfile}" &
+pid=$!
+"$MUC_R_HOME/scripts/watchdog.sh" $pid "$WATCHFILE"
+wait $pid
+result=$?
+echo "----[${TOKEN}] ${evalfile} exited with status $result"
 
 exit $result

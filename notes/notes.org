@@ -3,6 +3,11 @@
 Some of these may be environment-dependent, e.g. NODE_ID, others are global settings that change run behaviour (e.g. SCHEDULING_MODE) or even results (SAMPLING_TRAFO)
 ** Environment only
 - SBATCH_INDEX :: set while calling sbatch, see *setup.recipe*.
+- LEARNERNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
+- TASKNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
+- ARGUMENT :: set in *runscript.sh*, read by eval_single
+- PERCPU_STEPSIZE :: set in *sbatch.cmd*, read by eval_multiple
+- PROGRESSFILE :: set in *runscript.sh*, read by eval_multiple
 ** Environment AND R setting
 - MUC_R_HOME :: base directory of this repository, has subdirectories =scripts/=, =R/=. Set/inferred by most *.sh* files.
 - BASEDIR :: the directory in which all results are written, probably a subdirectory of =$WORK=, see *setup.recipe*
