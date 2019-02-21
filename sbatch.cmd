@@ -181,7 +181,6 @@ elif [ "$SCHEDULING_MODE" = percpu ] ; then
 				PROGRESS="$NEWPROGRESS"
 			    fi
 			fi
-			sleep 60  # wait for file changes to propagate; let's hope this is enough...
 			call_srun "${i}" "${TASKNAME}" "${LEARNERNAME}"
 		    done
 		) &
