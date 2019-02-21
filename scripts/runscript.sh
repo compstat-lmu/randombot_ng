@@ -62,6 +62,12 @@ touch "$WATCHFILE"
 if [ "$SCHEDULING_MODE" = percpu ] ; then
     TODO
 else
-    /usr/bin/time -f "----[$RANDOM] E %E K %Ss U %Us P %P M %MkB O %O" Rscript "$MUC_R_HOME/eval_single.R"
-    echo "----[${TOKEN}] eval_single.R exited with status $?"
+    /usr/bin/time -f "----[$RANDOM] E %E K %Ss U %Us P %P M %MkB O %O" Rscript "$MUC_R_HOME/eval_single.R" &
+    pid=$!
+    "$MUC_R_HOME/scripts/watchdog.sh" $pid "$WATCHFILE"
+    wait $pid
+    result=$?
+    echo "----[${TOKEN}] eval_single.R exited with status $result"
 fi
+
+exit $result

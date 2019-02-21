@@ -10,6 +10,10 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
     - WORKDIR :: base directory from which to work. Set by *runscript.sh* to a subdirectory of NODEDIR, depending on SLURM_STEP_ID
       - OUTPUTDIR :: directory where the output is written. set using *rbn.setOutputDir()* in *constants.R* to a subdir in WORKDIR. Should be called before each new output file is opened.
   - WATCHFILE :: watchdog file. Set by *runscript.sh* to a file identified by WATCHFILE_$$ (where $$ is the bash process PID) in NODEDIR
+- SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself. set and exported before calling sbatch, see *setup.recipe*.
+  - SEED_STEPSIZE :: if SCHEDULING_MODE is "percpu": how much to increase RUN_ID each execution. Should be roughly NUMBER_OF_CPUS / ( NUMBER_OF_TASKS * NUMBER_OF_LEARNERS )
+  - SEED_OFFSET :: if SCHEDULING_MODE is "percpu": at what RUN_ID to start at first; should be between 0 and SEED_STEPSIZE.
+  - SEED_INIT_ID ::  if SCHEDULING_MODE is "percpu": at what RUN_ID to start the current loop; used to communicate from =.sh= to =.R=.
 ** R setting only
 - DATADIR :: directory where data files are stored, set by *constants.R* to =MUC_R_HOME/data=
   - DATA_TABLE :: filename of data info csv. set by *constants.R*
@@ -20,10 +24,6 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
 - LEARNER :: [character(1)] learner name to be evaluated in this instance. Taken from command line.
 - DATASET :: [character(1)] dataset name to be evaluated in this instance. Taken from command line.
 
-- SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself. set and exported before calling sbatch, see *setup.recipe*.
-  - SEED_STEPSIZE :: if SCHEDULING_MODE is "percpu": how much to increase RUN_ID each execution. Should be roughly NUMBER_OF_CPUS / ( NUMBER_OF_TASKS * NUMBER_OF_LEARNERS )
-  - SEED_OFFSET :: if SCHEDULING_MODE is "percpu": at what RUN_ID to start at first; should be between 0 and SEED_STEPSIZE.
-  - SEED_INIT_ID ::  if SCHEDULING_MODE is "percpu": at what RUN_ID to start the current loop; used to communicate from =.sh= to =.R=.
 - SUPERRATE :: [numeric 0..1] fraction of evaluation points that have supererogatory evaluations
 - SAMPLING_TRAFO :: "none", "default", "default+norm"
   - "none" :: transformations given in paramspace csv are not performed (although the given parameter limits are transformed)
