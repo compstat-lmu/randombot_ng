@@ -37,3 +37,30 @@
 - Custom learners can be registered using 'rbn.registerLearner'.
 - Custom learner "MODIFIER" is a unary function that can attach CPOs.
 
+## Benchmark Setup:
+
+### Datasets
+OpenML CC-18 + AutoML Datasets; ~110 Datasets in Total
+[Tasks Google Sheets](https://docs.google.com/spreadsheets/d/1IlcB98LZsG9y6veYivH05mN4yC8Qf2y2kB2HZHPsaMI/edit?usp=sharing)
+
+### Learners
+- xgboost (xgboost)
+- svm (e1071) (without linear, possibly without poly kernel if we use liblinear)
+- random forest (ranger)
+- rpart (rpart)
+- LiblineaR (LiblineaR) / Glmnet (glmnet)
+- Fnn / Approx NN / KNN  (falls wir es zum laufen kriegen)
+- Keras/Mxnet Fully Connected NN’s
+- Other boosting?
+
+### Hyperparam Spaces
+Options: 
+- (https://github.com/mb706/automlr/blob/master/tools/learners.org)
+- (https://github.com/pfistfl/OMLRandomBotv2/blob/master/R/learners.R)
+
+## Evaluation Strategies
+- 10-fold stratified CV (80%)
+- 10 x 10-fold stratified CV (10%)
+- Subsampling (10%)
+
+
