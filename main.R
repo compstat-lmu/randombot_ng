@@ -160,19 +160,6 @@ repeat {
   }
 }
 
-####################################################################################
-# --------- "single" mode: each eval in its own srun ----------------------------- #
-####################################################################################
-
-#################################################################################
-# OPTION 1: if we send parameter strings to the srun, we have to prepare at home
-# --------- the following on some random pc ---
-rbn.registerSetting("SUPERRATE", 0.03)  # 3% extra eval rate
-rbn.registerSetting("SAMPLING_TRAFO", "default+norm")  # normal distribution + trafo
-
-
-table <- rbn.compileParamTbl(file.path(inputdir, "spaces.csv"), sep = "\t")
-
 # maybe parallelize this; also will probably create huge files
 for (learner in unique(table$learner)) {
   rbn.registerSetting("LEARNER", learner)
@@ -197,45 +184,5 @@ for (learner in unique(table$learner)) {
   }
 }
 
-# --------- the following on the compute node --
-rbn.registerSetting("SCHEDULING_MODE", "single")
-
-learner.name = rbn.getSetting("LEARNER")
-learner.object = rbn.getearner(learner.name)
-data = rbn.getData(rbn.getSetting("DATASET"))  # function still needs to be defined
-
-single.point.string <- get_point_string_from_cmdline()
-point.value = rbn.parseEvalPoint(single.point.string)  # function to be defined
-rbn.evaluatePoint(learner.object, point.value, data)  # obvious TODO here
-
-#################################################################################
-# OPTION 2: if we send only RUN_IDs (and learner / data names) to the SRUN calls
-# --------- all of this on a compute node:
-
-rbn.registerSetting("SCHEDULING_MODE", "single")
-
-rbn.registerSetting("SUPERRATE", 0.03)  # 3% extra eval rate
-rbn.registerSetting("SAMPLING_TRAFO", "default+norm")  # normal distribution + trafo
-
-rbn.registerSetting("RUN_ID", get_run_id_from_cmdline())
-
-learner.name = rbn.getSetting("LEARNER")
-learner.object = rbn.getearner(learner.name)
-data = rbn.getData(rbn.getSetting("DATASET"))  # function still needs to be defined
-
-table <- rbn.compileParamTbl(file.path(inputdir, "spaces.csv"), sep = "\t")
-
-runid <- rbn.getSetting("INIT_ID")
-point.strings <- rbn.sampleEvalPoint(
-    learner.name = learner.name,
-    learner.object = learner.object,
-    data = data,
-    seet = runid,
-    paramtbl = table)
-# this can be multiple, for supererogatory evaluation
-for (single.point.string in point.strings) {
-  point.value <- rbn.parseEvalPoint(single.point.string)  # function to be defined
-  rbn.evaluatePoint(learner.object, point.value, data)  # obvious TODO here
-}
 
 

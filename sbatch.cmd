@@ -70,9 +70,6 @@ if ! [ -d "$DATADIR" ] ; then
     exit 6
 fi
 
-
-
-
 call_srun() {  # arguments: <seed/line> <task> <learner>
     learner="$1"
     task="$2"
@@ -81,7 +78,7 @@ call_srun() {  # arguments: <seed/line> <task> <learner>
     memreq=1G  # TODO
 
     srun \
-	--mem="${memreq}" --nodes=1 --ntask=1 --exclusive \
+	--mem="${memreq}" --nodes=1 --ntasks=1 --exclusive \
 	"${SCRIPTDIR}/runscript.sh" \
 	"$SCHEDULING_MODE" "$task" "$learner" "$argument" | \
 	sed -u "s'^'[${task},${learner},${argument}]: '"
