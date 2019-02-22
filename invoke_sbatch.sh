@@ -39,7 +39,15 @@ if ! [ "$INDEXSTEPSIZE" -gt 0 ] 2>/dev/null ; then
     exit 1
 fi
 
+if [ -z "$CONTROL_JOB_COUNT" ] ; then
+    export CONTROL_JOB_COUNT=1
+fi
+if ! [ "$CONTROL_JOB_COUNT" -ge 0 ] 2>/dev/null ; then
+    echo "No valid CONTROL_JOB_COUNT: $CONTROL_JOB_COUNT"
+    exit 1
+fi
+
 
 for ((i=0;i<"$INDEXSTEPSIZE";i++)) ; do
-    sbatch "${MUC_R_HOME}/sbatch.cmd" --export=BASEDIR,MUC_R_HOME,SCHEDULING_MODE,USE_PARALLEL,INDEXSTEPSIZE,SBATCH_INDEX=${i} "$@"
+    sbatch "${MUC_R_HOME}/sbatch.cmd" --export=BASEDIR,MUC_R_HOME,SCHEDULING_MODE,USE_PARALLEL,INDEXSTEPSIZE,CONTROL_JOB_COUNT,SBATCH_INDEX=${i} "$@"
 done

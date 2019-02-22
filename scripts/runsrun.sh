@@ -23,12 +23,12 @@ fi
 
 if ! [ -d "$BASEDIR" ] ; then
     echo "BASEDIR Not a directory: $BASEDIR"
-    exit 5
+    exit 6
 fi
 
 if ! [[ "${USE_PARALLEL}" =~ ^(TRUE|FALSE)$ ]] ; then
     echo "No valid USE_PARALLEL: $USE_PARALLEL"
-    exit 6
+    exit 7
 fi
 
 MAXINDEX=10000000000  # maximum seed
@@ -54,7 +54,7 @@ SCRIPTDIR="${MUC_R_HOME}/scripts"
 
 if ! [ -d "$DATADIR" ] ; then
     echo "Inferred DATADIR Not a directory: $DATADIR"
-    exit 6
+    exit 8
 fi
 
 call_srun() {  # arguments: <seed/line> <task> <learner>
@@ -64,7 +64,7 @@ call_srun() {  # arguments: <seed/line> <task> <learner>
     # TODO: infer memory requirement from $1 and $2
     memreq="$(get_mem_req "$learner" "$task")"  # TODO
 
-    srun \
+    srun --unbuffered \
 	--mem="${memreq}" --nodes=1 --ntasks=1 --exclusive \
 	"${SCRIPTDIR}/runscript.sh" \
 	"$SCHEDULING_MODE" "$task" "$learner" "$argument" | \
@@ -113,7 +113,7 @@ elif [ "$SCHEDULING_MODE" = perparam ] ; then
     else
 	declare -i i
 	i="-$SBATCH_INDEX"
-	while read learner task argument ; do
+	while learner task argument ; do
 	    if [ "$((i % INDEXSTEPSIZE))" = 0 ] ; then
 		call_srun "$learner" "$task" "$argument"
 	    fi
@@ -123,7 +123,7 @@ elif [ "$SCHEDULING_MODE" = perparam ] ; then
 		    sleep 0.1
 		done
 	    fi
-	done <"${DATADIR}/INPUTS"
+	done < <(zcat "${DATADIR}/INPUTS")
 	wait
     fi
 elif [ "$SCHEDULING_MODE" = percpu ] ; then
