@@ -40,8 +40,9 @@
 ## Benchmark Setup:
 
 ### Datasets
-OpenML CC-18 + AutoML Datasets; ~110 Datasets in Total
-[Tasks Google Sheets](https://docs.google.com/spreadsheets/d/1IlcB98LZsG9y6veYivH05mN4yC8Qf2y2kB2HZHPsaMI/edit?usp=sharing)
+OpenML CC-18 + AutoML Datasets; ~102 Datasets in Total
+
+[Tasks](https://docs.google.com/spreadsheets/d/1IlcB98LZsG9y6veYivH05mN4yC8Qf2y2kB2HZHPsaMI/edit?usp=sharing)
 
 ### Learners
 - xgboost (xgboost)
