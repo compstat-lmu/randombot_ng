@@ -46,13 +46,14 @@ classif.xgboost = makeParamSet(
   makeDiscreteParam("booster", values = c("gbtree", "gblinear", "dart")),
   makeNumericParam("eta",   lower = -10, upper = 0, requires = quote(booster %in% c("dart", "gbtree")), trafo = function(x) 2^x),
   makeNumericParam("gamma", lower = -15, upper = 3, requires = quote(booster %in% c("dart", "gbtree")), trafo = function(x) 2^x),
+  makeNumericParam("lambda", lower = -10, upper = 10, trafo = function(x) 2^x),
+  makeNumericParam("alpha", lower = -10, upper = 10, trafo = function(x) 2^x),
   makeNumericParam("subsample",lower = 0.1, upper = 1),
   makeIntegerParam("max_depth", lower = 1, upper = 15,        requires = quote(booster %in% c("dart", "gbtree"))),
   makeNumericParam("min_child_weight",  lower = 0, upper = 7, requires = quote(booster %in% c("dart", "gbtree")), trafo = function(x) 2^x),
   makeNumericParam("colsample_bytree",  lower = 0, upper = 1, requires = quote(booster %in% c("dart", "gbtree")),
   makeNumericParam("colsample_bylevel", lower = 0, upper = 1, requires = quote(booster %in% c("dart", "gbtree")),
-  makeNumericParam("lambda", lower = -10, upper = 10, trafo = function(x) 2^x),
-  makeNumericParam("alpha", lower = -10, upper = 10, trafo = function(x) 2^x),
+  # makeDiscreteParam("tree_method", values = c("exact", "auto", "approx", "hist")), # CURRENTLY NOT IMPLEMENTED IN MLR
   makeNumericParam("rate_drop", lower = 0, upper = 1, requires = quote(booster == "dart")),
   makeNumericParam("skip_drop", lower =  0, upper = 1, requires = quote(booster == "dart"))
   ),
