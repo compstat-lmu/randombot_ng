@@ -4,7 +4,7 @@ makeRLearner.classif.LiblineaR = function() {
     package = "LiblineaR",
     par.set = makeParamSet(
       makeIntegerLearnerParam(id = "type", default = 5L, lower = 0L, upper = 7L),
-      makeNumericLearnerParam(id = "cost", default = 1, lower = 0),
+      makeNumericLearnerParam(id = "cost", default = 1, lower = 0, upper = Inf),
       makeNumericLearnerParam(id = "epsilon", default = 0.01, lower = 0),
       makeLogicalLearnerParam(id = "bias", default = TRUE),
       makeNumericVectorLearnerParam(id = "wi", len = NA_integer_),

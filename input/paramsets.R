@@ -17,7 +17,7 @@ classif.svm = makeParamSet(
   makeNumericParam("cost", lower = -10, upper = 10, trafo = function(x) 2^x), # Discuss bounds -10, 3
   makeNumericParam("gamma", lower = -10, upper = 10, trafo = function(x) 2^x, requires = quote(kernel == "radial")), # Discuss bounds -10, 3
   makeIntegerParam("degree", lower = 2, upper = 5, requires = quote(kernel == "polynomial")),
-  makeLogicalParam("tolerance", lower = 0.001, upper = 1),
+  makeNumericParam("tolerance", lower = 0.001, upper = 1),
   makeLogicalParam("shrinking")
 )
 classif.svm = makeParamSet( # Only radial basis function kernel
@@ -63,7 +63,7 @@ classif.xgboost.fixed_pars = list("nthread" = 1L)
 # => See RLearner.classif.LiblineaR.R
 classif.LiblineaR = makeParamSet(
   makeIntegerLearnerParam(id = "type", default = 0L, lower = 0L, upper = 7L),
-  makeNumericLearnerParam(id = "cost", default = 10, lower = 0, upper = 10, trafo = function(x) 2^x),
+  makeNumericLearnerParam(id = "cost", default = 10, lower = -10, upper = 10, trafo = function(x) 2^x),
   makeNumericLearnerParam(id = "epsilon", default = 0.01, lower = -12, upper = 0, trafo = function(x) 2^x),
   makeLogicalLearnerParam(id = "bias", default = TRUE)
 )
