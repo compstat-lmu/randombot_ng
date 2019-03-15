@@ -50,14 +50,22 @@ OpenML CC-18 + AutoML Datasets; ~102 Datasets in Total
 - random forest (ranger)
 - rpart (rpart)
 - LiblineaR (LiblineaR) / Glmnet (glmnet)
-- Fnn / Approx NN / KNN  (falls wir es zum laufen kriegen)
-- Keras/Mxnet Fully Connected NN’s
-- Other boosting?
+
+For now we exclude:
+  - Fnn / Approx NN / KNN  (falls wir es zum laufen kriegen)
+  - Keras/Mxnet Fully Connected NN’s
+  - Other boosting?
 
 ### Hyperparam Spaces
-Options: 
-- (https://github.com/mb706/automlr/blob/master/tools/learners.org)
-- (https://github.com/pfistfl/OMLRandomBotv2/blob/master/R/learners.R)
+
+Current spaces: [Parameter Set](https://github.com/compstat-lmu/randombot_ng/blob/master/input/paramsets.R)
+
+We currently sample numerics using the following strategy:
+  1. compute m = (upper - lower) / 2
+  2. sample x from N(m, m^2) (i.e. our bounds are mu +/- 1 * sigma
+  3. if x out of bounds go back to 2., else return x
+
+Integers and discrete variables are sampled with equal probabilities.
 
 ## Evaluation Strategies
 - 10-fold stratified CV (80%)

@@ -5,7 +5,7 @@ classif.glmnet = makeParamSet(
 
 classif.rpart = makeParamSet(
   makeNumericParam("cp", lower = 0, upper = 1, default = 0.01),
-  makeIntegerParam("maxdepth", lower = 1, upper = 30, default = 30), # Martin has 14 here.
+  makeIntegerParam("maxdepth", lower = 1, upper = 30, default = 30),
   makeIntegerParam("minbucket", lower = 1, upper = 60, default = 1),
   makeIntegerParam("minsplit", lower = 1, upper = 60, default = 20)
   # Open Question: Use *surrogate* params? => Only in case we do not generally impute all missings.
@@ -38,7 +38,7 @@ classif.ranger.pow = makeParamSet(
   makeDiscreteParam("splitrule", values = c("gini", "extratrees")),
   makeIntegerParam("num.random.splits", lower = 1, upper = 100, default = 1L, requires = quote(splitrule == "extratrees") # No idea
 )
-classif.ranger.fixed_pars = list("num.threads" = 1L)
+classif.ranger.pow.fixed_pars = list("num.threads" = 1L)
 
 
 classif.xgboost = makeParamSet(
