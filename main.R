@@ -51,6 +51,8 @@ plot(sapply(cvparts, function(cvx) performance(cvx$pred, list(mmce))))
 
 
 
+
+
 # --------- PURELY TESTING: parameters
 
 lrn <- rbn.getLearner("classif.xgboost")
@@ -106,6 +108,8 @@ eta.norm <- sampleParam("classif.xgboost", 10000, "eta", "norm")
 hist(log(eta.default))
 hist(log(eta.norm))
 hist(eta.none)
+
+
 
 
 # --------- END PURELY TESTING
@@ -179,6 +183,4 @@ for (learner in unique(table$learner)) {
     }
   }
 }
-
-
 
