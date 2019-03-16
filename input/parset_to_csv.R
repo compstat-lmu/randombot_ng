@@ -20,13 +20,17 @@ parfix.lg <- grepl("\\.fixed_pars$", names(pss))
 pardef <- pss[!parfix.lg]
 parfix <- pss[parfix.lg]
 
+ppp <- pss$preproc.pipeline
+pss$preproc.pipeline <- NULL
+
+
 names(parfix) <- sub("\\.fixed_pars$", "", names(parfix))
 
 stopifnot(all(names(parfix) %in% names(pardef)))
 
 cat("learner\tparameter\tvalues\tlower\tupper\ttrafo\trequires\tcondition\n")
 for (lname in names(pardef)) {
-  parset <- pardef[[lname]]
+  parset <- c(pardef[[lname]], ppp)
   for (pname in getParamIds(parset)) {
     par <- parset$pars[[pname]]
     val <- ""

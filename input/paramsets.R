@@ -64,3 +64,7 @@ classif.LiblineaR = makeParamSet(
   makeNumericParam(id = "epsilon", default = log2(0.01), lower = -12, upper = 0, trafo = function(x) 2^x),
   makeLogicalParam(id = "bias", default = TRUE)
 )
+
+preproc.pipeline <- pSS(
+  num.impute.selected.cpo: discrete [impute.mean, impute.median, impute.hist]  # numeric feature imputation to use
+)
