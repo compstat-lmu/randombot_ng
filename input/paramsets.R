@@ -1,7 +1,6 @@
 classif.glmnet = makeParamSet(
   makeNumericParam("alpha", lower = 0, upper = 1, default = 1),
   makeNumericVectorParam("lambda", len = 1L, lower = -10, upper = 10, default = 0, trafo = function(x) 2^x))
-)
 
 classif.rpart = makeParamSet(
   makeNumericParam("cp", lower = 0, upper = 1, default = 0.01),
@@ -36,8 +35,7 @@ classif.ranger.pow = makeParamSet(
   makeDiscreteParam("respect.unordered.factors", values = c("ignore", "order", "partition")),
   makeIntegerParam("min.node.size", lower = 1, upper = 100),
   makeDiscreteParam("splitrule", values = c("gini", "extratrees")),
-  makeIntegerParam("num.random.splits", lower = 1, upper = 100, default = 1L, requires = quote(splitrule == "extratrees") # No idea
-)
+  makeIntegerParam("num.random.splits", lower = 1, upper = 100, default = 1L, requires = quote(splitrule == "extratrees"))) # No idea
 classif.ranger.pow.fixed_pars = list("num.threads" = 1L)
 
 
@@ -63,6 +61,6 @@ classif.xgboost.fixed_pars = list("nthread" = 1L)
 classif.LiblineaR = makeParamSet(
   makeDiscreteParam(id = "type", default = 0L, values = 0:7),
   makeNumericParam(id = "cost", default = 10, lower = -10, upper = 10, trafo = function(x) 2^x),
-  makeNumericParam(id = "epsilon", default = 0.01, lower = -12, upper = 0, trafo = function(x) 2^x),
+  makeNumericParam(id = "epsilon", default = log2(0.01), lower = -12, upper = 0, trafo = function(x) 2^x),
   makeLogicalParam(id = "bias", default = TRUE)
 )
