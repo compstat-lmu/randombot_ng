@@ -3,7 +3,7 @@ makeRLearner.classif.LiblineaR = function() {
     cl = "classif.LiblineaR",
     package = "LiblineaR",
     par.set = makeParamSet(
-      makeIntegerLearnerParam(id = "type", default = 5L, lower = 0L, upper = 7L),
+      makeDiscreteLearnerParam(id = "type", default = 5L, values = 0:7),
       makeNumericLearnerParam(id = "cost", default = 1, lower = 0, upper = Inf),
       makeNumericLearnerParam(id = "epsilon", default = 0.01, lower = 0),
       makeLogicalLearnerParam(id = "bias", default = TRUE),
