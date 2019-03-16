@@ -51,19 +51,18 @@ classif.xgboost = makeParamSet(
   makeNumericParam("subsample",lower = 0.1, upper = 1),
   makeIntegerParam("max_depth", lower = 1, upper = 15,        requires = quote(booster %in% c("dart", "gbtree"))),
   makeNumericParam("min_child_weight",  lower = 0, upper = 7, requires = quote(booster %in% c("dart", "gbtree")), trafo = function(x) 2^x),
-  makeNumericParam("colsample_bytree",  lower = 0, upper = 1, requires = quote(booster %in% c("dart", "gbtree")),
-  makeNumericParam("colsample_bylevel", lower = 0, upper = 1, requires = quote(booster %in% c("dart", "gbtree")),
+  makeNumericParam("colsample_bytree",  lower = 0, upper = 1, requires = quote(booster %in% c("dart", "gbtree"))),
+  makeNumericParam("colsample_bylevel", lower = 0, upper = 1, requires = quote(booster %in% c("dart", "gbtree"))),
   # makeDiscreteParam("tree_method", values = c("exact", "auto", "approx", "hist")), # CURRENTLY NOT IMPLEMENTED IN MLR
   makeNumericParam("rate_drop", lower = 0, upper = 1, requires = quote(booster == "dart")),
-  makeNumericParam("skip_drop", lower =  0, upper = 1, requires = quote(booster == "dart"))
-  ),
+  makeNumericParam("skip_drop", lower =  0, upper = 1, requires = quote(booster == "dart")))
 classif.xgboost.fixed_pars = list("nthread" = 1L)
 
 
 # => See RLearner.classif.LiblineaR.R
 classif.LiblineaR = makeParamSet(
-  makeIntegerLearnerParam(id = "type", default = 0L, lower = 0L, upper = 7L),
-  makeNumericLearnerParam(id = "cost", default = 10, lower = -10, upper = 10, trafo = function(x) 2^x),
-  makeNumericLearnerParam(id = "epsilon", default = 0.01, lower = -12, upper = 0, trafo = function(x) 2^x),
-  makeLogicalLearnerParam(id = "bias", default = TRUE)
+  makeDiscreteParam(id = "type", default = 0L, values = 0:7),
+  makeNumericParam(id = "cost", default = 10, lower = -10, upper = 10, trafo = function(x) 2^x),
+  makeNumericParam(id = "epsilon", default = 0.01, lower = -12, upper = 0, trafo = function(x) 2^x),
+  makeLogicalParam(id = "bias", default = TRUE)
 )
