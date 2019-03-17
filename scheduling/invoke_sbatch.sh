@@ -1,4 +1,7 @@
 #!/bin/bash
+# This is the entry point!
+# Sets up some variables, performs some tests, and calls sbatch the required
+# number of times.
 
 # get parent directory
 path="${BASH_SOURCE[0]}"
@@ -12,42 +15,16 @@ while [ -h "$path" ] ; do
 done
 export MUC_R_HOME="$(cd -P "$(dirname "$path")" >/dev/null 2>&1 && pwd)"
 
+. "$MUC_R_HOME/scheduling/common.sh"
 
-if ! [[ "${SCHEDULING_MODE}" =~ ^per(seed|param|cpu)$ ]] ; then
-    echo "No valid SCHEDULING_MODE: $SCHEDULING_MODE"
-    exit 2
-fi
+[ -z "${USE_PARALLEL}" ] || export USE_PARALLEL=TRUE
+[ -z "$INDEXSTEPSIZE" ] || export INDEXSTEPSIZE=20
+[ -z "$CONTROL_JOB_COUNT" ] || export CONTROL_JOB_COUNT=1
 
-if ! [ -d "$BASEDIR" ] ; then
-    echo "BASEDIR Not a directory: $BASEDIR"
-    exit 4
-fi
-
-if [ -z "${USE_PARALLEL}" ] ; then
-    export USE_PARALLEL=TRUE
-fi
-if ! [[ "${USE_PARALLEL}" =~ ^(TRUE|FALSE)$ ]] ; then
-    echo "No valid USE_PARALLEL: $USE_PARALLEL"
-    exit 5
-fi
-
-if [ -z "$INDEXSTEPSIZE" ] ; then
-    export INDEXSTEPSIZE=20
-fi
-if ! [ "$INDEXSTEPSIZE" -gt 0 ] 2>/dev/null ; then
-    echo "No valid INDEXSTEPSIZE: $INDEXSTEPSIZE"
-    exit 1
-fi
-
-if [ -z "$CONTROL_JOB_COUNT" ] ; then
-    export CONTROL_JOB_COUNT=1
-fi
-if ! [ "$CONTROL_JOB_COUNT" -ge 0 ] 2>/dev/null ; then
-    echo "No valid CONTROL_JOB_COUNT: $CONTROL_JOB_COUNT"
-    exit 1
-fi
-
+check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT
 
 for ((i=0;i<"$INDEXSTEPSIZE";i++)) ; do
-    sbatch "${MUC_R_HOME}/sbatch.cmd" --export=BASEDIR,MUC_R_HOME,SCHEDULING_MODE,USE_PARALLEL,INDEXSTEPSIZE,CONTROL_JOB_COUNT,SBATCH_INDEX=${i} "$@"
+    sbatch "${MUC_R_HOME}/scheduling/sbatch.cmd" \
+	   --export=BASEDIR,MUC_R_HOME,SCHEDULING_MODE,USE_PARALLEL,INDEXSTEPSIZE,CONTROL_JOB_COUNT,SBATCH_INDEX=${i} \
+	   "$@"
 done

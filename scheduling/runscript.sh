@@ -2,20 +2,20 @@
 # run script, to be launched using `srun` in an sbatch command file
 # Expectations:
 # - This file is not copied somewhere else, but instead ran from its path
-#   in the randombot_ng/scripts directory
-# - start path is the base output directory, the same one 
+#   in the randombot_ng/scheduling directory
+# - start path is BASEDIR
 # - command line is $0 <MODE> <TASKNAME> <LEARNERNAME> <PARAMS/SEED/STARTINDEX>
-# - <MODE> one of percpu, perseed, perparam
-# - if <MODE> is percpu, the PERCPU_STEPSIZE env var must be set
-# - if <MODE> is percpu, the PROGRESS env var must be set to a number
-# - if <MODE> is percpu, the
+# - <SCHEDULING_MODE> one of percpu, perseed, perparam
+# - if <SCHEDULING_MODE> is percpu, the PERCPU_STEPSIZE env var must be set
+# - if <SCHEDULING_MODE> is percpu, the PROGRESS env var must be set to a number
+# - if <SCHEDULING_MODE> is percpu, the
 #     BASEDIR/joblookup/<LEARNERNAME>/<TASKNAME>/PROGRESSPOINTER_<STARTINDEX>
 #   is written to and contains the "progress file" path.
 
-SCHEDULING_MODE="$1"
-TASKNAME="$2"
-LEARNERNAME="$3"
-ARGUMENT="$4"
+export SCHEDULING_MODE="$1"
+export TASKNAME="$2"
+export LEARNERNAME="$3"
+export ARGUMENT="$4"
 
 TOKEN="$((date +"%F_%T"))_${RANDOM}"
 
@@ -23,31 +23,24 @@ if [ -z "$ARGUMENT" ]; then
     echo "Bad Command line: $*" >&2
     exit 100
 fi
-if [ "$SCHEDULING_MODE" = percpu ] && ! [ "$PERCPU_STEPSIZE" -gt 0 ] ; then
-    echo "Missing or invalid PERCPU_STEPSIZE: $PERCPU_STEPSIZE" >&2
-    exit 101
-fi
-if [ "$SCHEDULING_MODE" = percpu ] && ! [ "$PROGRESS" -ge 0 ] ; then
-    echo "Missing or invalid PROGRESS: $PROGRESS" >&2
-    exit 101
-fi
 
-if ! [[ "${SCHEDULING_MODE}" =~ ^per(seed|param|cpu)$ ]] ; then
-    echo "No valid SCHEDULING_MODE: $SCHEDULING_MODE"
-    exit 102
-fi
+# get parent directory
+path="${BASH_SOURCE[0]}"
+while [ -h "$path" ] ; do
+    linkpath="$(readlink "$path")"
+    if [[ "$linkpath" != /* ]] ; then
+	path="$(dirname "$path")/$linkpath"
+    else
+	path="$linkpath"
+    fi
+done
+export MUC_R_HOME="$(cd -P "$(dirname "$path")" >/dev/null 2>&1 && pwd)"
 
-if ! [ -d "$MUC_R_HOME" ] ; then
-    echo "MUC_R_HOME Not a directory: $MUC_R_HOME"
-    exit 103
-fi
+. "$MUC_R_HOME/scheduling/common.sh"
 
-if ! [ -d "$BASEDIR" ] ; then
-    echo "BASEDIR Not a directory: $BASEDIR"
-    exit 104
-fi
+check_env BASEDIR SCHEDULING_MODE PERCPU_STEPSIZE PROGRESS
 
-cd -P "$(echo "$SLURMD_NODENAME" | md5sum | cut -c -2)/${SLURMD_NODENAME}/work" || \
+cd -P "${BASEDIR}/$(echo "$SLURMD_NODENAME" | md5sum | cut -c -2)/${SLURMD_NODENAME}/work" || \
     exit 105
 NODEDIR="$(pwd)"
 # NODEDIR: node-local directory, for file system reasons
@@ -56,6 +49,7 @@ export NODEDIR
 # workdir: 
 WORKDIR="${NODEDIR}/$(printf "%02d\n" "$((RANDOM%100))")/$(printf "%02d\n" "$((RANDOM%100))")"
 mkdir -p "$WORKDIR"
+export WORKDIR
 
 # watchfile:
 # delete old watchfiles first
@@ -68,20 +62,24 @@ export WATCHFILE=WATCHFILE_$$
 touch "$WATCHFILE"
 
 if [ "$SCHEDULING_MODE" = percpu ] ; then
-    export PROGRESSFILE="$NODEDIR/PROGRESSFILE_${ARGUMENT}"
+    export PROGRESSFILE="${NODEDIR}/PROGRESSFILE_${ARGUMENT}"
     echo "$PROGRESS" > "$PROGRESSFILE"
-    echo "$PROGRESSFILE" > "${BASEDIR}/joblookup/${LEARNERNAME}/${TASKNAME}/PROGRESSPOINTER_${ARGUMENT}"
+
+    get_progresspointer "$ARGUMENT"
+    echo "$PROGRESSFILE" > "$PROGRESSPOINTER"
     
     evalfile="eval_multiple.R"
 else
     evalfile="eval_single.R"
 fi
 
-/usr/bin/time -f "----[$RANDOM] E %E K %Ss U %Us P %P M %MkB O %O" Rscript "$MUC_R_HOME/${evalfile}" &
+/usr/bin/time -f "----[$RANDOM] E %E K %Ss U %Us P %P M %MkB O %O" Rscript "$MUC_R_HOME/scheduling/${evalfile}" &
 pid=$!
-"$MUC_R_HOME/scripts/watchdog.sh" $pid "$WATCHFILE"
+"${MUC_R_HOME}/scheduling/watchdog.sh" $pid "$WATCHFILE"
+wpd=$!
 wait $pid
 result=$?
+kill "$wpd" 2>/dev/null
 echo "----[${TOKEN}] ${evalfile} exited with status $result"
 
 exit $result

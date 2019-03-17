@@ -2,50 +2,56 @@
 * Global settings:
 Some of these may be environment-dependent, e.g. NODE_ID, others are global settings that change run behaviour (e.g. SCHEDULING_MODE) or even results (SAMPLING_TRAFO)
 ** Environment only
-- SBATCH_INDEX :: set while calling sbatch, see *setup.recipe*.
-- LEARNERNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
-- TASKNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
-- ARGUMENT :: set in *runscript.sh*, read by eval_single
-- PERCPU_STEPSIZE :: set in *sbatch.cmd*, read by eval_multiple
-- PROGRESSFILE :: set in *runscript.sh*, read by eval_multiple
+- Scheduling
+  - SBATCH_INDEX :: set while calling sbatch, see *setup.recipe*.
+  - INDEXSTEPSIZE :: number of parallel SLURM jobs, default 20
+  - CONTROL_JOB_COUNT :: Number of dedicated jobs that run. "0" for direct execution.
+  - USE_PARALLEL :: "TRUE" or "FALSE", whether to use gnu parallel, see *setup.recipe*
+  - SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself. set and exported before calling sbatch, see *setup.recipe*.
+    - for "percpu" scheduling
+      - PROGRESS :: set in *invoke_srun.sh*, read by eval_multiple. what RUN_ID to start at
+      - PERCPU_STEPSIZE :: set in *invoke_srun.sh*, read by eval_multiple. corresponds to number of LEARNER x TASK running instances and is the stepsize when incrementing RUN_ID
+      - PROGRESSFILE :: set in *runscript.sh*, read by eval_multiple
+- R-Script invocation
+  - LEARNERNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
+  - TASKNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
+  - ARGUMENT :: set in *runscript.sh*, read by eval_single. indicating either rng-seed, 
 ** Environment AND R setting
-- MUC_R_HOME :: base directory of this repository, has subdirectories =scripts/=, =R/=. Set/inferred by most *.sh* files.
-- BASEDIR :: the directory in which all results are written, probably a subdirectory of =$WORK=, see *setup.recipe*
-  - NODEDIR :: node-local directory. Set by *runscript.sh* to form =BASEDIR/xx/nodename/work=, where =xx= is the first two characters of =md5sum $nodename=.
-    - WORKDIR :: base directory from which to work. Set by *runscript.sh* to a subdirectory of NODEDIR, depending on SLURM_STEP_ID
-      - OUTPUTDIR :: directory where the output is written. set using *rbn.setOutputDir()* in *constants.R* to a subdir in WORKDIR. Should be called before each new output file is opened.
-  - WATCHFILE :: watchdog file. Set by *runscript.sh* to a file identified by WATCHFILE_$$ (where $$ is the bash process PID) in NODEDIR
-- SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself. set and exported before calling sbatch, see *setup.recipe*.
-  - SEED_STEPSIZE :: if SCHEDULING_MODE is "percpu": how much to increase RUN_ID each execution. Should be roughly NUMBER_OF_CPUS / ( NUMBER_OF_TASKS * NUMBER_OF_LEARNERS )
-  - SEED_OFFSET :: if SCHEDULING_MODE is "percpu": at what RUN_ID to start at first; should be between 0 and SEED_STEPSIZE.
-  - SEED_INIT_ID ::  if SCHEDULING_MODE is "percpu": at what RUN_ID to start the current loop; used to communicate from =.sh= to =.R=.
+- Directories
+  - MUC_R_HOME :: base directory of this repository, has subdirectories =scripts/=, =R/=. Set/inferred by most *.sh* files.
+  - BASEDIR :: the directory in which all results are written, probably a subdirectory of =$WORK=, see *setup.recipe*
+    - NODEDIR :: node-local directory. Set by *runscript.sh* to form =BASEDIR/xx/nodename/work=, where =xx= is the first two characters of =md5sum $nodename=.
+      - WORKDIR :: base directory from which to work. Set by *runscript.sh* to a subdirectory of NODEDIR, depending on SLURM_STEP_ID
+	- OUTPUTDIR :: directory where the output is written. set using *rbn.setOutputDir()* in *constants.R* to a subdir in WORKDIR. Should be called before each new output file is opened.
+    - WATCHFILE :: watchdog file. Set by *runscript.sh* to a file identified by WATCHFILE_$$ (where $$ is the bash process PID) in NODEDIR
+    - joblookup :: directory structure =BASEDIR/joblookup/LEARNERNAME/TASKNAME/= with files =PROGRESSPOINTER_${i}= and =PROGRESSFILE_${i}=.
+  - DATADIR :: directory where data files are stored, set by *constants.R* to =MUC_R_HOME/data=
 ** R setting only
-- DATADIR :: directory where data files are stored, set by *constants.R* to =MUC_R_HOME/data=
+- Input settings
   - DATA_TABLE :: filename of data info csv. set by *constants.R*
   - DATA_TABLE_OPTS :: options to be given to =read.csv= when reading DATA_TABLE. set by *constants.R*
-- SEARCHSPACE_TABLE :: filename of search space csv. set by *constants.R*
-- SEARCHSPACE_TABLE_OPTS :: options to be given to =read.csv= when reading SEARCHSPACE_TABLE. set by *constants.R*
-- RUN_ID ::  [integer] number of the run. Between 0 and 2^31-1 inclusive. used for seeding / indexing into table. Set depending on SCHEDULING_MODE.
-- LEARNER :: [character(1)] learner name to be evaluated in this instance. Taken from command line.
-- DATASET :: [character(1)] dataset name to be evaluated in this instance. Taken from command line.
-
-- SUPERRATE :: [numeric 0..1] fraction of evaluation points that have supererogatory evaluations
-- SAMPLING_TRAFO :: "none", "default", "default+norm"
-  - "none" :: transformations given in paramspace csv are not performed (although the given parameter limits are transformed)
-  - "default" :: transformations as given in paramspace csv
-  - "norm" :: transformation as given, prepended by an inverse error function; parameter bounds as given are instead the inflection points of the normal distribution (i.e. each 1 std-dev from center)
-- RESAMPLINGTIMEOUTS :: [numeric] seconds to wait for each resampling. Violating the time constraint kills the R session if the watchdog is running.
-
-
-
+  - SEARCHSPACE_TABLE :: filename of search space csv. set by *constants.R*
+  - SEARCHSPACE_TABLE_OPTS :: options to be given to =read.csv= when reading SEARCHSPACE_TABLE. set by *constants.R*
+- Single Run Settings
+  - RUN_ID ::  [integer] number of the run. Between 0 and 2^31-1 inclusive. used for seeding / indexing into table. Set depending on SCHEDULING_MODE.
+  - LEARNER :: [character(1)] learner name to be evaluated in this instance. Taken from command line.
+  - DATASET :: [character(1)] dataset name to be evaluated in this instance. Taken from command line.
+- Sampling Configuration
+  - SUPERRATE :: [numeric 0..1] fraction of evaluation points that have supererogatory evaluations
+  - SAMPLING_TRAFO :: "none", "default", "default+norm"
+    - "none" :: transformations given in paramspace csv are not performed (although the given parameter limits are transformed)
+    - "default" :: transformations as given in paramspace csv
+    - "norm" :: transformation as given, prepended by an inverse error function; parameter bounds as given are instead the inflection points of the normal distribution (i.e. each 1 std-dev from center)
+  - RESAMPLINGTIMEOUTS :: [numeric] seconds to wait for each resampling. Violating the time constraint kills the R session if the watchdog is running.
 * Directory structure
 - data
   input arguments are in file DATADIR/INPUTS, a *single space* separated file with columns <LEARNER> <TASK> <POINT_STRING>. LEARNER changes the fastest, then TASK, then POINT_STRING changes slowest (i.e. LEARNER is the inner loop)
-* Scripts
-- scripts
-  - scripts/runscript.sh :: to be called by =srun=, takes important
-
-
+- input
+  - learners
+- R
+- scheduling
+- setup
+- testenv
 * scheduling
 ** "percpu" scheduling
  - Have a directory hierarchy that maps from "task, learner, INIT_ID" to the path where the checkpoint file is written
@@ -57,5 +63,87 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
 ** "perparam" scheduling
  - parameters are in a text file
  - executed using GNU Parallel
-
-
+* Control Flow
+1. invoke_sbatch.sh
+   - Takes arguments:
+     - BASEDIR
+     - SCHEDULING_MODE
+     - USE_PARALLEL
+     - *INDEXSTEPSIZE*
+     - CONTROL_JOB_COUNT
+   - Exports further arguments:
+     - MUC_R_HOME
+     - SBATCH_INDEX :: index of sbatch job
+   - Does:
+     - for loop through *INDEXSTEPSIZE*: run *sbatch sbatch.cmd*
+2. sbatch.cmd
+   - Takes arguments:
+     - *MUC_R_HOME*
+     - BASEDIR
+     - SCHEDULING_MODE
+     - USE_PARALLEL
+     - *INDEXSTEPSIZE*
+     - *CONTROL_JOB_COUNT*
+   - Exports further arguments
+     - SBATCH_INDEX :: modified when iterating over CONTROL_JOB_COUNT
+     - INDEXSTEPSIZE :: augmented by CONTROL_JOB_COUNT
+   - Does:
+     - for loop through *CONTROL_JOB_COUNT*: run *srun runscript.sh*
+3. invoke_srun.sh
+   - Takes arguments:
+     - *BASEDIR*
+     - *SCHEDULING_MODE*
+     - *USE_PARALLEL*
+     - *INDEXSTEPSIZE*
+     - *SBATCH_INDEX*
+   - Uses from constants.R:
+     - *DATADIR*
+   - Exports further arguments:
+     - *PERCPU_STEPSIZE* :: in *percpu* mode the number of processes to have running for a single LEARNER x TASK config
+     - PROGRESS :: 
+   - Does:
+     - Depending on *SCHEDULING_MODE* and *USE_PARALLEL*:
+       - *perseed*: loop from *SBATCH_INDEX* by *INDEXSTEPSIZE* and call *eval_single.R*
+       - *perparam*: loop through *DATADIR* / INPUTS file
+       - *percpu*: loop through *DATADIR* / LEARNERS, *DATADIR* / TASKS, by *INDEXSTEPSIZE* (and up to *PERCPU_STEPSIZE*)
+4. runscript.sh
+   - Takes arguments:
+     - *BASEDIR*
+     - *SCHEDULING_MODE* (from arg 1)
+     - *TASKNAME* (from arg 2)
+     - *LEARNERNAME* (from arg 3)
+     - *ARGUMENT* (from arg 4)
+     - PERCPU_STEPSIZE
+     - *PROGRESS*
+   - Exports further arguments:
+     - NODEDIR
+     - WORKDIR
+     - WATCHFILE
+     - TOKEN
+     - PROGRESSFILE (only for eval_multiple)
+   - Does:
+     - after setting up vars calls *eval_single.R* or *eval_multiple.R* as well as *watchdog.sh*
+5. eval_single.R
+   - Takes arguments:
+     - *TOKEN*
+     - *MUC_R_HOME*
+     - *LEARNERNAME*
+     - *TASKNAME*
+     - *ARGUMENT*
+     - *WORKDIR*
+     - *NODEDIR*
+     - *WATCHFILE*
+6. eval_multiple.R
+   - Takes arguments:
+     - *TOKEN*
+     - *MUC_R_HOME*
+     - *LEARNERNAME*
+     - *TASKNAME*
+     - *PROGRESSFILE*
+     - *PERCPU_STEPSIZE*
+     - *WORKDIR*
+     - *NODEDIR*
+     - *WATCHFILE*
+7. watchdog.sh
+   - Takes arguments:
+     - *WATCHFILE*

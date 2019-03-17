@@ -5,7 +5,10 @@ if (!length(args)) {
   stop("Usage: parse_to_csv.R <infile.R>")
 }
 
-library("ParamHelpers")
+suppressMessages({
+  library("ParamHelpers")
+  library("mlrCPO")
+})
 
 sourceEnv <- function(file) {
   source(file = file, local = TRUE, echo = FALSE, chdir = TRUE)
@@ -15,13 +18,14 @@ sourceEnv <- function(file) {
 
 pss <- sourceEnv(args[1])
 
+ppp <- pss$preproc.pipeline
+pss$preproc.pipeline <- NULL
+
 parfix.lg <- grepl("\\.fixed_pars$", names(pss))
 
 pardef <- pss[!parfix.lg]
 parfix <- pss[parfix.lg]
 
-ppp <- pss$preproc.pipeline
-pss$preproc.pipeline <- NULL
 
 
 names(parfix) <- sub("\\.fixed_pars$", "", names(parfix))

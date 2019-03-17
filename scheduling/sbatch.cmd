@@ -7,8 +7,13 @@
 #SBATCH --export=NONE
 #SBATCH --time=48:00:00
 
+# This is the sbatch-script, should probably be scheduled by
+# **invoke_sbatch.sh**. This either calls *invoke_srun.sh* directly or as
+# dependend job steps CONTROL_JOB_COUNT number of times.
+
 # consciously omitting the following:
-# -o output file: default "slurm-%j.out", where the "%j" is replaced with the job allocation number.
+# -o output file: default "slurm-%j.out", where the "%j" is replaced with the
+#    job allocation number.
 # -D directory, default CWD
 # -J jobname, default script name
 # don't need --ntasks, it is calculated from --nodes and --cpus-per-task
@@ -17,32 +22,22 @@
 # This is set while running sbatch:
 # $ sbatch <filename> --export=SBATCH_INDEX=$i
 
-# Expects the variable SCHEDULING_MODE to be one of 'perseed', 'perparam', 'percpu'
+# Expects the variable SCHEDULING_MODE to be one of 'perseed', 'perparam',
+# 'percpu'
 
 echo "Salve, Job ${SLURM_JOB_NAME}:${SLURM_JOB_ID} index ${SBATCH_INDEX} scheduling mode ${SCHEDULING_MODE}. Laboraturi Te Salutant."
 
-
-if [ -z "${INDEXSTEPSIZE}" ] || ! [ "$INDEXSTEPSIZE" -gt 0 ] 2>/dev/null ; then
-    echo "No valid INDEXSTEPSIZE: $INDEXSTEPSIZE"
-    exit 1
-fi
-
-if [ -z "${SBATCH_INDEX}" ] || ! [ "$SBATCH_INDEX" -lt "$INDEXSTEPSIZE" -a "$SBATCH_INDEX" -ge 0 ] 2>/dev/null ; then
-    echo "No valid SBATCH_INDEX: $SBATCH_INDEX"
-    exit 2
-fi
-
 if ! [ -d "$MUC_R_HOME" ] ; then
     echo "MUC_R_HOME Not a directory: $MUC_R_HOME"
-    exit 4
+    exit 101
 fi
 
-if ! [ "$CONTROL_JOB_COUNT" -ge 0 ] ; then
-    echo "Invalid CONTROL_JOB_COUNT: $CONTROL_JOB_COUNT"
-    exit 5
-fi
+. "$MUC_R_HOME/scheduling/common.sh"
 
-TOEXEC="${MUC_R_HOME}/scripts/runsrun.sh"
+check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT \
+	  SBATCH_INDEX
+
+TOEXEC="${MUC_R_HOME}/scheduling/invoke_srun.sh"
 if [ "$CONTROL_JOB_COUNT" = 0 ] ; then
     "$TOEXEC"
 else
@@ -50,6 +45,7 @@ else
     INDEXSTEPSIZE="$((INDEXSTEPSIZE * CONTROL_JOB_COUNT))"
     for ((IDX=0;IDX<"$CONTROL_JOB_COUNT";IDX++)) ; do
 	SBATCH_INDEX="$((ORIG_SBATCH_INDEX * CONTROL_JOB_COUNT + IDX))"
-	srun --nodes=1 --ntasks=1 --exclusive $CONTROL_JOB_ARGS "$TOEXEC"
+	srun --nodes=1 --ntasks=1 --exclusive $CONTROL_JOB_ARGS "$TOEXEC" &
     done
+    wait
 fi

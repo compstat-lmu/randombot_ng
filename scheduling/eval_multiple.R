@@ -39,13 +39,13 @@ repeat {
   file.rename(PROGRESSTMP, PROGRESSFILE)
 
   catf("----[%s] Evaluating seed %s", token, seed)
-  points <- rbn.sampleEvalPoint(lrn, data$task, ARGUMENT, paramtable)
+  points <- rbn.sampleEvalPoint(lrn, data$task, seed, paramtable)
 
   for (pt in points) {
     catf("----[%s] Evaluating point %s", token, pt)
     result <- rbn.evaluatePoint(lrn, pt, data)
     rbn.setWatchdogTimeout(600)  # ten minutes timeout to write result file
-    rbn.writeResult(result, ARG)
+    rbn.writeResult(result, pt)
   }
 
   catf("----[%s] Done evaluating seed %s", token, seed)

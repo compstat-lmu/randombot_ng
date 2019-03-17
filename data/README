@@ -1,1 +1,8 @@
 This directory contains data to be used by R processes, but not to be saved in the git repository. All of the data here is created by various scripts.
+
+Important files are:
+
+* files according to lines in DATA_TABLE .csv file
+* "INPUTS" gz-file of input lines
+* "TASKS" file listing all tasks
+* "LEARNERS" file listing all learners

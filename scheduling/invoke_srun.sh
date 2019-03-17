@@ -1,39 +1,27 @@
 #!/bin/bash
+# This script calls the `srun` commands in the way the SCHEDULING_MODE requires.
+# Should be invoked directly or indirectly by `sbatch.cmd`.
+
+# get parent directory
+path="${BASH_SOURCE[0]}"
+while [ -h "$path" ] ; do
+    linkpath="$(readlink "$path")"
+    if [[ "$linkpath" != /* ]] ; then
+	path="$(dirname "$path")/$linkpath"
+    else
+	path="$linkpath"
+    fi
+done
+export MUC_R_HOME="$(cd -P "$(dirname "$path")" >/dev/null 2>&1 && pwd)"
+
+. "$MUC_R_HOME/scheduling/common.sh"
+
+check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE SBATCH_INDEX
 
 
-if [ -z "${INDEXSTEPSIZE}" ] || ! [ "$INDEXSTEPSIZE" -gt 0 ] 2>/dev/null ; then
-    echo "No valid INDEXSTEPSIZE: $INDEXSTEPSIZE"
-    exit 1
-fi
-
-if [ -z "${SBATCH_INDEX}" ] || ! [ "$SBATCH_INDEX" -lt "$INDEXSTEPSIZE" -a "$SBATCH_INDEX" -ge 0 ] 2>/dev/null ; then
-    echo "No valid SBATCH_INDEX: $SBATCH_INDEX"
-    exit 2
-fi
-
-if ! [[ "${SCHEDULING_MODE}" =~ ^per(seed|param|cpu)$ ]] ; then
-    echo "No valid SCHEDULING_MODE: $SCHEDULING_MODE"
-    exit 3
-fi
-
-if ! [ -d "$MUC_R_HOME" ] ; then
-    echo "MUC_R_HOME Not a directory: $MUC_R_HOME"
-    exit 4
-fi
-
-if ! [ -d "$BASEDIR" ] ; then
-    echo "BASEDIR Not a directory: $BASEDIR"
-    exit 6
-fi
-
-if ! [[ "${USE_PARALLEL}" =~ ^(TRUE|FALSE)$ ]] ; then
-    echo "No valid USE_PARALLEL: $USE_PARALLEL"
-    exit 7
-fi
-
-MAXINDEX=10000000000  # maximum seed
-JOBLOGFILE=TODO # TODO 
-CONCURRENCY=TODO  # TODO
+MAXINDEX=10000000000  # maximum seed, should be larger than the largest realistic seed.
+JOBLOGFILE=TODO # job log file where `parallel` progress is saved.
+CONCURRENCY=TODO  # number of `srun`s to have in the pipe at the same time.
 export PERCPU_STEPSIZE=TODO # TODO
 get_mem_req() {
     # arguments: learner, task
@@ -42,7 +30,7 @@ get_mem_req() {
 }
 
 DATADIR=$(Rscript -e " \
-  scriptdir <- '$MUC_R_HOME'; \
+  scriptdir <- Sys.getenv('MUC_R_HOME'); \
   inputdir <- file.path(scriptdir, 'input'); \
   suppressPackageStartupMessages( \
     source(file.path(scriptdir, 'load_all.R'), chdir = TRUE)); \
@@ -50,12 +38,10 @@ DATADIR=$(Rscript -e " \
   cat(rbn.getSetting('DATADIR'))
 ")
 
-SCRIPTDIR="${MUC_R_HOME}/scripts"
+check_env DATADIR
 
-if ! [ -d "$DATADIR" ] ; then
-    echo "Inferred DATADIR Not a directory: $DATADIR"
-    exit 8
-fi
+SCRIPTDIR="${MUC_R_HOME}/scheduling"
+
 
 call_srun() {  # arguments: <seed/line> <task> <learner>
     learner="$1"
@@ -102,14 +88,14 @@ if [ "$SCHEDULING_MODE" = perseed ] ; then
     fi
 elif [ "$SCHEDULING_MODE" = perparam ] ; then
     if [ "$USE_PARALLEL" = "TRUE" ] ; then
-	"$SCRIPTDIR/parallel" \
-	    --line-buffer \
-	    --joblog "$JOBLOGFILE" \
-	    --jobs "$CONCURRENCY" \
-	    --resume \
-	    --colsep ' ' \
-	    call_srun \
-	    :::: "${DATADIR}/INPUTS"
+	zcat "${DATADIR}/INPUTS" | \
+	    "$SCRIPTDIR/parallel" \
+		--line-buffer \
+		--joblog "$JOBLOGFILE" \
+		--jobs "$CONCURRENCY" \
+		--resume \
+		--colsep ' ' \
+		call_srun
     else
 	declare -i i
 	i="-$SBATCH_INDEX"
@@ -127,39 +113,13 @@ elif [ "$SCHEDULING_MODE" = perparam ] ; then
 	wait
     fi
 elif [ "$SCHEDULING_MODE" = percpu ] ; then
+    export PROGRESS
     while read -u 5 TASKNAME ; do
 	while read -u 6 LEARNERNAME ; do
 	    for ((i="$BATCH_INDEX";i<="$PERCPU_STEPSIZE";i+="$INDEXSTEPSIZE")) ; do
 	        (
 		    while true ; do
-			PROGRESSSOURCE="${BASEDIR}/joblookup/${LEARNERNAME}/${TASKNAME}"
-			PROGRESSPOINTER="${PROGRESSSOURCE}/PROGRESSPOINTER_${i}"
-			NEWPF="${PROGRESSSOURCE}/PROGRESSFILE_${i}"
-
-
-			if [ -f "$NEWPF" ] ; then
-			    PROGRESS="$(cat "$NEWPF")"
-			fi
-			if ! [ "$PROGRESS" -ge 0 ] 2>/dev/null ; then
-			    PROGRESS="$i"
-			fi
-			if [ -f "$PROGRESSPOINTER" ] ; then
-			    OLDPF="$(cat "$PROGRESSPOINTER")"
-			    if mv -f "$OLDPF" "${NEWPF}.tmp" ; then
-				for ((i=0;i<180;i++)) ; do
-				    if [ -f "${NEWPF}.tmp" ] ; then break ; fi
-				    sleep 1
-				done
-			    fi
-			    NEWPROGRESS="$(cat "${NEWPF}.tmp")"
-
-			    if ! [ "$NEWPROGRESS" -ge "$PROGRESS" ] 2>/dev/null ; then
-				rm -f "${NEWPF}.tmp"
-			    else
-				mv -f "${NEWPF}.tmp" "$NEWPF"
-				PROGRESS="$NEWPROGRESS"
-			    fi
-			fi
+			get_progress_from_pointer "$i"
 			call_srun "${i}" "${TASKNAME}" "${LEARNERNAME}"
 		    done
 		) &
