@@ -9,8 +9,8 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
   - USE_PARALLEL :: "TRUE" or "FALSE", whether to use gnu parallel, see *setup.recipe*
   - SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself. set and exported before calling sbatch, see *setup.recipe*.
     - for "percpu" scheduling
-      - PROGRESS :: set in *invoke_srun.sh*, read by eval_multiple. what RUN_ID to start at
-      - PERCPU_STEPSIZE :: set in *invoke_srun.sh*, read by eval_multiple. corresponds to number of LEARNER x TASK running instances and is the stepsize when incrementing RUN_ID
+      - PROGRESS :: set in *invoke_srun.sh*, read by eval_multiple. what seed to start at
+      - PERCPU_STEPSIZE :: set in *invoke_srun.sh*, read by eval_multiple. corresponds to number of LEARNER x TASK running instances and is the stepsize when incrementing seed
       - PROGRESSFILE :: set in *runscript.sh*, read by eval_multiple
 - R-Script invocation
   - LEARNERNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
@@ -24,7 +24,7 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
       - WORKDIR :: base directory from which to work. Set by *runscript.sh* to a subdirectory of NODEDIR, depending on SLURM_STEP_ID
 	- OUTPUTDIR :: directory where the output is written. set using *rbn.setOutputDir()* in *constants.R* to a subdir in WORKDIR. Should be called before each new output file is opened.
     - WATCHFILE :: watchdog file. Set by *runscript.sh* to a file identified by WATCHFILE_$$ (where $$ is the bash process PID) in NODEDIR
-    - joblookup :: directory structure =BASEDIR/joblookup/LEARNERNAME/TASKNAME/= with files =PROGRESSPOINTER_${i}= and =PROGRESSFILE_${i}=.
+    - PROGRESSDIR :: directory structure =BASEDIR/joblookup/LEARNERNAME/TASKNAME/= with files =PROGRESSPOINTER_${i}= and =PROGRESSFILE_${i}=; see functions in *common.sh*
   - DATADIR :: directory where data files are stored, set by *constants.R* to =MUC_R_HOME/data=
 ** R setting only
 - Input settings
@@ -32,12 +32,9 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
   - DATA_TABLE_OPTS :: options to be given to =read.csv= when reading DATA_TABLE. set by *constants.R*
   - SEARCHSPACE_TABLE :: filename of search space csv. set by *constants.R*
   - SEARCHSPACE_TABLE_OPTS :: options to be given to =read.csv= when reading SEARCHSPACE_TABLE. set by *constants.R*
-- Single Run Settings
-  - RUN_ID ::  [integer] number of the run. Between 0 and 2^31-1 inclusive. used for seeding / indexing into table. Set depending on SCHEDULING_MODE.
-  - LEARNER :: [character(1)] learner name to be evaluated in this instance. Taken from command line.
-  - DATASET :: [character(1)] dataset name to be evaluated in this instance. Taken from command line.
 - Sampling Configuration
   - SUPERRATE :: [numeric 0..1] fraction of evaluation points that have supererogatory evaluations
+  - SUPERCV_PROPORTIONS :: [numeric 0..1] subsampling proportions to sample
   - SAMPLING_TRAFO :: "none", "default", "default+norm"
     - "none" :: transformations given in paramspace csv are not performed (although the given parameter limits are transformed)
     - "default" :: transformations as given in paramspace csv

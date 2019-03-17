@@ -12,7 +12,7 @@ rbn.registerSetting("RESAMPLINGTIMEOUTS",
 
 rbn.registerSetting("SUPERRATE", 0.01)
 
-rbn.registerSetting("SAMPLING_TRAFO", "default")
+rbn.registerSetting("SAMPLING_TRAFO", "norm")
 
 rbn.registerSetting("SEARCHSPACE_TABLE", file.path(getwd(), "spaces.csv"))
 rbn.registerSetting("SEARCHSPACE_TABLE_OPTS", 'list(sep = "\\t", quote = "")')
