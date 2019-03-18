@@ -69,8 +69,9 @@ To start evaluations, call `invoke_sbatch.sh` in the `/scheduling/` directory.
 1. **`invoke_sbatch.sh`**: called by the user, calls `sbatch` with `sbatch.cmd`
 2. **`sbatch.cmd`**: calls `invoke_srun.sh` once or optionally multiple times in parallel
 3. **`invoke_srun.sh`**: starts `srun` job-steps with `runscript.sh`
-4. **`eval_single.R`** or **`eval_multiple.R`**: R script that performs resampling
-5. **`watchdog.sh`**: kills resampling evaluations that take too long.
+4. **`runscript.sh`**: runs `eval_single.R` or `eval_multiple.R` (depending on scheduling mode), as well as `watchdog.sh`, on the computation nodes
+5. **`eval_single.R`** or **`eval_multiple.R`**: R script that performs resampling
+6. **`watchdog.sh`**: kills resampling evaluations that take too long.
 
 ### R Script Internals
 Mostly in `/R/` directory, with exception of `load_all.R`.
