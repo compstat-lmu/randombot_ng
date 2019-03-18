@@ -10,12 +10,9 @@ rbn.registerSetting("RESAMPLINGTIMEOUTS",
     1.5) * PERCVTIME)
 
 
-rbn.registerSetting("SUPERRATE", 0.01)
+rbn.registerSetting("SUPERRATE", 0.1)
 
 rbn.registerSetting("SAMPLING_TRAFO", "norm")
-
-rbn.registerSetting("SEARCHSPACE_TABLE", file.path(getwd(), "spaces.csv"))
-rbn.registerSetting("SEARCHSPACE_TABLE_OPTS", 'list(sep = "\\t", quote = "")')
 
 rbn.setOutputDir <- function() {
   dir <- rbn.registerSetting("OUTPUTDIR", overwrite = TRUE,
@@ -29,6 +26,9 @@ rbn.setOutputDir <- function() {
 # in the DATADIR folder. Be sure to call rbn.retrieveData() when this changes.
 rbn.registerSetting("DATADIR",
   file.path(rbn.getSetting("MUC_R_HOME"), "data"))
+
+rbn.registerSetting("SEARCHSPACE_TABLE", file.path(getwd(), "spaces.csv"))
+rbn.registerSetting("SEARCHSPACE_TABLE_OPTS", 'list(sep = "\\t", quote = "")')
 
 rbn.registerSetting("DATA_TABLE", file.path(getwd(), "tasks_test.csv"))
 rbn.registerSetting("DATA_TABLE_OPTS", 'list()')
