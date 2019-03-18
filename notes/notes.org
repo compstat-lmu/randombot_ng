@@ -7,6 +7,7 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
   - INDEXSTEPSIZE :: number of parallel SLURM jobs, default 20
   - CONTROL_JOB_COUNT :: Number of dedicated jobs that run. "0" for direct execution.
   - USE_PARALLEL :: "TRUE" or "FALSE", whether to use gnu parallel, see *setup.recipe*
+  - TOTAL_SLOT_COUNT :: total number of jobs running at the same time
   - SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself. set and exported before calling sbatch, see *setup.recipe*.
     - for "percpu" scheduling
       - PROGRESS :: set in *invoke_srun.sh*, read by eval_multiple. what seed to start at
@@ -18,7 +19,7 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
   - ARGUMENT :: set in *runscript.sh*, read by eval_single. indicating either rng-seed, 
 ** Environment AND R setting
 - Directories
-  - MUC_R_HOME :: base directory of this repository, has subdirectories =scripts/=, =R/=. Set/inferred by most *.sh* files.
+  - MUC_R_HOME :: base directory of this repository, has subdirectories =input/=, =R/=, =scheduling/=, =setup/=. Set/inferred by most *.sh* files.
   - BASEDIR :: the directory in which all results are written, probably a subdirectory of =$WORK=, see *setup.recipe*
     - NODEDIR :: node-local directory. Set by *runscript.sh* to form =BASEDIR/xx/nodename/work=, where =xx= is the first two characters of =md5sum $nodename=.
       - WORKDIR :: base directory from which to work. Set by *runscript.sh* to a subdirectory of NODEDIR, depending on SLURM_STEP_ID
@@ -84,6 +85,7 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
    - Exports further arguments
      - SBATCH_INDEX :: modified when iterating over CONTROL_JOB_COUNT
      - INDEXSTEPSIZE :: augmented by CONTROL_JOB_COUNT
+     - TOTAL_TASK_SLOTS :: indicates total (maximum) number of tasks to queue
    - Does:
      - for loop through *CONTROL_JOB_COUNT*: run *srun runscript.sh*
 3. invoke_srun.sh
@@ -93,6 +95,8 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
      - *USE_PARALLEL*
      - *INDEXSTEPSIZE*
      - *SBATCH_INDEX*
+     - *CONTROL_JOB_COUNT*
+     - *TOTAL_TASK_SLOTS*
    - Uses from constants.R:
      - *DATADIR*
    - Exports further arguments:
