@@ -17,12 +17,11 @@ rbn.registerLearner("MODIFIER", function(lrn) {
 })
 
 
-# just a demonstration
-rbn.registerLearner("classif.svm", function() {
-  cpoCbind(NULLCPO, cpoSelect("numeric") %>>% cpoPca(rank = 3)) %>>%
-    makeLearner("classif.svm")
+# just a demonstration: hard limit classif.xgboost nrounds to 6000
+rbn.registerLearner("classif.xgboost.1", function() {
+  lrn <- makeLearner("classif.xgboost")
+  lrn$par.set$pars$nrounds$upper <- 6000
+  # add dummy encode, xgboost can't handle factorials otherwise
+  cpoDummyEncode(TRUE) %>>% lrn
 })
 
-rbn.registerLearner("classif.xgboost", function() {
-  cpoDummyEncode(TRUE) %>>% makeLearner("classif.xgboost")
-})
