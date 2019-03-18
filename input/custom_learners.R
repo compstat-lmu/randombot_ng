@@ -21,7 +21,7 @@ rbn.registerLearner("MODIFIER", function(lrn) {
 rbn.registerLearner("classif.xgboost.1", function() {
   lrn <- makeLearner("classif.xgboost")
   lrn$par.set$pars$nrounds$upper <- 6000
-  # add dummy encode, xgboost can't handle factorials otherwise
+  # add dummy encode, xgboost can't handle factors otherwise
   cpoDummyEncode(TRUE) %>>% lrn
 })
 
