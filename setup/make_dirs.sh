@@ -41,11 +41,13 @@ DATADIR=$(Rscript -e " \
   cat(rbn.getSetting('DATADIR'))
 ")
 
-"${MUC_R_HOME}/scripts/parallel" \
+"${MUC_R_HOME}/scheduling/parallel" \
     echo -ne "${BASEDIR}/joblookup/{1}/{2}\\\\0" \
     :::: "${DATADIR}/LEARNERS" \
     :::: "${DATADIR}/TASKS" | \
     xargs -0 mkdir -p
+
+mkdir "${BASEDIR}/parallel_joblogs"
 
 
 cat "$2" | while read NODENAME ; do
