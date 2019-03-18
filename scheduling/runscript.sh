@@ -38,16 +38,18 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")" >/dev/null 2>&1 && pwd)"
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
+
+
 check_env BASEDIR SCHEDULING_MODE PERCPU_STEPSIZE PROGRESS
 
-cd -P "${BASEDIR}/$(echo "$SLURMD_NODENAME" | md5sum | cut -c -2)/${SLURMD_NODENAME}/work" || \
+cd -P "$BASEDIR/$(echo "$SLURMD_NODENAME" | md5sum | cut -c -2)/$SLURMD_NODENAME/work" || \
     exit 105
 NODEDIR="$(pwd)"
 # NODEDIR: node-local directory, for file system reasons
 export NODEDIR
 
 # workdir: 
-WORKDIR="${NODEDIR}/$(printf "%02d\n" "$((RANDOM%100))")/$(printf "%02d\n" "$((RANDOM%100))")"
+WORKDIR="$NODEDIR/$(printf "%02d\n" "$((RANDOM%100))")/$(printf "%02d\n" "$((RANDOM%100))")"
 mkdir -p "$WORKDIR"
 export WORKDIR
 
@@ -73,7 +75,8 @@ else
     evalfile="eval_single.R"
 fi
 
-/usr/bin/time -f "----[$RANDOM] E %E K %Ss U %Us P %P M %MkB O %O" Rscript "$MUC_R_HOME/scheduling/${evalfile}" &
+/usr/bin/time -f "----[$RANDOM] E %E K %Ss U %Us P %P M %MkB O %O" \
+	      Rscript "$MUC_R_HOME/scheduling/${evalfile}" &
 pid=$!
 "${MUC_R_HOME}/scheduling/watchdog.sh" $pid "$WATCHFILE"
 wpd=$!

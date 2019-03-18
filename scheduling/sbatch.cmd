@@ -34,18 +34,24 @@ fi
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
+
+
 check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT \
 	  SBATCH_INDEX
 
+
+
 TOEXEC="${MUC_R_HOME}/scheduling/invoke_srun.sh"
 if [ "$CONTROL_JOB_COUNT" = 0 ] ; then
+    export TOTAL_TASK_SLOTS=SLURM_NTASKS
     "$TOEXEC"
 else
+    export TOTAL_TASK_SLOTS=$(( (SLURM_NTASKS + CONTROL_JOB_COUNT - 1) / CONTROL_JOB_COUNT))
     ORIG_SBATCH_INDEX="$SBATCH_INDEX"
     INDEXSTEPSIZE="$((INDEXSTEPSIZE * CONTROL_JOB_COUNT))"
     for ((IDX=0;IDX<"$CONTROL_JOB_COUNT";IDX++)) ; do
 	SBATCH_INDEX="$((ORIG_SBATCH_INDEX * CONTROL_JOB_COUNT + IDX))"
-	srun --nodes=1 --ntasks=1 --exclusive $CONTROL_JOB_ARGS "$TOEXEC" &
+	srun --nodes=1 --ntasks=1 --exclusive $CONTROL_JOB_ARGS "$TOEXEC" --export=ALL &
     done
     wait
 fi

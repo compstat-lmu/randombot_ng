@@ -69,6 +69,12 @@ check_env() {
 		    exit 10
 		fi
 		;;
+	    TOTAL_TASK_SLOTS)
+		if [ -z "$TOTAL_TASK_SLOTS" ] || ! [ "$TOTAL_TASK_SLOTS" -gt 0 ] ; then
+		    echo "TOTAL_TASK_SLOTS invalid value $TOTAL_TASK_SLOTS" >&2
+		    exit 11
+		fi
+		;;
 	    *)
 		echo "bad check_env argument $WHAT" >&2
 		exit 253

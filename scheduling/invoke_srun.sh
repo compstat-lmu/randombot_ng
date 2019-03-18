@@ -16,12 +16,16 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")" >/dev/null 2>&1 && pwd)"
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
-check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE SBATCH_INDEX
+check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE SBATCH_INDEX TOTAL_TASK_SLOTS
 
+# maximum seed, should be larger than the largest realistic seed.
+MAXINDEX=10000000000
 
-MAXINDEX=10000000000  # maximum seed, should be larger than the largest realistic seed.
-JOBLOGFILE=TODO # job log file where `parallel` progress is saved.
-CONCURRENCY=TODO  # number of `srun`s to have in the pipe at the same time.
+# job log file where `parallel` progress is saved.
+JOBLOGFILE="${BASEDIR}/parallel_joblogs/JOBLOG_${SCHEDULING_MODE}_${SBATCH_INDEX}_of_${INDEXSTEPSIZE}.log"
+
+# number of `srun`s to have in the pipe at the same time.
+CONCURRENCY=$(( (TOTAL_TASK_SLOTS - CONTROL_JOB_COUNT) * SLURM_CPUS_ON_NODE))
 export PERCPU_STEPSIZE=TODO # TODO
 get_mem_req() {
     # arguments: learner, task
