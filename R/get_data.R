@@ -88,18 +88,21 @@ rbn.getData <- function(dataname) {
 # @param file [data.frame] task information table file path
 # @param ... additional arguments to read.csv
 rbn.loadDataTable <- function(file, ...) {
-  required.names <- c("name", "task.id", "data.id")
+  required.names <- c("name", "task\\.id.*", "data\\.id")
 
   assertString(file)
-  table <- read.csv(file, ...)
-  assertDataFrame(table)
+  intable <- read.csv(file, ...)
+  assertDataFrame(intable)
 
-  assertNames(colnames(table), must.include = required.names)
+  # check that all required names are present
+  assertTRUE(all(sapply(required.names, function(rn) any(grepl(paste0("^", rn, "$"), colnames(intable))))))
 
   table <- data.frame(
-      name = as.character(table$name),
-      task.id = as.integer(table$task.id),
-      data.id = as.integer(table$data.id))
+      name = as.character(intable$name),
+      data.id = as.integer(intable$data.id))
+
+  # TODO: convert task.id columns to integer
+
 
   table$name <- paste(make.names(table$name), table$task.id, sep = ".")
   assertCharacter(table$name, unique = TRUE)

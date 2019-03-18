@@ -1,5 +1,7 @@
-
 # This script is supposed to give an idea how things should be run.
+# It can also serve as a stash of interactive commands that are useful.
+
+# WARNING: the following clears the workspace!
 
 rm(list=ls(all.names = TRUE))  ; Sys.setenv(MUC_R_HOME = ".")
 
@@ -110,77 +112,4 @@ hist(log(eta.norm))
 hist(eta.none)
 
 
-
-
-# --------- END PURELY TESTING
-
-# --------- the following should always be at the head of an SRUN script
-# --------- independent of scheduling mode
-
-# the values are probably all to be configured from cmdline
-
-####################################################################################
-# --------- watchdog mode: all of this on a compute node ------------------------- #
-####################################################################################
-
-rbn.registerSetting("SCHEDULING_MODE", "watchdog")
-
-rbn.registerSetting("STEPSIZE", 100)
-rbn.registerSetting("SUPERRATE", 0.03)  # 3% extra eval rate
-rbn.registerSetting("SAMPLING_TRAFO", "default+norm")  # normal distribution + trafo
-# would want to do something smart here, like ask what INIT_ID was previously
-# tried and failed if the process got killed before
-rbn.registerSetting("INIT_ID", get_current_runid_from_file())  # TODO
-
-
-runid <- rbn.getSetting("INIT_ID")
-learner.name = rbn.getSetting("LEARNER")
-learner.object = rbn.getearner(learner.name)
-data = rbn.getData(rbn.getSetting("DATASET"))  # function still needs to be defined
-
-table <- rbn.compileParamTbl(file.path(inputdir, "spaces.csv"), sep = "\t")
-
-repeat {
-  rbn.registerSetting("RUN_ID", runid, overwrite = TRUE)
-
-  write_current_runid_to_file()  # TODO
-
-  runid <- runid + rbn.getSetting("STEPSIZE")
-
-  point.strings <- rbn.sampleEvalPoint(
-      learner.name = learner.name,
-      learner.object = learner.object,
-      data = data,
-      seet = runid,
-      paramtbl = table)
-
-  for (single.point.string in point.strings) {
-    point.value = rbn.parseEvalPoint(single.point.string)  # function to be defined
-    rbn.evaluatePoint(learner.object, point.value, data)  # obvious TODO here
-  }
-}
-
-# maybe parallelize this; also will probably create huge files
-for (learner in unique(table$learner)) {
-  rbn.registerSetting("LEARNER", learner)
-
-  learner.object = rbn.getearner(learner.name)
-  for (task in get_all_tasks()) {
-    rbn.registerSetting("DATASET", task)
-
-    data = rbn.getData(rbn.getSetting("DATASET"))
-
-    for (runid in seq_len(MAX_RUN_ID)) {
-      point.strings <- rbn.sampleEvalPoint(
-          learner.name = learner.name,
-          learner.object = learner.object,
-          data = data,
-          seet = runid,
-          paramtbl = table)
-      for (single.point.string in point.strings) {
-        write_to_srun_input_table(point.strings, learner, task)
-      }
-    }
-  }
-}
 
