@@ -1,5 +1,5 @@
 
-lapply(dir("learners", "*.R"), source, chdir = TRUE)
+lapply(dir("learners", "\\.R$", full.names = TRUE), source, chdir = TRUE)
 
 rbn.registerLearner("MODIFIER", function(lrn) {
   cpoFixFactors() %>>%
