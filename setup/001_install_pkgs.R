@@ -66,6 +66,7 @@
 #   update.packages(repos = paste0("file:", repo_dir), ask = FALSE, lib.loc = Sys.getenv("R_LIBS_USER"))
 #   inst_pkg_deps("e1071",     repos = paste0("file:", repo_dir))
 #   inst_pkg_deps("xgboost",   repos = paste0("file:", repo_dir))
+#   inst_pkg_deps("RcppHNSW",  repos = paste0("file:", repo_dir))
 #   inst_pkg_deps("rpart",     repos = paste0("file:", repo_dir))
 #   inst_pkg_deps("LiblineaR", repos = paste0("file:", repo_dir))
 #   inst_pkg_deps("ranger",    repos = paste0("file:", repo_dir))
