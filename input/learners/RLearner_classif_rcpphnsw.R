@@ -4,7 +4,7 @@ makeRLearner.classif.RcppHNSW = function() {
     cl = "classif.RcppHNSW",
     package = "RcppHNSW",
     par.set = makeParamSet(
-      makeIntegerLearnerParam(id = "k", lower = 1L, default = 500L, when = "predict"),
+      makeIntegerLearnerParam(id = "k", lower = 1L, default = 1L, upper = 50L, when = "predict"),
       makeDiscreteLearnerParam(id = "distance", values = c("euclidean", "l2", "cosine", "ip"), default = "euclidean"),
       makeIntegerLearnerParam(id = "M", lower = 2, upper = Inf, default = 16),
       makeIntegerLearnerParam(id = "ef", lower = 1, upper = Inf, default = 10, when = "predict"),
@@ -29,7 +29,7 @@ trainLearner.classif.RcppHNSW = function(.learner, .task, .subset, .weights = NU
 
 #' @export
 predictLearner.classif.RcppHNSW = function(.learner, .model, .newdata, ...) {
-  nns = RcppHNSW::hnsw_search(as.matrix(.newdata), .model$learner.model$ann, 
+  nns = RcppHNSW::hnsw_search(as.matrix(.newdata), .model$learner.model$ann,
     ...)
   tgt = .model$learner.model$target
   print(dim(nns$idx))
