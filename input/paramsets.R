@@ -98,13 +98,13 @@ classif.xgboost3.fixed_pars = list("nthread" = 1L)
 #   makeLogicalParam(id = "bias", default = TRUE)
 # )
 
-classif.xgboost3 = makeParamSet(
-  makeIntegerParam(id = "k", lower = 1L, default = 500L, when = "predict"),
-  makeDiscreteParam(id = "distance", values = c("euclidean", "l2", "cosine", "ip"), default = "euclidean"),
+prob.classif.rcpphnsw = 0.075
+classif.rcpphnsw = makeParamSet(
+  makeIntegerParam(id = "k", lower = 1L, default = 1, upper = 200, when = "predict"),
+  makeDiscreteParam(id = "distance", values = c("l2", "cosine", "ip"), default = "l2"),
   makeIntegerParam(id = "M", lower = 10, upper = 50, default = 16),
-  makeIntegerParam(id = "ef", lower = 1, upper = Inf, default = 16),
-  makeIntegerParam(id = "ef_construction", lower = 1, upper = Inf, default = 16),
-  makeLogicalParam(id = "verbose", default = FALSE, tunable = FALSE)
+  makeIntegerParam(id = "ef", lower = 1, upper = 1000, default = 10),
+  makeIntegerParam(id = "ef_construction", lower = 1, upper = 1000, default = 200)
 )
 
 
