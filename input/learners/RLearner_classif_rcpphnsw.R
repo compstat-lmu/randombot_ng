@@ -6,9 +6,9 @@ makeRLearner.classif.RcppHNSW = function() {
     par.set = makeParamSet(
       makeIntegerLearnerParam(id = "k", lower = 1L, default = 1L, upper = 50L, when = "predict"),
       makeDiscreteLearnerParam(id = "distance", values = c("euclidean", "l2", "cosine", "ip"), default = "euclidean"),
-      makeIntegerLearnerParam(id = "M", lower = 2, upper = Inf, default = 16),
-      makeIntegerLearnerParam(id = "ef", lower = 1, upper = Inf, default = 10, when = "predict"),
-      makeIntegerLearnerParam(id = "ef_construction", lower = 1, upper = Inf, default = 200),
+      makeIntegerLearnerParam(id = "M", lower = 2, upper = 1000, default = 16),
+      makeIntegerLearnerParam(id = "ef", lower = 1, upper = 10^5, default = 10, when = "predict"),
+      makeIntegerLearnerParam(id = "ef_construction", lower = 1, upper = 10^5, default = 200),
       makeLogicalLearnerParam(id = "verbose", default = FALSE, tunable = FALSE)
     ),
     par.vals = list(k = 1, M = 16, ef_construction = 200),

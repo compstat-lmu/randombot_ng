@@ -19,8 +19,9 @@ for (i in 10:14) {
   print(ti[, c("task.id", "data.id", "name", "number.of.classes")])
 }
 
-
 # Check whether all datasets / tasks are in the cachedir
 setdiff(as.character(data$data.id), list.files("~/Documents/projects/oml_cache/datasets"))
 setdiff(as.character(data$task.id_cv10), list.files("~/Documents/projects/oml_cache/tasks"))
 setdiff(as.character(data$task.id_10cv10), list.files("~/Documents/projects/oml_cache/tasks"))
+
+for (i in 168871:168875) getOMLTask(i)

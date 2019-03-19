@@ -100,11 +100,11 @@ classif.xgboost3.fixed_pars = list("nthread" = 1L)
 
 prob.classif.rcpphnsw = 0.075
 classif.rcpphnsw = makeParamSet(
-  makeIntegerParam(id = "k", lower = 1L, default = 1, upper = 50, when = "predict"),
+  makeIntegerParam(id = "k", lower = 1L, upper = 50, when = "predict"),
   makeDiscreteParam(id = "distance", values = c("l2", "cosine", "ip"), default = "l2"),
-  makeIntegerParam(id = "M", lower = 10, upper = 50, default = 16),
-  makeIntegerParam(id = "ef", lower = 1, upper = 1000, default = 10),
-  makeIntegerParam(id = "ef_construction", lower = 1, upper = 1000, default = 200)
+  makeIntegerParam(id = "M", lower = 10, upper = 50),
+  makeNumericParam(id = "ef", lower = 0, upper = 7, trafo = function(x) round(2^x), when = "predict")
+  makeNumericParam(id = "ef_construction", lower = 0, upper = 7, trafo = function(x) round(2^x))
 )
 
 
