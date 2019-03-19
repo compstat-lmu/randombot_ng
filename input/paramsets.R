@@ -98,6 +98,16 @@ classif.xgboost3.fixed_pars = list("nthread" = 1L)
 #   makeLogicalParam(id = "bias", default = TRUE)
 # )
 
+classif.xgboost3 = makeParamSet(
+  makeIntegerParam(id = "k", lower = 1L, default = 500L, when = "predict"),
+  makeDiscreteParam(id = "distance", values = c("euclidean", "l2", "cosine", "ip"), default = "euclidean"),
+  makeIntegerParam(id = "M", lower = 10, upper = 50, default = 16),
+  makeIntegerParam(id = "ef", lower = 1, upper = Inf, default = 16),
+  makeIntegerParam(id = "ef_construction", lower = 1, upper = Inf, default = 16),
+  makeLogicalParam(id = "verbose", default = FALSE, tunable = FALSE)
+)
+
+
 preproc.pipeline <- pSS(
   num.impute.selected.cpo: discrete [impute.mean, impute.median, impute.hist]  # numeric feature imputation to use
 )
