@@ -36,7 +36,7 @@ rbn.retrieveData <- function(table, ...) {
 
   taskcols <- grep("^task\\.id", colnames(table), value = TRUE)
 
-  for (line in seq_len(nrow(table))) {
+  parallel::mclapply(seq_len(nrow(table)), function(line) {
 
     catf("Retrieving task %s...", table$name[line], newline = FALSE)
 
@@ -87,7 +87,7 @@ rbn.retrieveData <- function(table, ...) {
     saveRDS(data, file = file.path(rbn.getSetting("DATADIR"), paste0(table$name[line], ".rds.gz")),
       version = 2, compress = "gzip")
     cat(" Done.\n")
-  }
+  }, mc.cores = parallel::detectCores())
 }
 
 # Read dataset that was saved in DATADIR
