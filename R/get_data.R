@@ -34,47 +34,59 @@ rbn.retrieveData <- function(table, ...) {
     table <- rbn.loadDataTable(table, ...)
   }
 
+  taskcols <- grep("^task\\.id", colnames(table), value = TRUE)
+
   for (line in seq_len(nrow(table))) {
 
-    omltask <- OpenML::getOMLTask(table$task.id[line])
-    assert(all.equal(table$task.id[line], omltask$task.id))
-    assert(all.equal(table$data.id[line], omltask$input$data.set$desc$id))
-    omltask$input$evaluation.measures <- "root_mean_squared_error"
+    catf("Retrieving task %s...", table$name[line], newline = FALSE)
 
-    task <- convertOMLTaskToMlr(omltask, mlr.task.id = table$name[line])
+    tasks <- sapply(taskcols, function(taskname) {
+      omltask <- OpenML::getOMLTask(table[[taskname]][line], cache.only = TRUE, verbosity = 0)
+      assert(all.equal(table[[taskname]][line], omltask$task.id))
+      assert(all.equal(table$data.id[line], omltask$input$data.set$desc$id))
+      omltask$input$evaluation.measures <- "root_mean_squared_error"
 
-    strat.tag <- omltask$input$estimation.procedure$parameters$stratified_sampling
-    if (is.null(strat.tag)) {
-      warningf("Task %s has no 'stratified_sampling' info", table$name[line])
+      strat.tag <- omltask$input$estimation.procedure$parameters$stratified_sampling
+      if (is.null(strat.tag)) {
+        warningf("Task %s %s has no 'stratified_sampling' info", taskname, table$name[line])
+      }
+      strat.tag <- isTRUE(all.equal(strat.tag, "true")) || is.null(strat.tag)
+      if (!strat.tag) {
+        messagef("Task %s %s does not do stratified resampling", taskname, table$name[line])
+      }
+
+      list(
+        task = convertOMLTaskToMlr(omltask, mlr.task.id = table$name[line], verbosity = 0),
+        strat.tag = strat.tag
+      )
+    }, simplify = FALSE)
+
+    for (t in tasks) {
+      assertTRUE(all.equal(tasks[[1]]$task$mlr.task, t$task$mlr.task))  # only resampling should differ
     }
-    strat.tag <- isTRUE(all.equal(strat.tag, "true")) || is.null(strat.tag)
-    if (!strat.tag) {
-      messagef("Task %s does not do stratified resampling", table$name[line])
-    }
 
-    resampling <- task$mlr.rin
-    resampling$desc$stratify <- strat.tag
-
-    super.rdesc <- makeResampleDesc("CV",
-      iters = 10,
-      stratify = strat.tag)
+    resampling <- lapply(tasks, function(t) {
+      res <- t$task$mlr.rin
+      res$desc$stratify <- t$strat.tag
+      res
+    })
 
     set.seed(1)
     super.resampling <- rbn.unionResample(c(
-        replicate(rbn.getSetting("SUPERCV_REPS"),
-          makeResampleInstance(super.rdesc, task = task$mlr.task), simplify = FALSE),
+        resampling[-1],
         lapply(sort(rbn.getSetting("SUPERCV_PROPORTIONS"), decreasing = TRUE),
-          rbn.reduceCrossval, task = task$mlr.task, cvinst = resampling)
+          rbn.reduceCrossval, task = tasks[[1]]$task$mlr.task, cvinst = resampling[[1]])
     ))
 
     data <- list(
-      task = task$mlr.task,
-      resampling = resampling,
+      task = tasks[[1]]$task$mlr.task,
+      resampling = resampling[[1]],
       super.resampling = super.resampling
     )
 
     saveRDS(data, file = file.path(rbn.getSetting("DATADIR"), paste0(table$name[line], ".rds.gz")),
       version = 2, compress = "gzip")
+    cat(" Done.\n")
   }
 }
 
@@ -101,10 +113,15 @@ rbn.loadDataTable <- function(file, ...) {
       name = as.character(intable$name),
       data.id = as.integer(intable$data.id))
 
+  table <- cbind(table, as.data.frame(sapply(grep(paste0("^task\\.id"), colnames(intable), value = TRUE),
+    function(colname) {
+      as.integer(intable[[colname]])
+    })))
+
   # TODO: convert task.id columns to integer
 
 
-  table$name <- paste(make.names(table$name), table$task.id, sep = ".")
+  table$name <- paste(make.names(table$name), table$data.id, sep = ".")
   assertCharacter(table$name, unique = TRUE)
   assertInteger(table$data.id, unique = TRUE)
 
