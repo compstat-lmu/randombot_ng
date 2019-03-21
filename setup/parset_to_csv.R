@@ -26,6 +26,10 @@ parfix.lg <- grepl("\\.fixed_pars$", names(pss))
 pardef <- pss[!parfix.lg]
 parfix <- pss[parfix.lg]
 
+prob.lg <- grepl("^prob\\.", names(pardef))
+
+pardef <- pardef[!prob.lg]
+prob <- pardef[prob.lg]
 
 
 names(parfix) <- sub("\\.fixed_pars$", "", names(parfix))
