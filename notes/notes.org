@@ -86,6 +86,7 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
      - SBATCH_INDEX :: modified when iterating over CONTROL_JOB_COUNT
      - INDEXSTEPSIZE :: augmented by CONTROL_JOB_COUNT
      - TOTAL_TASK_SLOTS :: indicates total (maximum) number of tasks to queue
+     - INDIVIDUAL_TASK_SLOTS :: indicates total (maximum) number of tasks for single invoke_srun instance
    - Does:
      - for loop through *CONTROL_JOB_COUNT*: run *srun runscript.sh*
 3. invoke_srun.sh
@@ -97,6 +98,7 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
      - *SBATCH_INDEX*
      - *CONTROL_JOB_COUNT*
      - *TOTAL_TASK_SLOTS*
+     - *INDIVIDUAL_TASK_SLOTS*
    - Uses from constants.R:
      - *DATADIR*
    - Exports further arguments:

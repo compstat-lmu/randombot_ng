@@ -75,6 +75,13 @@ check_env() {
 		    exit 11
 		fi
 		;;
+	    INDIVIDUAL_TASK_SLOTS)
+		if [ -z "$INDIVIDUAL_TASK_SLOTS" ] || \
+		       ! [ "$INDIVIDUAL_TASK_SLOTS" -gt 0 ] ; then
+		    echo "INDIVIDUAL_TASK_SLOTS invalid value $INDIVIDUAL_TASK_SLOTS" >&2
+		    exit 12
+		fi
+		;;
 	    *)
 		echo "bad check_env argument $WHAT" >&2
 		exit 253
