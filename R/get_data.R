@@ -38,7 +38,7 @@ rbn.retrieveData <- function(table, ...) {
 
   parallel::mclapply(seq_len(nrow(table)), function(line) {
 
-    catf("Retrieving task %s...", table$name[line], newline = FALSE)
+    catf("Retrieving task %s...", table$name[line])
 
     tasks <- sapply(taskcols, function(taskname) {
       omltask <- OpenML::getOMLTask(table[[taskname]][line], cache.only = TRUE, verbosity = 0)
@@ -86,7 +86,7 @@ rbn.retrieveData <- function(table, ...) {
 
     saveRDS(data, file = file.path(rbn.getSetting("DATADIR"), paste0(table$name[line], ".rds.gz")),
       version = 2, compress = "gzip")
-    cat(" Done.\n")
+    catf("Done with %s.", table$name[line])
   }, mc.cores = parallel::detectCores())
 }
 
