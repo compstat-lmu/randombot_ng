@@ -17,11 +17,14 @@ rbn.registerLearner("MODIFIER", function(lrn) {
 })
 
 
-# just a demonstration: hard limit classif.xgboost nrounds to 6000
-rbn.registerLearner("classif.xgboost.1", function() {
+xgboost.constructor <- function() {
   lrn <- makeLearner("classif.xgboost")
   lrn$par.set$pars$nrounds$upper <- 6000
   # add dummy encode, xgboost can't handle factors otherwise
   cpoDummyEncode(TRUE) %>>% lrn
-})
+}
+
+rbn.registerLearner("classif.xgboost.gblinear", xgboost.constructor)
+rbn.registerLearner("classif.xgboost.gbtree", xgboost.constructor)
+rbn.registerLearner("classif.xgboost.dart", xgboost.constructor)
 

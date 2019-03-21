@@ -45,49 +45,46 @@ classif.ranger.pow = makeParamSet(
 classif.ranger.pow.fixed_pars = list("num.threads" = 1L)
 
 
-prob.classif.xgboost1 = 0.075
-classif.xgboost1 = makeParamSet(
+prob.classif.xgboost.gblinear = 0.075
+classif.xgboost.gblinear = makeParamSet(
   makeIntegerParam("nrounds", lower = 1, upper = 5000),
-  makeDiscreteParam("booster", values = "gblinear"),
   makeNumericParam("lambda", lower = -10, upper = 10, trafo = function(x) 2^x),
   makeNumericParam("alpha", lower = -10, upper = 10, trafo = function(x) 2^x),
   makeNumericParam("subsample",lower = 0.1, upper = 1)
-  )
-classif.xgboost1.fixed_pars = list("nthread" = 1L)
+)
+classif.xgboost.gblinear.fixed_pars = list("nthread" = 1L, booster = "gblinear")
 
-prob.classif.xgboost2 = 0.35
-classif.xgboost2 = makeParamSet(
+prob.classif.xgboost.gbtree = 0.35
+classif.xgboost.gbtree = makeParamSet(
   makeIntegerParam("nrounds", lower = 1, upper = 5000),
-  makeDiscreteParam("booster", values = "gbtree"),
-  makeNumericParam("eta",   lower = -10, upper = 0, requires = quote(booster %in% c("dart", "gbtree")), trafo = function(x) 2^x),
-  makeNumericParam("gamma", lower = -15, upper = 3, requires = quote(booster %in% c("dart", "gbtree")), trafo = function(x) 2^x),
+  makeNumericParam("eta",   lower = -10, upper = 0, trafo = function(x) 2^x),
+  makeNumericParam("gamma", lower = -15, upper = 3, trafo = function(x) 2^x),
   makeNumericParam("lambda", lower = -10, upper = 10, trafo = function(x) 2^x),
   makeNumericParam("alpha", lower = -10, upper = 10, trafo = function(x) 2^x),
   makeNumericParam("subsample",lower = 0.1, upper = 1),
-  makeIntegerParam("max_depth", lower = 1, upper = 15,        requires = quote(booster %in% c("dart", "gbtree"))),
-  makeNumericParam("min_child_weight",  lower = 0, upper = 7, requires = quote(booster %in% c("dart", "gbtree")), trafo = function(x) 2^x),
-  makeNumericParam("colsample_bytree",  lower = 0, upper = 1, requires = quote(booster %in% c("dart", "gbtree"))),
-  makeNumericParam("colsample_bylevel", lower = 0, upper = 1, requires = quote(booster %in% c("dart", "gbtree")))
+  makeIntegerParam("max_depth", lower = 1, upper = 15),
+  makeNumericParam("min_child_weight",  lower = 0, upper = 7, trafo = function(x) 2^x),
+  makeNumericParam("colsample_bytree",  lower = 0, upper = 1),
+  makeNumericParam("colsample_bylevel", lower = 0, upper = 1)
   # makeDiscreteParam("tree_method", values = c("exact", "auto", "approx", "hist")), # CURRENTLY NOT IMPLEMENTED IN MLR
   )
-classif.xgboost2.fixed_pars = list("nthread" = 1L)
+classif.xgboost.gbtree.fixed_pars = list("nthread" = 1L, booster = "gbtree")
 
-prob.classif.xgboost3 = 0.075
-classif.xgboost3 = makeParamSet(
+prob.classif.xgboost.dart = 0.075
+classif.xgboost.dart = makeParamSet(
   makeIntegerParam("nrounds", lower = 1, upper = 5000),
-  makeDiscreteParam("booster", values = "dart"),
-  makeNumericParam("eta",   lower = -10, upper = 0, requires = quote(booster %in% c("dart", "gbtree")), trafo = function(x) 2^x),
-  makeNumericParam("gamma", lower = -15, upper = 3, requires = quote(booster %in% c("dart", "gbtree")), trafo = function(x) 2^x),
+  makeNumericParam("eta",   lower = -10, upper = 0, trafo = function(x) 2^x),
+  makeNumericParam("gamma", lower = -15, upper = 3, trafo = function(x) 2^x),
   makeNumericParam("lambda", lower = -10, upper = 10, trafo = function(x) 2^x),
   makeNumericParam("alpha", lower = -10, upper = 10, trafo = function(x) 2^x),
   makeNumericParam("subsample",lower = 0.1, upper = 1),
-  makeIntegerParam("max_depth", lower = 1, upper = 15,        requires = quote(booster %in% c("dart", "gbtree"))),
-  makeNumericParam("min_child_weight",  lower = 0, upper = 7, requires = quote(booster %in% c("dart", "gbtree")), trafo = function(x) 2^x),
-  makeNumericParam("colsample_bytree",  lower = 0, upper = 1, requires = quote(booster %in% c("dart", "gbtree"))),
-  makeNumericParam("colsample_bylevel", lower = 0, upper = 1, requires = quote(booster %in% c("dart", "gbtree"))),
-  makeNumericParam("rate_drop", lower = 0, upper = 1, requires = quote(booster == "dart")),
-  makeNumericParam("skip_drop", lower =  0, upper = 1, requires = quote(booster == "dart")))
-classif.xgboost3.fixed_pars = list("nthread" = 1L)
+  makeIntegerParam("max_depth", lower = 1, upper = 15),
+  makeNumericParam("min_child_weight",  lower = 0, upper = 7, trafo = function(x) 2^x),
+  makeNumericParam("colsample_bytree",  lower = 0, upper = 1),
+  makeNumericParam("colsample_bylevel", lower = 0, upper = 1),
+  makeNumericParam("rate_drop", lower = 0, upper = 1),
+  makeNumericParam("skip_drop", lower =  0, upper = 1))
+classif.xgboost.dart.fixed_pars = list("nthread" = 1L, booster = "dart")
 
 # Leave this out for now as there is no benefit over glmnet (LiblineaR svm can not do probs)
 # # => See RLearner.classif.LiblineaR.R
@@ -100,10 +97,10 @@ classif.xgboost3.fixed_pars = list("nthread" = 1L)
 
 prob.classif.rcpphnsw = 0.075
 classif.rcpphnsw = makeParamSet(
-  makeIntegerParam(id = "k", lower = 1L, upper = 50, when = "predict"),
+  makeIntegerParam(id = "k", lower = 1L, upper = 50),
   makeDiscreteParam(id = "distance", values = c("l2", "cosine", "ip"), default = "l2"),
   makeIntegerParam(id = "M", lower = 10, upper = 50),
-  makeNumericParam(id = "ef", lower = 0, upper = 7, trafo = function(x) round(2^x), when = "predict")
+  makeNumericParam(id = "ef", lower = 0, upper = 7, trafo = function(x) round(2^x)),
   makeNumericParam(id = "ef_construction", lower = 0, upper = 7, trafo = function(x) round(2^x))
 )
 
