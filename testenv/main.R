@@ -113,3 +113,55 @@ hist(eta.none)
 
 
 
+getdata <- populateOMLCache(
+  data.ids = table$data.id,
+  task.ids = unique(unlist(table[grep("^task\\.id", colnames(table), value = TRUE)])))
+
+listOMLTasks()
+
+setOMLConfig(cachedir = "/projects/user/supermuc_ng/cache")
+saveOMLConfig()
+
+alltaskinfo <- read.csv("/projects/user/supermuc_ng/alltaskinfo", sep = " ")
+names(alltaskinfo)
+
+reform <- aggregate(alltaskinfo$taskid, by = alltaskinfo["datasetid"], FUN = identity)
+
+baddata <- setdiff(alltaskinfo$datasetid, table$data.id)
+
+brokentaskid <- subset(alltaskinfo, datasetid %in% baddata)$taskid
+
+halfmissingdataid <- table$data.id[apply(
+  table[grep("^task\\.id", colnames(table), value = TRUE)], 1,
+  function(x) any(brokentaskid %in% x))]
+
+halfmissingdataid
+
+reform <- subset(reform, datasetid %nin% baddata)
+
+unacctdataid <- reform$datasetid[sapply(reform$x, length) == 1]
+
+alltaskids <- unlist(table[grep("^task\\.id", colnames(table), value = TRUE)])
+duplis <- alltaskids[duplicated(alltaskids)]
+maybeduplidata <- table$data.id[apply(
+  table[grep("^task\\.id", colnames(table), value = TRUE)], 1,
+  function(x) any(x %in% duplis))]
+
+
+unacctdataid
+
+setdiff(unacctdataid, halfmissingdataid)
+maybeduplidata
+
+duplis
+
+table$data.id[which(table$task.id_10cv10 %in% duplis)]
+table$data.id[which(table$task.id_cv10 %in% duplis)]
+
+table$data.id[which(table$task.id_10cv10 %in% brokentaskid)]
+table$data.id[which(table$task.id_cv10 %in% brokentaskid)]
+
+# write.csv(subset(table, data.id %nin% unacctdataid), "input/tasks_repaired.csv")
+
+
+
