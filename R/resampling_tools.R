@@ -112,7 +112,7 @@ rbn.reduceCrossval <- function(cvinst, task, fraction) {
 # the measures can be evaluated when resulting predictions
 # are split using `rbn.splitResamplingResult`.
 #
-# WORKS ONLY WITH `predict = "test"` RESAMPLING INSTANCES THAT HAVE NO `$group`
+# WORKS ONLY WITH `predict = "test"` RESAMPLING INSTANCES
 #
 # @param cvinst [list of ResampleInstance]
 # @return [ResampleInstance]
@@ -124,8 +124,17 @@ rbn.unionResample <- function(cvinsts) {
 
   assertTRUE(length(unique(extractSubList(cvinsts, "size"))) == 1)
 
+  groups <- unlist(lapply(seq_along(cvinsts), function(idx) {
+    ci <- cvinsts[[idx]]
+    if (!length(ci$group)) {
+      ci$group <- factor(rep("1", length(ci$train.inds)))
+    }
+    assertCharacter(levels(ci$group), min.len  = 1)
+    levels(ci$group) <- paste0(idx, "_", levels(ci$group))
+    ci$group
+  }))
+
   descs <- sapply(cvinsts, function(ci) {
-    assertFactor(ci$group, levels = character(0), len = 0)
     ci$desc[c("predict", "fixed", "iters", "stratify")]
   }, simplify = TRUE)
 
@@ -155,7 +164,7 @@ rbn.unionResample <- function(cvinsts) {
       size = cvinsts[[1]]$size,
       train.inds = unlist(extractSubList(cvinsts, "train.inds", simplify = FALSE), recursive = FALSE),
       test.inds = unlist(extractSubList(cvinsts, "test.inds", simplify = FALSE), recursive = FALSE),
-      group = cvinsts[[1]]$group),
+      group = groups),
     class = "ResampleInstance")
 }
 
