@@ -103,18 +103,19 @@ rbn.loadDataTable <- function(file, ...) {
   required.names <- c("name", "task\\.id.*", "data\\.id")
 
   assertString(file)
-  intable <- read.csv(file, ...)
+  intable <- read.csv(file, stringsAsFactors = FALSE, ...)
   assertDataFrame(intable)
 
   # check that all required names are present
   assertTRUE(all(sapply(required.names, function(rn) any(grepl(paste0("^", rn, "$"), colnames(intable))))))
-
+  assertIntegerish(intable$data.id)
   table <- data.frame(
       name = as.character(intable$name),
       data.id = as.integer(intable$data.id))
 
   table <- cbind(table, as.data.frame(sapply(grep(paste0("^task\\.id"), colnames(intable), value = TRUE),
     function(colname) {
+      assertIntegerish(intable[[colname]])
       as.integer(intable[[colname]])
     })))
 
