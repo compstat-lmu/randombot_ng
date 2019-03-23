@@ -111,19 +111,24 @@ hist(log(eta.default))
 hist(log(eta.norm))
 hist(eta.none)
 
+table <- rbn.loadDataTable(file.path(inputdir, "tasks.csv"))
 
+str(read.csv(file.path(inputdir, "tasks.csv"), stringsAsFactors = FALSE)$task.id_10cv10)
 
 getdata <- populateOMLCache(
   data.ids = table$data.id,
   task.ids = unique(unlist(table[grep("^task\\.id", colnames(table), value = TRUE)])))
-
-listOMLTasks()
 
 setOMLConfig(cachedir = "/projects/user/supermuc_ng/cache")
 saveOMLConfig()
 
 alltaskinfo <- read.csv("/projects/user/supermuc_ng/alltaskinfo", sep = " ")
 names(alltaskinfo)
+
+repinfo <- read.csv("/projects/user/supermuc_ng/repinfo", sep = " ")
+
+subset(repinfo, taskid %in% table$task.id_cv10 & reps != 1)
+subset(repinfo, taskid %in% table$task.id_10cv10 & reps != 10)
 
 reform <- aggregate(alltaskinfo$taskid, by = alltaskinfo["datasetid"], FUN = identity)
 
