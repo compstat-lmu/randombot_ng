@@ -2,6 +2,7 @@
 # info given through TASKNAME, LEARNERNAME and ARGUMENT
 token <- Sys.getenv("TOKEN")
 
+library("BBmisc")
 catf("----[%s] eval_single.R", token)
 
 scriptdir <- Sys.getenv("MUC_R_HOME")
