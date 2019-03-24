@@ -31,7 +31,7 @@ rbn.setWatchdogTimeout <- function(timeout) {
   # first we write to an intermediate file and then swap out with `file.rename`.
   # we must not write to the watchfile directly to avoid race-conditions with the watchdog!
   # file.rename is atomic on linux.
-  cat(as.character(timeout + as.integer(Sys.time())), file = intermediate.file)
+  cat(as.character(round(timeout) + as.integer(Sys.time())), file = intermediate.file)
   file.rename(intermediate.file, watchfile)
 }
 
