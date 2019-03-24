@@ -51,8 +51,8 @@ Settings for runs should be collected in the `/input/` directory.
 ### Data Preparation (developer machine)
 Data preparation with scripts in `/setup/`:
 
-1. **`collect_data.R`**: Retrieve data and write `/data/LEARNERS`, `/data/TASKS` as well as data `*.rds.gz` files.
-2. **`parse_to_csv.sh`**: Read in `paramsets.R` and pipe result to `spaces.csv`.
+1. **`parse_to_csv.sh`**: Read in `paramsets.R` and pipe result to `spaces.csv`.
+2. **`collect_data.R`**: Retrieve data and write `/data/LEARNERS`, `/data/TASKS` as well as data `*.rds.gz` files.
 3. **`create_inputs.sh`**: Create input value table for "perparam" scheduling mode into `/data/INPUTS`
 4. Move content of `/data/` directory to login node
 
