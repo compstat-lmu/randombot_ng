@@ -17,7 +17,7 @@ export TASKNAME="$2"
 export LEARNERNAME="$3"
 export ARGUMENT="$4"
 
-TOKEN="$(date +"%F_%T")_${RANDOM}"
+export TOKEN="$(date +"%F_%T")_${RANDOM}"
 
 if [ -z "$ARGUMENT" ]; then
     echo "Bad Command line: $*" >&2
@@ -56,7 +56,7 @@ export WORKDIR
 # watchfile:
 # delete old watchfiles first
 comm -23 \
-     <(ls WATCHFILE_* | sort) \
+     <(find -maxdepth 1 -type f -name 'WATCHFILE_*' -printf '%f\n' | sort) \
      <(ps -eo "%p" --no-headers | sed 's/^ */WATCHFILE_/' | sort) | \
     xargs rm
 # create new watchfile
@@ -75,10 +75,10 @@ else
     evalfile="eval_single.R"
 fi
 
-/usr/bin/time -f "----[$RANDOM] E %E K %Ss U %Us P %P M %MkB O %O" \
+/usr/bin/time -f "----[$TOKEN] E %E K %Ss U %Us P %P M %MkB O %O" \
 	      Rscript "$MUC_R_HOME/scheduling/${evalfile}" &
 pid=$!
-"${MUC_R_HOME}/scheduling/watchdog.sh" $pid "$WATCHFILE"
+"${MUC_R_HOME}/scheduling/watchdog.sh" $pid "$WATCHFILE" &
 wpd=$!
 wait $pid
 result=$?
