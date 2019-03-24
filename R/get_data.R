@@ -87,7 +87,7 @@ rbn.retrieveData <- function(table, ...) {
     saveRDS(data, file = file.path(rbn.getSetting("DATADIR"), paste0(table$name[line], ".rds.gz")),
       version = 2, compress = "gzip")
     catf("Done with %s.", table$name[line])
-  }, mc.cores = parallel::detectCores())
+  }, mc.cores = round(parallel::detectCores() / 2))
 }
 
 # Read dataset that was saved in DATADIR
