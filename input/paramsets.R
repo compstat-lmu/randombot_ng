@@ -95,8 +95,8 @@ classif.xgboost.dart.fixed_pars = list("nthread" = 1L, booster = "dart")
 #   makeLogicalParam(id = "bias", default = TRUE)
 # )
 
-prob.classif.rcpphnsw = 0.075
-classif.rcpphnsw = makeParamSet(
+prob.classif.RcppHNSW = 0.075
+classif.RcppHNSW = makeParamSet(
   makeIntegerParam(id = "k", lower = 1L, upper = 50),
   makeDiscreteParam(id = "distance", values = c("l2", "cosine", "ip"), default = "l2"),
   makeIntegerParam(id = "M", lower = 10, upper = 50),

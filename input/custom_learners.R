@@ -28,3 +28,11 @@ rbn.registerLearner("classif.xgboost.gblinear", xgboost.constructor)
 rbn.registerLearner("classif.xgboost.gbtree", xgboost.constructor)
 rbn.registerLearner("classif.xgboost.dart", xgboost.constructor)
 
+rbn.registerLearner("classif.svm.radial", function() {
+  makeLearner("classif.svm")
+})
+
+rbn.registerLearner("classif.RcppHNSW", function() {
+  lrn <- makeLearner("classif.RcppHNSW")
+  cpoDummyEncode(TRUE) %>>% lrn
+})
