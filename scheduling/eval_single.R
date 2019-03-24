@@ -35,6 +35,6 @@ if (substr(ARGUMENT, 1, 4) != "list") {
 for (ARG in ARGUMENT) {
   catf("----[%s] Evaluating %s", token, ARG)
   result <- rbn.evaluatePoint(lrn, ARG, data)
-  rbn.writeResult(result, ARG)
+  rbn.writeResult(result, TASKNAME, LEARNERNAME, ARG)
 }
 catf("----[%s] END OF eval_single.R", token)

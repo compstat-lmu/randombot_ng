@@ -25,6 +25,8 @@ PROGRESSFILE <- Sys.getenv("PROGRESSFILE")
 PROGRESSTMP <- paste0(PROGRESSFILE, ".tmp")
 PERCPU_STEPSIZE <- Sys.getenv("PERCPU_STEPSIZE")
 
+PERCPU_STEPSIZE <- assertInt(as.numeric(PERCPU_STEPSIZE), coerce = TRUE)
+
 data <- rbn.getData(TASKNAME)
 lrn <- rbn.getLearner(LEARNERNAME)
 paramtable <- rbn.compileParamTblConfigured()
@@ -46,7 +48,7 @@ repeat {
     catf("----[%s] Evaluating point %s", token, pt)
     result <- rbn.evaluatePoint(lrn, pt, data)
     rbn.setWatchdogTimeout(600)  # ten minutes timeout to write result file
-    rbn.writeResult(result, pt)
+    rbn.writeResult(result, TASKNAME, LEARNERNAME, pt)
   }
 
   catf("----[%s] Done evaluating seed %s", token, seed)
