@@ -124,6 +124,8 @@ rbn.checkParamTbl <- function(table) {
             convertToParamType(val, param.lrn, param.given$trafo)))
       }
     }
+    # the values that the learner "sees" include its default settings
+    default.fixed.values <- insert(getDefaults(getParamSet(lrn)), fixed.values)
     true.requires <- getRequirements(getParamSet(lrn))
     for (param.name in subtbl$parameter) {
       param.lrn <- getParamSet(lrn)$pars[[param.name]]
@@ -132,7 +134,7 @@ rbn.checkParamTbl <- function(table) {
       if (hasRequires(param.lrn) && is.null(param.given$requires)) {
         # check that requirement of parameter is always fulfulled
         assert(isTRUE(eval(true.requires[[param.name]],
-          envir = fixed.values, enclos = .GlobalEnv)))
+          envir = default.fixed.values, enclos = .GlobalEnv)))
       } else {
         if (!is.null(param.given$requires)) {
           reqeval <- eval(param.given$requires,

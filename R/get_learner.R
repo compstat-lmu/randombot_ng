@@ -30,9 +30,9 @@ rbn.registerLearner <- function(learner, creator) {
 # @return [Learner]
 rbn.getLearner <- function(learner) {
   assertString(learner)
-  lrn <-  rbn.getCustomLearnerConstructor(learner) %??%
-    function() makeLearner(learner, predict.type = "prob")
-  lrn <- suppressWarnings(lrn())
+  lrn <- rbn.getCustomLearnerConstructor(learner) %??%
+    function() makeLearner(learner)
+  lrn <- suppressWarnings(setPredictType(lrn(), "prob"))
   wrapper <- rbn.getCustomLearnerConstructor("MODIFIER")
   if (!is.null(wrapper)) {
     lrn <- wrapper(lrn)
