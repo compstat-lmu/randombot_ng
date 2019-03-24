@@ -82,6 +82,10 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
      - USE_PARALLEL
      - *INDEXSTEPSIZE*
      - *CONTROL_JOB_COUNT*
+   - SLURM arguments:
+     - SLURM_JOB_NAME (not essential)
+     - SLURM_JOB_ID (not essential)
+     - *SLURM_NTASKS*
    - Exports further arguments
      - SBATCH_INDEX :: modified when iterating over CONTROL_JOB_COUNT
      - INDEXSTEPSIZE :: augmented by CONTROL_JOB_COUNT
@@ -99,6 +103,8 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
      - *CONTROL_JOB_COUNT*
      - *TOTAL_TASK_SLOTS*
      - *INDIVIDUAL_TASK_SLOTS*
+   - SLURM arguments:
+     - *SLURM_CPUS_ON_NODE*
    - Uses from constants.R:
      - *DATADIR*
    - Exports further arguments:
@@ -118,6 +124,8 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
      - *ARGUMENT* (from arg 4)
      - PERCPU_STEPSIZE
      - *PROGRESS*
+   - SLURM arguments:
+     - *SLURMD_NODENAME*
    - Exports further arguments:
      - NODEDIR
      - WORKDIR
