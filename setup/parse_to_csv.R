@@ -46,7 +46,7 @@ for (lname in names(pardef)) {
     up <- ""
     trafo <- ""
     req <- ""
-    if (isDiscrete(par, include.logical = FALSE)) {
+    if (isDiscrete(par, include.logical = TRUE)) {
       val <- paste(names(par$values), collapse = ", ")
     } else if (isNumeric(par)) {
       low <- par$lower
