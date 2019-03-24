@@ -13,7 +13,7 @@ rbn.setupDataDir <- function() {
   rbn.retrieveData(datatable)
 
   fname <- file.path(rbn.getSetting("DATADIR"), "LEARNERS")
-  cat(table$learner, sep = "\n", file = fname)
+  cat(unique(table$learner), sep = "\n", file = fname)
 
   fname <- file.path(rbn.getSetting("DATADIR"), "TASKS")
   cat(datatable$name, sep = "\n", file = fname)
