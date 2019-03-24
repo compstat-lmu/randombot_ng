@@ -1,9 +1,72 @@
 learner	parameter	values	lower	upper	trafo	requires	condition
-classif.xgboost	booster	gbtree, gblinear, dart					
-classif.xgboost	eta		-10	0	exp(x)	booster %in% c("gbtree", "dart")	
-classif.xgboost	gamma		-10	0	exp(x)	booster %in% c("gbtree", "dart")	
-classif.xgboost	max_depth		1	14		booster %in% c("gbtree", "dart")	
-classif.svm	type	C-classification, nu-classification					
-classif.svm	cost		-7	2	exp(x)	type == "C-classification"	
-classif.ranger	num.trees		3	7	round(exp(x))		
-classif.ranger	mtry		0	7	round(exp(x))		x <= p
+classif.RcppHNSW	k		1	50			
+classif.RcppHNSW	distance	l2, cosine, ip					
+classif.RcppHNSW	M		10	50			
+classif.RcppHNSW	ef		0	7	round(2^x)		
+classif.RcppHNSW	ef_construction		0	7	round(2^x)		
+classif.RcppHNSW	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.xgboost.dart	nrounds		1	5000			
+classif.xgboost.dart	eta		-10	0	2^x		
+classif.xgboost.dart	gamma		-15	3	2^x		
+classif.xgboost.dart	lambda		-10	10	2^x		
+classif.xgboost.dart	alpha		-10	10	2^x		
+classif.xgboost.dart	subsample		0.1	1			
+classif.xgboost.dart	max_depth		1	15			
+classif.xgboost.dart	min_child_weight		0	7	2^x		
+classif.xgboost.dart	colsample_bytree		0	1			
+classif.xgboost.dart	colsample_bylevel		0	1			
+classif.xgboost.dart	rate_drop		0	1			
+classif.xgboost.dart	skip_drop		0	1			
+classif.xgboost.dart	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.xgboost.dart	nthread	1					
+classif.xgboost.dart	booster	dart					
+classif.xgboost.gbtree	nrounds		1	5000			
+classif.xgboost.gbtree	eta		-10	0	2^x		
+classif.xgboost.gbtree	gamma		-15	3	2^x		
+classif.xgboost.gbtree	lambda		-10	10	2^x		
+classif.xgboost.gbtree	alpha		-10	10	2^x		
+classif.xgboost.gbtree	subsample		0.1	1			
+classif.xgboost.gbtree	max_depth		1	15			
+classif.xgboost.gbtree	min_child_weight		0	7	2^x		
+classif.xgboost.gbtree	colsample_bytree		0	1			
+classif.xgboost.gbtree	colsample_bylevel		0	1			
+classif.xgboost.gbtree	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.xgboost.gbtree	nthread	1					
+classif.xgboost.gbtree	booster	gbtree					
+classif.xgboost.gblinear	nrounds		1	5000			
+classif.xgboost.gblinear	lambda		-10	10	2^x		
+classif.xgboost.gblinear	alpha		-10	10	2^x		
+classif.xgboost.gblinear	subsample		0.1	1			
+classif.xgboost.gblinear	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.xgboost.gblinear	nthread	1					
+classif.xgboost.gblinear	booster	gblinear					
+classif.ranger.pow	num.trees		1	2000			
+classif.ranger.pow	replace	TRUE, FALSE					
+classif.ranger.pow	sample.fraction		0.1	1			
+classif.ranger.pow	mtry.power		0	1			
+classif.ranger.pow	respect.unordered.factors	ignore, order, partition					
+classif.ranger.pow	min.node.size		1	100			
+classif.ranger.pow	splitrule	gini, extratrees					
+classif.ranger.pow	num.random.splits		1	100		splitrule == "extratrees"	
+classif.ranger.pow	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.ranger.pow	num.threads	1					
+classif.svm.radial	cost		-10	10	2^x		
+classif.svm.radial	gamma		-10	10	2^x		
+classif.svm.radial	tolerance		-5	-1	2^x		
+classif.svm.radial	shrinking	TRUE, FALSE					
+classif.svm.radial	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.svm	kernel	linear, polynomial, radial					
+classif.svm	cost		-10	10	2^x		
+classif.svm	gamma		-10	10	2^x	kernel == "radial"	
+classif.svm	degree		2	5		kernel == "polynomial"	
+classif.svm	tolerance		0.001	1			
+classif.svm	shrinking	TRUE, FALSE					
+classif.svm	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.rpart	cp		0	1			
+classif.rpart	maxdepth		1	30			
+classif.rpart	minbucket		1	60			
+classif.rpart	minsplit		1	60			
+classif.rpart	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.glmnet	alpha		0	1			
+classif.glmnet	s		-10	10	2^x		
+classif.glmnet	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					

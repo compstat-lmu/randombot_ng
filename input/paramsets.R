@@ -13,8 +13,8 @@ classif.rpart = makeParamSet(
   # Open Question: Use *surrogate* params? => Only in case we do not generally impute all missings.
 )
 
-prob.classif.svm1 = 0.10
-classif.svm1 = makeParamSet(
+prob.classif.svm = 0.10
+classif.svm = makeParamSet(
   makeDiscreteParam("kernel", values = c("linear", "polynomial", "radial")),
   makeNumericParam("cost", lower = -10, upper = 10, trafo = function(x) 2^x), # Discuss bounds -10, 3
   makeNumericParam("gamma", lower = -10, upper = 10, trafo = function(x) 2^x, requires = quote(kernel == "radial")), # Discuss bounds -10, 3
@@ -23,10 +23,10 @@ classif.svm1 = makeParamSet(
   makeLogicalParam("shrinking")
 )
 
-prob.classif.svm2 = 0.075
-classif.svm2 = makeParamSet( # Only radial basis function kernel
+prob.classif.svm.radial = 0.075
+classif.svm.radial = makeParamSet( # Only radial basis function kernel
   makeNumericParam("cost", lower = -10, upper = 10, trafo = function(x) 2^x), # Discuss bounds -10, 3
-  makeNumericParam("gamma", lower = -10, upper = 10, trafo = function(x) 2^x, requires = quote(kernel == "radial")), # Discuss bounds -10, 3
+  makeNumericParam("gamma", lower = -10, upper = 10, trafo = function(x) 2^x), # Discuss bounds -10, 3
   makeNumericParam("tolerance", lower = -5, upper = -1, trafo = function(x) 2^x),
   makeLogicalParam("shrinking")
 )
