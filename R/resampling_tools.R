@@ -17,7 +17,7 @@ rbn.reduceCrossval <- function(cvinst, task, fraction) {
 
   targetcol <- getTaskTargets(task)
 
-  new.size <- round(getTaskSize(task) * fraction)
+  new.size <- max(round(getTaskSize(task) * fraction), cvinst$desc$iters)
   new.size.iters <- viapply(split(seq_len(new.size),
     rep_len(seq_len(cvinst$desc$iters),
       new.size)), length)

@@ -122,6 +122,8 @@ getdata <- populateOMLCache(
 setOMLConfig(cachedir = "/projects/user/supermuc_ng/cache")
 saveOMLConfig()
 
+
+
 alltaskinfo <- read.csv("/projects/user/supermuc_ng/alltaskinfo", sep = " ")
 names(alltaskinfo)
 
@@ -169,4 +171,33 @@ table$data.id[which(table$task.id_cv10 %in% brokentaskid)]
 # write.csv(subset(table, data.id %nin% unacctdataid), "input/tasks_repaired.csv")
 
 
+
+table[111, ]
+
+ot <- OpenML::getOMLTask(table[["task.id_cv10"]][15], cache.only = TRUE, verbosity = 0)
+
+
+
+ot2 <- OpenML::getOMLTask(table[["task.id_10cv10"]][111], cache.only = TRUE, verbosity = 0)
+ot$input$evaluation.measure <- "root_mean_squared_error"
+ot2$input$evaluation.measure <- "root_mean_squared_error"
+ott <- convertOMLTaskToMlr(ot, mlr.task.id = table$name[111], verbosity = 0)
+ott2 <- convertOMLTaskToMlr(ot2, mlr.task.id = table$name[111], verbosity = 0)
+
+res <- ott$mlr.rin
+res$desc$stratify <- TRUE
+
+set.seed(1)
+lapply(sort(rbn.getSetting("SUPERCV_PROPORTIONS"), decreasing = TRUE),
+  rbn.reduceCrossval, cvinst = ott$mlr.rin, task = ott$mlr.task)
+
+
+
+15, 31, 47, 63, 79, 95,
+ll(15)
+ll(31)
+ll(47)
+ll(63)
+ll(79)
+ll(95) # <-- ?!
 
