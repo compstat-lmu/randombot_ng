@@ -25,6 +25,8 @@ rbn.setupDataDir <- function() {
 # @param ... additional arguments to read.csv if `table` is a [character(1)].
 rbn.retrieveData <- function(table, ...) {
 
+  library("OpenML")
+
   assert(
       checkDataFrame(table),
       checkString(table)
