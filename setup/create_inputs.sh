@@ -39,7 +39,7 @@ Rscript -e " \
   datas <- lapply(datatable[['name']], function(x) rbn.getData(x)[['task']]); \
   offset <- 0; \
   stepsize <- max(${cores}, \
-    ceiling(${cores} * 1000 / length(learners) / length(datas)) \
+    ceiling(${cores} * 100000 / length(learners) / length(datas)) \
   ); \
   linesnum <- ${lines}; \
   while (linesnum > 0) { \
