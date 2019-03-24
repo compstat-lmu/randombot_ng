@@ -36,7 +36,7 @@ rbn.retrieveData <- function(table, ...) {
 
   taskcols <- grep("^task\\.id", colnames(table), value = TRUE)
 
-  parallel::mclapply(seq_len(nrow(table)), function(line) {
+  parallel::mclapply(sample(seq_len(nrow(table))), function(line) {
 
     catf("Retrieving task %s...", table$name[line])
 
