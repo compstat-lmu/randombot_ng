@@ -1,11 +1,13 @@
 
 # load libraries, set up RNG
 
-library("checkmate")
-library("BBmisc")
-library("mlr")
-library("mlrCPO")
-library("digest")
+suppressPackageStartupMessages({
+  library("checkmate")
+  library("BBmisc")
+  library("mlr")
+  library("mlrCPO")
+  library("digest")
+})
 
 RNGversion("3.3")
 

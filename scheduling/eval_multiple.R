@@ -4,7 +4,9 @@
 
 token <- Sys.getenv("TOKEN")
 
-library("BBmisc")
+suppressPackageStartupMessages({
+  library("BBmisc")
+})
 catf("----[%s] eval_multiple.R", token)
 
 scriptdir <- Sys.getenv("MUC_R_HOME")
