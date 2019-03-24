@@ -1,9 +1,13 @@
 #!/bin/bash
 
 killwatchpid() {
+    pkill -P "$watchpid" 2>/dev/null
+    sleep "$1"
+    pkill --signal KILL -P "$watchpid" 2>/dev/null
+    sleep "$1"
     kill "$watchpid" 2>/dev/null
     sleep "$1"
-    kill -s KILL "$watchpid" 2>/dev/null
+    kill --signal KILL "$watchpid" 2>/dev/null
 }
 
 if [ -z "$2" ] ; then
