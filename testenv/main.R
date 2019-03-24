@@ -22,6 +22,8 @@ rbn.setupDataDir()
 
 table <- rbn.compileParamTblConfigured()
 
+rbn.checkParamTbl(table)
+
 # --------- PURELY TESTING: data
 
 rbn.registerSetting("WATCHFILE", "/tmp/watchfile.txt")
@@ -201,3 +203,5 @@ ll(63)
 ll(79)
 ll(95) # <-- ?!
 
+
+table[95, ]

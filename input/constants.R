@@ -30,7 +30,7 @@ rbn.registerSetting("DATADIR",
 rbn.registerSetting("SEARCHSPACE_TABLE", file.path(getwd(), "spaces.csv"))
 rbn.registerSetting("SEARCHSPACE_TABLE_OPTS", 'list(sep = "\\t", quote = "")')
 
-rbn.registerSetting("DATA_TABLE", file.path(getwd(), "tasks_test.csv"))
+rbn.registerSetting("DATA_TABLE", file.path(getwd(), "tasks.csv"))
 rbn.registerSetting("DATA_TABLE_OPTS", 'list()')
 
 rbn.registerSetting("SUPERCV_REPS", 30)

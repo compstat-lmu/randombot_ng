@@ -6,6 +6,7 @@ library("BBmisc")
 library("mlr")
 library("mlrCPO")
 library("digest")
+library("OpenML")
 
 RNGversion("3.3")
 
