@@ -12,7 +12,7 @@ while [ -h "$path" ] ; do
 	path="$linkpath"
     fi
 done
-export MUC_R_HOME="$(cd -P "$(dirname "$path")" >/dev/null 2>&1 && pwd)"
+export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 . "$MUC_R_HOME/scheduling/common.sh"
 

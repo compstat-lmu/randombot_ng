@@ -17,7 +17,7 @@ export TASKNAME="$2"
 export LEARNERNAME="$3"
 export ARGUMENT="$4"
 
-TOKEN="$((date +"%F_%T"))_${RANDOM}"
+TOKEN="$(date +"%F_%T")_${RANDOM}"
 
 if [ -z "$ARGUMENT" ]; then
     echo "Bad Command line: $*" >&2
@@ -34,7 +34,7 @@ while [ -h "$path" ] ; do
 	path="$linkpath"
     fi
 done
-export MUC_R_HOME="$(cd -P "$(dirname "$path")" >/dev/null 2>&1 && pwd)"
+export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 . "$MUC_R_HOME/scheduling/common.sh"
 

@@ -22,12 +22,13 @@ mkdir "$MUC_R_HOME"
 module load ...............
 
 # choose the basedir to work with
-
+# !!! apparently currently this must be WORK_LIST instead of WORK
+# !!!
 export BASEDIR="$WORK/results"
 mkdir "$BASEDIR"
 
 # create the nodelist. inspect this file when done
-sinfo -O nodelist -N -h > "$WORK/nodelist"
+sinfo -O nodelist -N -h | sort | uniq > "$WORK/nodelist"
 
 # populate the basedir with directory structure. This needs the list
 # of nodes as input.
