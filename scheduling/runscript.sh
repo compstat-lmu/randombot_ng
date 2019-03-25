@@ -58,7 +58,7 @@ export WORKDIR
 comm -23 \
      <(find -maxdepth 1 -type f -name 'WATCHFILE_*' -printf '%f\n' | sort) \
      <(ps -eo "%p" --no-headers | sed 's/^ */WATCHFILE_/' | sort) | \
-    xargs rm
+    xargs rm 2>/dev/null
 # create new watchfile
 export WATCHFILE=WATCHFILE_$$
 touch "$WATCHFILE"
