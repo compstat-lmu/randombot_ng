@@ -13,7 +13,7 @@ rbn.evaluatePoint <- function(learner.object, point.string, data) {
 
   supereval <- point.value$SUPEREVAL
   point.value$SUPEREVAL <- NULL
-  learner.object <- setHyperPars(learner, par.vals = point.value)
+  learner.object <- setHyperPars(learner.object, par.vals = point.value)
   assertFlag(supereval)
   assertSubset(c("resampling", "super.resampling"), names(data))
 
