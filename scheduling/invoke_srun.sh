@@ -104,7 +104,7 @@ elif [ "$SCHEDULING_MODE" = perparam ] ; then
     else
 	declare -i i
 	i="-$SBATCH_INDEX"
-	while learner task argument ; do
+	while read learner task argument ; do
 	    if [ "$((i % INDEXSTEPSIZE))" = 0 ] ; then
 		call_srun "$learner" "$task" "$argument" &
 	    fi
