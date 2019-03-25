@@ -23,7 +23,7 @@
 # Expects the variable SCHEDULING_MODE to be one of 'perseed', 'perparam',
 # 'percpu'
 
-echo "Salve, Job ${SLURM_JOB_NAME}:${SLURM_JOB_ID} index ${SBATCH_INDEX} scheduling mode ${SCHEDULING_MODE}. Laboraturi Te Salutant."
+echo "Salve, Job ${SLURM_JOB_NAME}:${SLURM_JOB_ID} index ${SBATCH_INDEX}/${INDEXSTEPSIZE} scheduling mode ${SCHEDULING_MODE}. Laboraturi Te Salutant."
 
 if ! [ -d "$MUC_R_HOME" ] ; then
     echo "MUC_R_HOME Not a directory: $MUC_R_HOME"
