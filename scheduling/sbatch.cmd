@@ -4,7 +4,6 @@
 #SBATCH --nodes=316
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-user=martin.binder@stat.uni-muenchen.de
-#SBATCH --export=NONE
 #SBATCH --time=48:00:00
 
 # This is the sbatch-script, should probably be scheduled by

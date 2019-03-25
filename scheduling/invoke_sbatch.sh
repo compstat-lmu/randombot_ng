@@ -25,6 +25,6 @@ check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT
 
 for ((i=0;i<"$INDEXSTEPSIZE";i++)) ; do
     sbatch "${MUC_R_HOME}/scheduling/sbatch.cmd" \
-	   --export=BASEDIR,MUC_R_HOME,SCHEDULING_MODE,USE_PARALLEL,INDEXSTEPSIZE,CONTROL_JOB_COUNT,SBATCH_INDEX=${i} \
+	   --export=SBATCH_INDEX=${i} \
 	   "$@"
 done
