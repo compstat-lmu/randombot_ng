@@ -59,7 +59,11 @@ call_srun() {  # arguments: <learner> <task> <seed / cmd>
 	--mem="${memreq}" --nodes=1 --ntasks=1 --exclusive \
 	"${SCRIPTDIR}/runscript.sh" \
 	"$SCHEDULING_MODE" "$task" "$learner" "$argument" 2>&1 | \
-	sed -u "s'^'[${task},${learner},${argument}]: '"
+	sed -u "s'^'[${task},${learner},${argument}]: '" | \
+	grep --line-buffered '^'
+    # About the `grep --line-buffered`: not sure if `sed -u` suffices, but:
+    # We want each write to stdout be atomic, so different output lines
+    # are not interleaved.
 }
 
 export -f call_srun
