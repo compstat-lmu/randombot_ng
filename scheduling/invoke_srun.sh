@@ -58,7 +58,7 @@ call_srun() {  # arguments: <learner> <task> <seed / cmd>
     srun --unbuffered \
 	--mem="${memreq}" --nodes=1 --ntasks=1 --exclusive \
 	"${SCRIPTDIR}/runscript.sh" \
-	"$SCHEDULING_MODE" "$task" "$learner" "$argument" | \
+	"$SCHEDULING_MODE" "$task" "$learner" "$argument" 2>&1 | \
 	sed -u "s'^'[${task},${learner},${argument}]: '"
 }
 
