@@ -53,7 +53,9 @@ else
     INDEXSTEPSIZE="$((INDEXSTEPSIZE * CONTROL_JOB_COUNT))"
     for ((IDX=0;IDX<"$CONTROL_JOB_COUNT";IDX++)) ; do
 	SBATCH_INDEX="$((ORIG_SBATCH_INDEX * CONTROL_JOB_COUNT + IDX))"
-	srun --nodes=1 --ntasks=1 --exclusive $CONTROL_JOB_ARGS "$TOEXEC" --export=ALL &
+	srun --nodes=1 --ntasks=1 --exclusive --export=ALL \
+	     $CONTROL_JOB_ARGS "$TOEXEC" | \
+	    grep --line-buffered '^' &
     done
     wait
 fi
