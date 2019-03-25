@@ -17,9 +17,9 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
-[ -z "${USE_PARALLEL}" ] || export USE_PARALLEL=TRUE
-[ -z "$INDEXSTEPSIZE" ] || export INDEXSTEPSIZE=20
-[ -z "$CONTROL_JOB_COUNT" ] || export CONTROL_JOB_COUNT=1
+[ -z "${USE_PARALLEL}" ] && export USE_PARALLEL=TRUE
+[ -z "$INDEXSTEPSIZE" ] && export INDEXSTEPSIZE=20
+[ -z "$CONTROL_JOB_COUNT" ] && export CONTROL_JOB_COUNT=1
 
 check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT
 
