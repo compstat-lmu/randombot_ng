@@ -48,7 +48,7 @@ check_env DATADIR
 SCRIPTDIR="${MUC_R_HOME}/scheduling"
 
 
-call_srun() {  # arguments: <seed/line> <task> <learner>
+call_srun() {  # arguments: <learner> <task> <seed / cmd>
     learner="$1"
     task="$2"
     argument="$3"
@@ -82,7 +82,7 @@ if [ "$SCHEDULING_MODE" = perseed ] ; then
 	for ((i="$SBATCH_INDEX";i<="$MAXINDEX";i+="$INDEXSTEPSIZE")) ; do
 	    while read -u 5 task ; do
 		while read -u 6 learner ; do
-		    call_srun "${i}" "${task}" "${learner}" &
+		    call_srun "${learner}" "${task}" "${i}" &
 		done 6<"${DATADIR}/TASKS"
 	    done 5<"${DATADIR}/LEARNERS"
 	    while [ $(jobs -r | wc -l) -gt "$((CONCURRENCY * 2))" ] ; do

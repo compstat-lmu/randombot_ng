@@ -48,7 +48,7 @@ Rscript -e " \
       seed <- i + offset; \
       lapply(datas, function(data) { \
         lapply(learners, function(learner) { \
-          sprintf('%s %s %s', data[['task.desc']][['id']], learner[['id']], rbn.sampleEvalPoint(learner, data, seed, paramtable)) \
+          sprintf('%s %s %s', learner[['id']], data[['task.desc']][['id']], rbn.sampleEvalPoint(learner, data, seed, paramtable)) \
         }) \
       }) \
     }); \
