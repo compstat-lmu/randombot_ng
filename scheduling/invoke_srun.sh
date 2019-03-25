@@ -82,7 +82,7 @@ if [ "$SCHEDULING_MODE" = perseed ] ; then
 	for ((i="$SBATCH_INDEX";i<="$MAXINDEX";i+="$INDEXSTEPSIZE")) ; do
 	    while read -u 5 task ; do
 		while read -u 6 learner ; do
-		    call_srun "${i}" "${task}" "${learner}"
+		    call_srun "${i}" "${task}" "${learner}" &
 		done 6<"${DATADIR}/TASKS"
 	    done 5<"${DATADIR}/LEARNERS"
 	    while [ $(jobs -r | wc -l) -gt "$((CONCURRENCY * 2))" ] ; do
@@ -106,7 +106,7 @@ elif [ "$SCHEDULING_MODE" = perparam ] ; then
 	i="-$SBATCH_INDEX"
 	while learner task argument ; do
 	    if [ "$((i % INDEXSTEPSIZE))" = 0 ] ; then
-		call_srun "$learner" "$task" "$argument"
+		call_srun "$learner" "$task" "$argument" &
 	    fi
 	    i+=1
 	    if [ "$((i % CONCURRENCY))" = 0 ] ; then
