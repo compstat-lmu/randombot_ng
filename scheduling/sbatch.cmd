@@ -1,7 +1,6 @@
 #!/bin/bash
 #SBATCH --mail-type=end
 #SBATCH --mem=MaxMemPerNode
-#SBATCH --nodes=316
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-user=martin.binder@stat.uni-muenchen.de
 #SBATCH --time=48:00:00
@@ -33,7 +32,7 @@ fi
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
-
+env
 
 check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT \
 	  SBATCH_INDEX
@@ -42,11 +41,12 @@ check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT \
 
 TOEXEC="${MUC_R_HOME}/scheduling/invoke_srun.sh"
 if [ "$CONTROL_JOB_COUNT" = 0 ] ; then
-    export TOTAL_TASK_SLOTS=SLURM_NTASKS
+    export TOTAL_TASK_SLOTS="$SLURM_NTASKS"
+    export INDIVIDUAL_TASK_SLOTS="$SLURM_NTASKS"
     "$TOEXEC"
 else
     # adding 'CONTROL_JOB_COUNT - 1' for rounding up!
-    export TOTAL_TASK_SLOTS=SLURM_NTASKS
+    export TOTAL_TASK_SLOTS="$SLURM_NTASKS"
     export INDIVIDUAL_TASK_SLOTS=$(( (SLURM_NTASKS + CONTROL_JOB_COUNT - 1) / CONTROL_JOB_COUNT))
     ORIG_SBATCH_INDEX="$SBATCH_INDEX"
     INDEXSTEPSIZE="$((INDEXSTEPSIZE * CONTROL_JOB_COUNT))"

@@ -24,7 +24,6 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT
 
 for ((i=0;i<"$INDEXSTEPSIZE";i++)) ; do
-    sbatch "${MUC_R_HOME}/scheduling/sbatch.cmd" \
-	   --export=SBATCH_INDEX=${i} \
-	   "$@"
+    sbatch --export=BASEDIR,MUC_R_HOME,SCHEDULING_MODE,USE_PARALLEL,INDEXSTEPSIZE,CONTROL_JOB_COUNT,SBATCH_INDEX=${i} "$@" \
+	   "${MUC_R_HOME}/scheduling/sbatch.cmd"
 done
