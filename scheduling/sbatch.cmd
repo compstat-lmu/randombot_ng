@@ -32,8 +32,6 @@ fi
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
-env
-
 check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT \
 	  SBATCH_INDEX
 
