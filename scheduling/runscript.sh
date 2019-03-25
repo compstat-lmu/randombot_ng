@@ -39,10 +39,9 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 . "$MUC_R_HOME/scheduling/common.sh"
 
 
-
 check_env BASEDIR SCHEDULING_MODE PERCPU_STEPSIZE PROGRESS
 
-cd -P "$BASEDIR/$(echo "$SLURMD_NODENAME" | md5sum | cut -c -2)/$SLURMD_NODENAME/work" || \
+cd -P "$BASEDIR/$(echo "$HOSTNAME" | md5sum | cut -c -2)/$HOSTNAME/work" || \
     exit 105
 NODEDIR="$(pwd)"
 # NODEDIR: node-local directory, for file system reasons
