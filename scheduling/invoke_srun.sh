@@ -55,7 +55,7 @@ call_srun() {  # arguments: <learner> <task> <seed / cmd>
     # TODO: infer memory requirement from $1 and $2
     memreq="$(get_mem_req "$learner" "$task")"  # TODO
 
-    srun --unbuffered \
+    srun --unbuffered --export=ALL \
 	--mem="${memreq}" --nodes=1 --ntasks=1 --exclusive \
 	"${SCRIPTDIR}/runscript.sh" \
 	"$SCHEDULING_MODE" "$task" "$learner" "$argument" 2>&1 | \
