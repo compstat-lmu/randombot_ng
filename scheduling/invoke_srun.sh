@@ -31,7 +31,7 @@ export PERCPU_STEPSIZE=TODO # TODO
 get_mem_req() {
     # arguments: learner, task
     # TODO
-    echo 2G
+    echo 80G  # TODO
 }
 
 DATADIR=$(Rscript -e " \
