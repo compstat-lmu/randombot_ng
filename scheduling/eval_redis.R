@@ -16,7 +16,7 @@ r.port <- Sys.getenv("REDISPORT")
 r.port <- as.integer(r.port)
 
 rcon <- NULL
-catf("Connecting to redis %s:%s", r.host, r.port)
+catf("----[%s] Connecting to redis %s:%s", token, r.host, r.port)
 rcon <- hiredis(host = r.host, port = r.port)
 
 scriptdir <- Sys.getenv("MUC_R_HOME")
@@ -34,15 +34,15 @@ source(file.path(inputdir, "constants.R"), chdir = TRUE)
 LEARNERNAME <- Sys.getenv("LEARNERNAME")
 TASKNAME <- Sys.getenv("TASKNAME")
 
-queuename <- sprintf("QUEUE_%s_%s", LEARNERNAME, TASKNAME)
+queuename <- sprintf("QUEUE_lrn:%s_tsk:%s", LEARNERNAME, TASKNAME)
 
 data <- rbn.getData(TASKNAME)
 lrn <- rbn.getLearner(LEARNERNAME)
 paramtable <- rbn.compileParamTblConfigured()
 
 repeat {
-  seet <- rcon$INCR(queuename)
-  if (!is.numeric(nextseed)) {
+  seed <- rcon$INCR(queuename)
+  if (!is.numeric(seed)) {
     break
   }
   catf("----[%s] Evaluating seed %s", token, seed)
@@ -53,7 +53,7 @@ repeat {
     result <- rbn.evaluatePoint(lrn, pt, data)
     rbn.setWatchdogTimeout(600)  # ten minutes timeout to write result file
 
-    r$SET(sprintf("RESULT_%s_%s_SD:%012.0f_%s", LEARNERNAME, TASKNAME, seed, pt),
+    rcon$SET(sprintf("RESULT_lrn:%s_tsk:%s_SD:%012.0f_val:%s", LEARNERNAME, TASKNAME, seed, pt),
       serialize(result, connection = NULL))
   }
   catf("----[%s] Done evaluating seed %s", token, seed)

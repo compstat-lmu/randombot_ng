@@ -137,6 +137,22 @@ elif [ "$SCHEDULING_MODE" = percpu ] ; then
 	done 6<"${DATADIR}/TASKS"
     done 5<"${DATADIR}/LEARNERS"
     wait
+elif [ "$SCHEDULING_MODE" = redis ] ; then
+    export PROGRESS
+    while read -u 6 LEARNERNAME ; do
+	while read -u 5 TASKNAME ; do
+	    for ((i="$BATCH_INDEX";i<="$PERCPU_STEPSIZE";i+="$INDEXSTEPSIZE")) ; do
+	        (
+		    while true ; do
+			get_progress_from_pointer "$i"
+			call_srun "${i}" "${TASKNAME}" "${LEARNERNAME}"
+		    done
+		) &
+	    done
+	done 5<"${DATADIR}/LEARNERS"
+    done 6<"${DATADIR}/TASKS"
+    wait
+fi
 else
     # should never happen
     echo "Scheduling mode $SCHEDULING_MODE dispatch error"
