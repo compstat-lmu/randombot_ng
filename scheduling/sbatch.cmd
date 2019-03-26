@@ -46,7 +46,7 @@ DATADIR=$(Rscript -e " \
   cat(rbn.getSetting('DATADIR'))
 ")
 
-check_env DATADIR ONEOFF
+check_env DATADIR ONEOFF REDISHOST REDISPORT
 
 SCRIPTDIR="${MUC_R_HOME}/scheduling"
 
