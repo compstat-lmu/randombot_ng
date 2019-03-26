@@ -18,7 +18,7 @@ rbn.parseEvalPoint <- function(eval.point, learner.object, multiple = FALSE) {
         next
       }
       param.lrn <- ps.orig$pars[[param.name]]
-      if (isDiscrete(param.lrn, include.logical = FALSE)) {
+      if (isDiscrete(param.lrn, include.logical = TRUE)) {
         pval <- value[[param.name]]
         assertSubset(pval, names(getValues(param.lrn)))
         if (isVector(param.lrn)) {

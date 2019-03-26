@@ -1,10 +1,8 @@
 #!/bin/bash
 #SBATCH --mail-type=end
 #SBATCH --mem=MaxMemPerNode
-#SBATCH --nodes=316
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-user=martin.binder@stat.uni-muenchen.de
-#SBATCH --export=NONE
 #SBATCH --time=48:00:00
 
 # This is the sbatch-script, should probably be scheduled by
@@ -18,14 +16,10 @@
 # -J jobname, default script name
 # don't need --ntasks, it is calculated from --nodes and --cpus-per-task
 
-# Expects the variable SBATCH_INDEX to be between 0 and 19
-# This is set while running sbatch:
-# $ sbatch <filename> --export=SBATCH_INDEX=$i
-
 # Expects the variable SCHEDULING_MODE to be one of 'perseed', 'perparam',
 # 'percpu'
 
-echo "Salve, Job ${SLURM_JOB_NAME}:${SLURM_JOB_ID} index ${SBATCH_INDEX} scheduling mode ${SCHEDULING_MODE}. Laboraturi Te Salutant."
+echo "Salve, Job ${SLURM_JOB_NAME}:${SLURM_JOB_ID}. Laboraturi Te Salutant."
 
 if ! [ -d "$MUC_R_HOME" ] ; then
     echo "MUC_R_HOME Not a directory: $MUC_R_HOME"
@@ -34,28 +28,64 @@ fi
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
+export TOTAL_TASK_SLOTS=""
+export INDIVIDUAL_TASK_SLOTS="$SLURM_NTASKS"
 
+get_mem_req() {
+    # arguments: learner, task
+    # TODO
+    echo 80G  # TODO
+}
 
-check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT \
-	  SBATCH_INDEX
+DATADIR=$(Rscript -e " \
+  scriptdir <- Sys.getenv('MUC_R_HOME'); \
+  inputdir <- file.path(scriptdir, 'input'); \
+  suppressPackageStartupMessages( \
+    source(file.path(scriptdir, 'load_all.R'), chdir = TRUE)); \
+  source(file.path(inputdir, 'constants.R'), chdir = TRUE); \
+  cat(rbn.getSetting('DATADIR'))
+")
 
+check_env DATADIR ONEOFF REDISHOST REDISPORT
 
+SCRIPTDIR="${MUC_R_HOME}/scheduling"
 
-TOEXEC="${MUC_R_HOME}/scheduling/invoke_srun.sh"
-if [ "$CONTROL_JOB_COUNT" = 0 ] ; then
-    export TOTAL_TASK_SLOTS=SLURM_NTASKS
-    "$TOEXEC"
-else
-    # adding 'CONTROL_JOB_COUNT - 1' for rounding up!
-    export TOTAL_TASK_SLOTS=SLURM_NTASKS
-    export INDIVIDUAL_TASK_SLOTS=$(( (SLURM_NTASKS + CONTROL_JOB_COUNT - 1) / CONTROL_JOB_COUNT))
-    ORIG_SBATCH_INDEX="$SBATCH_INDEX"
-    INDEXSTEPSIZE="$((INDEXSTEPSIZE * CONTROL_JOB_COUNT))"
-    for ((IDX=0;IDX<"$CONTROL_JOB_COUNT";IDX++)) ; do
-	SBATCH_INDEX="$((ORIG_SBATCH_INDEX * CONTROL_JOB_COUNT + IDX))"
-	srun --nodes=1 --ntasks=1 --exclusive --export=ALL \
-	     $CONTROL_JOB_ARGS "$TOEXEC" | \
-	    grep --line-buffered '^' &
-    done
-    wait
-fi
+INVOCATION=0
+SUBINVOCATION=0
+
+call_srun() {  # arguments: <learner> <task>
+    learner="$1"
+    task="$2"
+    # TODO: infer memory requirement from $1 and $2
+    memreq="$(get_mem_req "$learner" "$task")"  # TODO
+
+    srun --unbuffered --export=ALL \
+	--mem="${memreq}" --nodes=1 --ntasks=1 --exclusive \
+	"${SCRIPTDIR}/runscript.sh" \
+	"$task" "$learner" "$ONEOFF" 2>&1 | \
+	sed -u "s'^'[${task},${learner},${INVOCATION},${SUBINVOCATION}]: '" | \
+	grep --line-buffered '^'
+    # About the `grep --line-buffered`: not sure if `sed -u` suffices, but:
+    # We want each write to stdout be atomic, so different output lines
+    # are not interleaved.
+}
+
+NUMTASKS="$(grep -v '^ *$' "${DATADIR}/TASKS" | wc -l)"
+
+while read -u 6 LEARNERNAME ; do
+    while read -u 5 TASKNAME ; do
+	(
+	    while true ; do
+		get_progress_from_pointer "$i"
+		call_srun "${LEARNERNAME}" "${TASKNAME}"
+		SUBINVOCATION=$((SUBINVOCATION + 1))
+	    done
+	) &
+	INVOCATION=$((INVOCATION + 1))
+    done 6<"${DATADIR}/TASKS"
+    if ! [ "$SLURM_NTASKS" -ge $((INVOCATION + NUMTASKS)) ] ; then
+	# as many workers running as there are tasks
+	break
+    fi
+done 5<"${DATADIR}/LEARNERS"
+wait

@@ -28,7 +28,7 @@ rbn.checkParamTbl(table)
 
 rbn.registerSetting("WATCHFILE", "/tmp/watchfile.txt")
 
-datatable <- rbn.loadDataTable(file.path(inputdir, "tasks_test.csv"))
+datatable <- rbn.loadDataTable(file.path(inputdir, "tasks.csv"))
 
 rbn.retrieveData(datatable)
 

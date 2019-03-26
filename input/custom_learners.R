@@ -6,9 +6,9 @@ rbn.registerLearner("MODIFIER", function(lrn) {
     cpoCbind(
         cpoMultiplex(id = "num.impute",
           list(
-              cpoImputeMean(),
-              cpoImputeMedian(),
-              cpoImputeHist()),
+              cpoImputeMean(affect.type = "numeric"),
+              cpoImputeMedian(affect.type = "numeric"),
+              cpoImputeHist(affect.type = "numeric")),
           selected.cpo = "impute.hist"),
         MISSING = cpoMissingIndicators(affect.type = "numeric")) %>>%
     cpoImputeConstant("__MISSING__", affect.type = c("factor", "ordered")) %>>%

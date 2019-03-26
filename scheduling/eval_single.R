@@ -1,3 +1,4 @@
+# !! This script is not used in production, but can be used for diagnosis.
 # evaluate a single point, either given as string of arguments "list()" or seed number
 # info given through TASKNAME, LEARNERNAME and ARGUMENT
 token <- Sys.getenv("TOKEN")

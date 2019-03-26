@@ -3,29 +3,17 @@
 Some of these may be environment-dependent, e.g. NODE_ID, others are global settings that change run behaviour (e.g. SCHEDULING_MODE) or even results (SAMPLING_TRAFO)
 ** Environment only
 - Scheduling
-  - SBATCH_INDEX :: set while calling sbatch, see *setup.recipe*.
-  - INDEXSTEPSIZE :: number of parallel SLURM jobs, default 20
-  - CONTROL_JOB_COUNT :: Number of dedicated jobs that run. "0" for direct execution.
-  - USE_PARALLEL :: "TRUE" or "FALSE", whether to use gnu parallel, see *setup.recipe*
-  - TOTAL_SLOT_COUNT :: total number of jobs running at the same time
-  - SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself. set and exported before calling sbatch, see *setup.recipe*.
-    - for "percpu" scheduling
-      - PROGRESS :: set in *invoke_srun.sh*, read by eval_multiple. what seed to start at
-      - PERCPU_STEPSIZE :: set in *invoke_srun.sh*, read by eval_multiple. corresponds to number of LEARNER x TASK running instances and is the stepsize when incrementing seed
-      - PROGRESSFILE :: set in *runscript.sh*, read by eval_multiple
+  - JOBCOUNT :: Number of sbatch invocations to run in invoke_sbatch.sh; default 1
+  - ONEOFF :: [string] "TRUE" or "FALSE" (default): whether to restart invocations after each eval (mainly for memory usage profiling).
+- Redis:
+  - REDISHOST :: redis hostname
+  - REDISPORT :: redis port
 - R-Script invocation
-  - LEARNERNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
-  - TASKNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
-  - ARGUMENT :: set in *runscript.sh*, read by eval_single. indicating either rng-seed, 
+  - LEARNERNAME :: set in *runscript.sh*, read by eval_redis.R
+  - TASKNAME :: set in *runscript.sh*, read by eval_redis.R
 ** Environment AND R setting
 - Directories
   - MUC_R_HOME :: base directory of this repository, has subdirectories =input/=, =R/=, =scheduling/=, =setup/=. Set/inferred by most *.sh* files.
-  - BASEDIR :: the directory in which all results are written, probably a subdirectory of =$WORK=, see *setup.recipe*
-    - NODEDIR :: node-local directory. Set by *runscript.sh* to form =BASEDIR/xx/nodename/work=, where =xx= is the first two characters of =md5sum $nodename=.
-      - WORKDIR :: base directory from which to work. Set by *runscript.sh* to a subdirectory of NODEDIR, depending on SLURM_STEP_ID
-	- OUTPUTDIR :: directory where the output is written. set using *rbn.setOutputDir()* in *constants.R* to a subdir in WORKDIR. Should be called before each new output file is opened.
-    - WATCHFILE :: watchdog file. Set by *runscript.sh* to a file identified by WATCHFILE_$$ (where $$ is the bash process PID) in NODEDIR
-    - PROGRESSDIR :: directory structure =BASEDIR/joblookup/LEARNERNAME/TASKNAME/= with files =PROGRESSPOINTER_${i}= and =PROGRESSFILE_${i}=; see functions in *common.sh*
   - DATADIR :: directory where data files are stored, set by *constants.R* to =MUC_R_HOME/data=
 ** R setting only
 - Input settings
@@ -51,110 +39,48 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
 - setup
 - testenv
 * scheduling
-** "percpu" scheduling
- - Have a directory hierarchy that maps from "task, learner, INIT_ID" to the path where the checkpoint file is written
- - run each srun in the form =(while true ; do srun TASK LEARNER INIT_ID ; done) &=
- - srun call looks up directory, looks up checkpoint, copies checkpoint to its own directory, overwrites lookup file, runs
-** "perseed" scheduling
- - sequentially go along seeds, learners, tasks
- - executed using GNU Parallel
-** "perparam" scheduling
- - parameters are in a text file
- - executed using GNU Parallel
+Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_tsk:<task>" is atomically incremented, the corresponding seed is evaluated, and the result is written to "RESULT_lrn:<learner>_tsk:<task>_SD:<seed>_val:<hyperparameter vals>". Unless ONEOFF is set to TRUE, evaluation happens in an infinite loop until the process is killed. So far there is no way of knowing whether a result is missing because of an error, timeout, memory out, or user intervention.
 * Control Flow
 1. invoke_sbatch.sh
    - Takes arguments:
-     - BASEDIR
-     - SCHEDULING_MODE
-     - USE_PARALLEL
-     - *INDEXSTEPSIZE*
-     - CONTROL_JOB_COUNT
+     - *JOBCOUNT*
+     - ONEOFF
    - Exports further arguments:
      - MUC_R_HOME
-     - SBATCH_INDEX :: index of sbatch job
    - Does:
-     - for loop through *INDEXSTEPSIZE*: run *sbatch sbatch.cmd*
+     - for loop through *JOBCOUNT*: run *sbatch sbatch.cmd*
 2. sbatch.cmd
    - Takes arguments:
      - *MUC_R_HOME*
-     - BASEDIR
-     - SCHEDULING_MODE
-     - USE_PARALLEL
-     - *INDEXSTEPSIZE*
-     - *CONTROL_JOB_COUNT*
+     - ONEOFF
    - SLURM arguments:
      - SLURM_JOB_NAME (not essential)
      - SLURM_JOB_ID (not essential)
      - *SLURM_NTASKS*
+   - Uses from constants.R:
+     - *DATADIR*
    - Exports further arguments
      - SBATCH_INDEX :: modified when iterating over CONTROL_JOB_COUNT
      - INDEXSTEPSIZE :: augmented by CONTROL_JOB_COUNT
      - TOTAL_TASK_SLOTS :: indicates total (maximum) number of tasks to queue
      - INDIVIDUAL_TASK_SLOTS :: indicates total (maximum) number of tasks for single invoke_srun instance
    - Does:
-     - for loop through *CONTROL_JOB_COUNT*: run *srun runscript.sh*
-3. invoke_srun.sh
+     - creates at most SLURM_NTASKS worker threads that repeatedly call srun *runscript.sh*
+3. runscript.sh
    - Takes arguments:
-     - *BASEDIR*
-     - *SCHEDULING_MODE*
-     - *USE_PARALLEL*
-     - *INDEXSTEPSIZE*
-     - *SBATCH_INDEX*
-     - *CONTROL_JOB_COUNT*
-     - *TOTAL_TASK_SLOTS*
-     - *INDIVIDUAL_TASK_SLOTS*
-   - SLURM arguments:
-     - *SLURM_CPUS_ON_NODE*
-   - Uses from constants.R:
-     - *DATADIR*
+     - *TASKNAME* (from arg 1)
+     - *LEARNERNAME* (from arg 2)
+     - ONEOFF (from arg 3)
    - Exports further arguments:
-     - *PERCPU_STEPSIZE* :: in *percpu* mode the number of processes to have running for a single LEARNER x TASK config
-     - PROGRESS :: 
-   - Does:
-     - Depending on *SCHEDULING_MODE* and *USE_PARALLEL*:
-       - *perseed*: loop from *SBATCH_INDEX* by *INDEXSTEPSIZE* and call *eval_single.R*
-       - *perparam*: loop through *DATADIR* / INPUTS file
-       - *percpu*: loop through *DATADIR* / LEARNERS, *DATADIR* / TASKS, by *INDEXSTEPSIZE* (and up to *PERCPU_STEPSIZE*)
-4. runscript.sh
-   - Takes arguments:
-     - *BASEDIR*
-     - *SCHEDULING_MODE* (from arg 1)
-     - *TASKNAME* (from arg 2)
-     - *LEARNERNAME* (from arg 3)
-     - *ARGUMENT* (from arg 4)
-     - PERCPU_STEPSIZE
-     - *PROGRESS*
-   - SLURM arguments:
-     - *SLURMD_NODENAME*
-   - Exports further arguments:
-     - NODEDIR
-     - WORKDIR
-     - WATCHFILE
      - TOKEN
-     - PROGRESSFILE (only for eval_multiple)
    - Does:
-     - after setting up vars calls *eval_single.R* or *eval_multiple.R* as well as *watchdog.sh*
-5. eval_single.R
+     - calls *eval_redis.R*, also traces the process's memory usage.
+4. eval_redis.R
    - Takes arguments:
      - *TOKEN*
      - *MUC_R_HOME*
      - *LEARNERNAME*
      - *TASKNAME*
-     - *ARGUMENT*
-     - *WORKDIR*
-     - *NODEDIR*
-     - *WATCHFILE*
-6. eval_multiple.R
-   - Takes arguments:
-     - *TOKEN*
-     - *MUC_R_HOME*
-     - *LEARNERNAME*
-     - *TASKNAME*
-     - *PROGRESSFILE*
-     - *PERCPU_STEPSIZE*
-     - *WORKDIR*
-     - *NODEDIR*
-     - *WATCHFILE*
-7. watchdog.sh
-   - Takes arguments:
-     - *WATCHFILE*
+     - *REDISHOST*
+     - *REDISPORT*
+     - *ONEOFF*

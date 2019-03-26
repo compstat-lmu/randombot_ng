@@ -13,7 +13,7 @@ rbn.evaluatePoint <- function(learner.object, point.string, data) {
 
   supereval <- point.value$SUPEREVAL
   point.value$SUPEREVAL <- NULL
-  learner.object <- setHyperPars(learner, par.vals = point.value)
+  learner.object <- setHyperPars(learner.object, par.vals = point.value)
   assertFlag(supereval)
   assertSubset(c("resampling", "super.resampling"), names(data))
 
@@ -29,8 +29,7 @@ rbn.evaluatePoint <- function(learner.object, point.string, data) {
   on.exit(catf("!!--- EXITING eval function of point: '%s' ---!!", point.string))
 
   res <- resample(learner = learner.object, task = data$task, resampling = resampling,
-    measures = list(timetrain, timepredict), models = FALSE, keep.pred = TRUE,
-    show.info = TRUE)
+    measures = list(timetrain, timepredict), models = FALSE, keep.pred = TRUE)
   catf("!!--- DONE Evaluating Point: '%s' ---!!", point.string)
   res
 }

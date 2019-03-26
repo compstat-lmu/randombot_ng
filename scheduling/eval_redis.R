@@ -7,7 +7,7 @@ token <- Sys.getenv("TOKEN")
 suppressPackageStartupMessages({
   library("BBmisc")
 })
-catf("----[%s] eval_multiple.R", token)
+catf("----[%s] eval_redis.R", token)
 
 scriptdir <- Sys.getenv("MUC_R_HOME")
 inputdir <- file.path(scriptdir, "input")
@@ -21,28 +21,37 @@ source(file.path(inputdir, "custom_learners.R"), chdir = TRUE)
 # load constants
 source(file.path(inputdir, "constants.R"), chdir = TRUE)
 
+rbn.setWatchdogTimeout(600)  # ten minutes timeout to connect to redux
+
+library("redux")
+
+r.host <- Sys.getenv("REDISHOST")
+r.port <- Sys.getenv("REDISPORT")
+r.port <- as.integer(r.port)
+
+oneoff <- Sys.getenv("ONEOFF")
+
+rcon <- NULL
+catf("----[%s] Connecting to redis %s:%s", token, r.host, r.port)
+rcon <- hiredis(host = r.host, port = r.port)
+
+
 LEARNERNAME <- Sys.getenv("LEARNERNAME")
 TASKNAME <- Sys.getenv("TASKNAME")
-PROGRESSFILE <- Sys.getenv("PROGRESSFILE")
-PROGRESSTMP <- paste0(PROGRESSFILE, ".tmp")
-PERCPU_STEPSIZE <- Sys.getenv("PERCPU_STEPSIZE")
 
-PERCPU_STEPSIZE <- assertInt(as.numeric(PERCPU_STEPSIZE), coerce = TRUE)
+queuename <- sprintf("QUEUE_lrn:%s_tsk:%s", LEARNERNAME, TASKNAME)
 
 data <- rbn.getData(TASKNAME)
 lrn <- rbn.getLearner(LEARNERNAME)
 paramtable <- rbn.compileParamTblConfigured()
 
-seed <- as.integer(readLines(PROGRESSFILE)[1])
-catf("----[%s] Read seed %s from PROGRESSFILE %s", token, seed, PROGRESSFILE)
+was.error <- FALSE
 repeat {
-  nextseed <- seed + PERCPU_STEPSIZE
-  if (is.na(nextseed)) {
+  seed <- rcon$INCR(queuename)
+  if (!is.numeric(seed)) {
+    was.error <- TRUE
     break
   }
-  writeLines(as.character(nextseed), PROGRESSTMP)
-  file.rename(PROGRESSTMP, PROGRESSFILE)
-
   catf("----[%s] Evaluating seed %s", token, seed)
   points <- rbn.sampleEvalPoint(lrn, data$task, seed, paramtable)
 
@@ -50,12 +59,17 @@ repeat {
     catf("----[%s] Evaluating point %s", token, pt)
     result <- rbn.evaluatePoint(lrn, pt, data)
     rbn.setWatchdogTimeout(600)  # ten minutes timeout to write result file
-    rbn.writeResult(result, TASKNAME, LEARNERNAME, pt)
-  }
 
+    rcon$SET(sprintf("RESULT_lrn:%s_tsk:%s_SD:%012.0f_val:%s", LEARNERNAME, TASKNAME, seed, pt),
+      serialize(result, connection = NULL))
+  }
   catf("----[%s] Done evaluating seed %s", token, seed)
-  seed <- nextseed
+
+  if (oneoff == "TRUE") {
+    break
+  }
 }
 
-
-catf("----[%s] nextseed was NA. Current seed: %s. Integer overflow? Ending.", token, seed)
+if (was.error) {
+  catf("----[%s] seed was bad. Current seed: %s. Integer overflow? Ending.", token, seed)
+}

@@ -11,10 +11,11 @@ suppressPackageStartupMessages({
 
 RNGversion("3.3")
 
-configureMlr(show.info = TRUE,
+configureMlr(
   on.learner.error = "warn",
   on.learner.warning = "warn",
-  show.learner.output = TRUE,
+  show.learner.output = FALSE,
+  show.info = FALSE,
   on.error.dump = FALSE)
 
 options(warn = 1)
