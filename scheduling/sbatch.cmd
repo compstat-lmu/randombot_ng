@@ -76,16 +76,15 @@ while read -u 6 LEARNERNAME ; do
     while read -u 5 TASKNAME ; do
 	(
 	    while true ; do
-		get_progress_from_pointer "$i"
 		call_srun "${LEARNERNAME}" "${TASKNAME}"
 		SUBINVOCATION=$((SUBINVOCATION + 1))
 	    done
 	) &
 	INVOCATION=$((INVOCATION + 1))
-    done 6<"${DATADIR}/TASKS"
+    done 5<"${DATADIR}/TASKS"
     if ! [ "$SLURM_NTASKS" -ge $((INVOCATION + NUMTASKS)) ] ; then
 	# as many workers running as there are tasks
 	break
     fi
-done 5<"${DATADIR}/LEARNERS"
+done 6<"${DATADIR}/LEARNERS"
 wait
