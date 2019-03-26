@@ -26,7 +26,7 @@ MAXINDEX=10000000000
 JOBLOGFILE="${BASEDIR}/parallel_joblogs/JOBLOG_${SCHEDULING_MODE}_${SBATCH_INDEX}_of_${INDEXSTEPSIZE}.log"
 
 # number of `srun`s to have in the pipe at the same time.
-CONCURRENCY=$(( (INDIVIDUAL_TASK_SLOTS - CONTROL_JOB_COUNT) * SLURM_CPUS_ON_NODE))
+CONCURRENCY=$(( (INDIVIDUAL_TASK_SLOTS - CONTROL_JOB_COUNT) )) # * SLURM_CPUS_ON_NODE)) TODO
 export PERCPU_STEPSIZE=TODO # TODO
 get_mem_req() {
     # arguments: learner, task
