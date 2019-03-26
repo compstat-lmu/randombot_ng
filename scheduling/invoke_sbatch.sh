@@ -19,8 +19,9 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 [ -z "$JOBCOUNT" ] && export JOBCOUNT=1
 
-check_env JOBCOUNT ONEOFF
+check_env JOBCOUNT ONEOFF REDISHOST REDISPORT
 
 for ((i=0;i<"$JOBCOUNT";i++)) ; do
-    sbatch --export=MUC_R_HOME "$@" "${MUC_R_HOME}/scheduling/sbatch.cmd"
+    sbatch --export=MUC_R_HOME,JOBCOUNT,ONEOFF,REDISHOST,REDISPORT \
+	   "$@" "${MUC_R_HOME}/scheduling/sbatch.cmd"
 done
