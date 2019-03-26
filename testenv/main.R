@@ -205,3 +205,18 @@ ll(95) # <-- ?!
 
 
 table[95, ]
+
+
+# ---------------------------------
+
+cpx <- .custom.learner.register$MODIFIER(NULLCPO)
+cpx <- setHyperPars(cpx, num.impute.selected.cpo = "impute.mean")
+
+datasizes <- t(sapply(datatable$name, function(dname) {
+  dataset <- rbn.getData(dname)$task %>>% cpx
+  c(p = getTaskNFeats(dataset),
+    p.dummy = getTaskNFeats(dataset %>>% cpoDummyEncode(reference.cat = TRUE, infixdot = TRUE)),
+    n = getTaskSize(dataset))
+}))
+
+# write.csv(datasizes, file = "notes/datasizes.csv")
