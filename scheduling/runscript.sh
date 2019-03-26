@@ -34,6 +34,12 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 check_env ONEOFF REDISHOST REDISPORT
 
+
+# benchmark stdout
+for ((i = 0 ; i < 10 ; i++)) ; do date +"%s.%N" ; done
+env | cut -c -4095
+for ((i = 0 ; i < 10 ; i++)) ; do date +"%s.%N" ; done
+
 /usr/bin/time -f "----[$TOKEN] E %E K %Ss U %Us P %P M %MkB O %O" \
 	      Rscript "$MUC_R_HOME/scheduling/eval_redis.R"
 result=$?
