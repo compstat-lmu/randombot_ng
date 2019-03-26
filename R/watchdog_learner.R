@@ -33,8 +33,8 @@ rbn.setWatchdogTimeout <- function(timeout) {
       usedtimeout < 0) {
     stopf("Invalid timeout %s", timeout)
   }
-  loops <- usedtimeout %% 10
-  resttimeout <- usedtimeout - 10 * loops
+  loops <- trunc(usedtimeout / 10)
+  resttimeout <- usedtimeout - 10 * loops  # not brave enough to use %% here
   stopifnot(resttimeout >= 0)
 
   WATCHDOGPID <<- system(
