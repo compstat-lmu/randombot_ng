@@ -45,7 +45,7 @@ DATADIR=$(Rscript -e " \
 
 check_env DATADIR
 
-SCRIPTDIR="${MUC_R_HOME}/scheduling"
+export SCRIPTDIR="${MUC_R_HOME}/scheduling"
 
 
 call_srun() {  # arguments: <learner> <task> <seed / cmd>
@@ -67,6 +67,7 @@ call_srun() {  # arguments: <learner> <task> <seed / cmd>
 }
 
 export -f call_srun
+export -f get_mem_req
 
 
 if [ "$SCHEDULING_MODE" = perseed ] ; then
