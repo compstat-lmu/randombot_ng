@@ -61,17 +61,14 @@ Preparation of work environment, using `/setup/` files:
 
 1. **`001_install_pkgs.R`**: installing `R` environment
 2. **`setup.recipe`**: description and explanation of environment variable setup
-3. **`make_dirs.sh`**: creating node-local directories to be used by scripts
 
 ### Evaluations
 To start evaluations, call `invoke_sbatch.sh` in the `/scheduling/` directory.
 
 1. **`invoke_sbatch.sh`**: called by the user, calls `sbatch` with `sbatch.cmd`
-2. **`sbatch.cmd`**: calls `invoke_srun.sh` once or optionally multiple times in parallel
-3. **`invoke_srun.sh`**: starts `srun` job-steps with `runscript.sh`
-4. **`runscript.sh`**: runs `eval_single.R` or `eval_multiple.R` (depending on scheduling mode), as well as `watchdog.sh`, on the computation nodes
-5. **`eval_single.R`** or **`eval_multiple.R`**: R script that performs resampling
-6. **`watchdog.sh`**: kills resampling evaluations that take too long.
+2. **`sbatch.cmd`**: starts `srun` job-steps with `runscript.sh`
+4. **`runscript.sh`**: runs `eval_redis.R` on the computation nodes
+5. **`eval_redis.R`**: R script that performs resampling
 
 ### R Script Internals
 Mostly in `/R/` directory, with exception of `load_all.R`.
@@ -83,13 +80,11 @@ Mostly in `/R/` directory, with exception of `load_all.R`.
 - **`get_learner.R`**: Functions for definition and retrieval of learners, interplays with `/input/custom_learners.R`.
 - **`tables_loader.R`**: Loading parameter space data
 - **`check_param_tbl.R`**: Checking parameter space data
-- **`sample_eval_point.R`**: Sampling parameters for evaluation; used either on developer-machine in `/setup/create_inputs.sh` (for scheduling mode "perparam") as well as on cluster in `eval_single.R` and `eval_multiple.R` (scheduling "perseed" and "percpu", respectively).
+- **`sample_eval_point.R`**: Sampling parameters for evaluation; used either on developer-machine in `/setup/create_inputs.sh` (for scheduling mode "perparam") as well as on cluster in `eval_redis.R`.
 - **`parse_eval_point.R`**: Going from `character[1]` value, emitted by `sample_eval_point.R`, to actual parameter list
 - **`evaluate_point.R`**: Calling resampling
 - **`write_results.R`**: Writing out results
 - **`resampling_tools.R`**: Auxiliary functions for handling `ResampleInstance` objects
-- **`watchdog_learner.R`**: watchdog learner
-
 
 ## Benchmark Setup:
 

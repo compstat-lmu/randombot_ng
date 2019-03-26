@@ -1,7 +1,4 @@
-
-
-rbn.setEnvToLoad(c("NODEDIR", "WORKDIR", "MUC_R_HOME", "WATCHFILE"))
-
+rbn.setEnvToLoad("MUC_R_HOME")
 
 PERCVTIME = 300
 rbn.registerSetting("RESAMPLINGTIMEOUTS",
@@ -9,18 +6,9 @@ rbn.registerSetting("RESAMPLINGTIMEOUTS",
     1.0, 1.0, 1.1, 1.1, 1.2,
     1.5) * PERCVTIME)
 
-
 rbn.registerSetting("SUPERRATE", 0.1)
 
 rbn.registerSetting("SAMPLING_TRAFO", "norm")
-
-rbn.setOutputDir <- function() {
-  dir <- rbn.registerSetting("OUTPUTDIR", overwrite = TRUE,
-    file.path(rbn.getSetting("WORKDIR"), format(Sys.time(), "%F_%H")))
-  dir.create(file.path(dir), showWarnings = FALSE)
-  dir
-}
-
 
 # WARNING: ALL OF the following changes the data which is cached
 # in the DATADIR folder. Be sure to call rbn.retrieveData() when this changes.

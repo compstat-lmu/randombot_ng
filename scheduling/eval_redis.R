@@ -9,16 +9,6 @@ suppressPackageStartupMessages({
 })
 catf("----[%s] eval_redis.R", token)
 
-library("redux")
-
-r.host <- Sys.getenv("REDISHOST")
-r.port <- Sys.getenv("REDISPORT")
-r.port <- as.integer(r.port)
-
-rcon <- NULL
-catf("----[%s] Connecting to redis %s:%s", token, r.host, r.port)
-rcon <- hiredis(host = r.host, port = r.port)
-
 scriptdir <- Sys.getenv("MUC_R_HOME")
 inputdir <- file.path(scriptdir, "input")
 
@@ -31,6 +21,21 @@ source(file.path(inputdir, "custom_learners.R"), chdir = TRUE)
 # load constants
 source(file.path(inputdir, "constants.R"), chdir = TRUE)
 
+rbn.setWatchdogTimeout(600)  # ten minutes timeout to connect to redux
+
+library("redux")
+
+r.host <- Sys.getenv("REDISHOST")
+r.port <- Sys.getenv("REDISPORT")
+r.port <- as.integer(r.port)
+
+oneoff <- Sys.getenv("ONEOFF")
+
+rcon <- NULL
+catf("----[%s] Connecting to redis %s:%s", token, r.host, r.port)
+rcon <- hiredis(host = r.host, port = r.port)
+
+
 LEARNERNAME <- Sys.getenv("LEARNERNAME")
 TASKNAME <- Sys.getenv("TASKNAME")
 
@@ -40,9 +45,11 @@ data <- rbn.getData(TASKNAME)
 lrn <- rbn.getLearner(LEARNERNAME)
 paramtable <- rbn.compileParamTblConfigured()
 
+was.error <- FALSE
 repeat {
   seed <- rcon$INCR(queuename)
   if (!is.numeric(seed)) {
+    was.error <- TRUE
     break
   }
   catf("----[%s] Evaluating seed %s", token, seed)
@@ -57,7 +64,12 @@ repeat {
       serialize(result, connection = NULL))
   }
   catf("----[%s] Done evaluating seed %s", token, seed)
+
+  if (oneoff == "TRUE") {
+    break
+  }
 }
 
-
-catf("----[%s] seed was bad. Current seed: %s. Integer overflow? Ending.", token, seed)
+if (was.error) {
+  catf("----[%s] seed was bad. Current seed: %s. Integer overflow? Ending.", token, seed)
+}

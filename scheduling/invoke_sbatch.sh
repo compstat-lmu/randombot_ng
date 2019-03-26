@@ -17,13 +17,10 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
-[ -z "${USE_PARALLEL}" ] && export USE_PARALLEL=TRUE
-[ -z "$INDEXSTEPSIZE" ] && export INDEXSTEPSIZE=20
-[ -z "$CONTROL_JOB_COUNT" ] && export CONTROL_JOB_COUNT=1
+[ -z "$JOBCOUNT" ] && export JOBCOUNT=1
 
-check_env BASEDIR SCHEDULING_MODE USE_PARALLEL INDEXSTEPSIZE CONTROL_JOB_COUNT
+check_env JOBCOUNT ONEOFF
 
-for ((i=0;i<"$INDEXSTEPSIZE";i++)) ; do
-    sbatch --export=BASEDIR,MUC_R_HOME,SCHEDULING_MODE,USE_PARALLEL,INDEXSTEPSIZE,CONTROL_JOB_COUNT,SBATCH_INDEX=${i} "$@" \
-	   "${MUC_R_HOME}/scheduling/sbatch.cmd"
+for ((i=0;i<"$JOBCOUNT";i++)) ; do
+    sbatch --export=MUC_R_HOME "$@" "${MUC_R_HOME}/scheduling/sbatch.cmd"
 done

@@ -20,19 +20,28 @@ makeWatchedLearner <- function(learner, timeouts, kill.on.error = FALSE) {
   learner
 }
 
-rbn.setWatchdogTimeout <- function(timeout) {
-  watchfile <- rbn.getSetting("WATCHFILE")
-  if (!testString(watchfile)) {
-    cat("No WATCHFILE given in environment.\n")
-    stop("No WATCHFILE given in environment.")
-  }
-  intermediate.file <- paste0(watchfile, ".tmp")
 
-  # first we write to an intermediate file and then swap out with `file.rename`.
-  # we must not write to the watchfile directly to avoid race-conditions with the watchdog!
-  # file.rename is atomic on linux.
-  cat(as.character(round(timeout) + as.integer(Sys.time())), file = intermediate.file)
-  file.rename(intermediate.file, watchfile)
+WATCHDOGPID <- NULL
+rbn.setWatchdogTimeout <- function(timeout) {
+  if (!is.null(WATCHDOGPID)) {
+    system(sprintf("kill %s", WATCHDOGPID))
+  }
+  usedtimeout <- as.numeric(timeout)
+  if (length(usedtimeout) != 1 ||
+      !is.finite(usedtimeout) ||
+      !is.numeric(usedtimeout) ||
+      usedtimeout < 0) {
+    stopf("Invalid timeout %s", timeout)
+  }
+  loops <- usedtimeout %% 10
+  resttimeout <- usedtimeout - 10 * loops
+  stopifnot(resttimeout >= 0)
+
+  WATCHDOGPID <<- system(
+    sprintf(
+        "(for ((i=0;i<%s;i++)) do sleep 10 ; if ! kill -0 $PPID 2>/dev/null ; then exit 0 ; fi ; done ; sleep %s ; echo KILLING $PPID WAU WAU >&2 ; kill $PPID) > /dev/null & echo $!",
+        loops, resttimeout),
+    intern = TRUE)
 }
 
 trainLearner.WatchedLearner <- function(.learner, ...) {
@@ -43,7 +52,7 @@ trainLearner.WatchedLearner <- function(.learner, ...) {
     timeout <- .learner$timeouts[iter]
     rbn.setWatchdogTimeout(timeout)
   }, error = function(e) { # if the timeout can't be written we commit sudoku
-    cat("Error writing watchfile!\n")
+    cat("Error setting watch timeout!\n")
     if (.learner$kill.on.error) {
       cat("Killing.\n")
       quit(status = 254)
