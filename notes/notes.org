@@ -84,3 +84,26 @@ Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_t
      - *REDISHOST*
      - *REDISPORT*
      - *ONEOFF*
+* Scriptlets
+
+cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
+
+( echo "dataset learner invocation restart point evalno walltime kernelseconds userseconds cpupercent memorykb" ;
+  cat threads | \
+  while read t ; do \
+    grep -F "$t" ../RESULT_REDIS_3/slurm-48771.out | \
+      cut -d ' ' -f 2- | \
+        sed 's/\[\[[0-9]\+\]\] ----\[[^]]*\]  exited with status [0-9]*//g' | \
+        sed 's/----\[[-0-9:]*_[^]]*\] eval_redis.R//g' | \
+        sed 's/----\[[-0-9:]*_[^]]*\] Connecting to redis [^:]*:[0-9]*//g' | \
+	sed 's/----\[[-0-9:]*_[^]]*\] Done evaluating seed [0-9]*//g' | \
+      tr $'\n' '@' | sed 's/@\([^-![]\)/\1/g' | tr '@' $'\n' | \
+      grep -v '^!' | grep 'Evaluating point \|^\[.*kB' | tr $'\n' '@' | \
+      sed 's/@\[/ [/g' | tr '@' $'\n' | \
+      cut -d ' ' -f 4,5,8,10,12,14,16 | \
+      sed 's/[][]//g' | sed 's/kB$//' | sed 's/[%s] / /g' | sed "s/^/$t/" | \
+      sed 's/^\[\([^,]*\),\([^,]*\),\([0-9]\+\),\([0-9]\+\)\]/\1 \2 \3 \4 /' | \
+      grep -v ')$' ; done
+) > memtable
+
+
