@@ -39,7 +39,7 @@ rbn.setWatchdogTimeout <- function(timeout) {
 
   WATCHDOGPID <<- system(
     sprintf(
-        "(for ((i=0;i<%s;i++)) do sleep 10 ; if ! kill -0 $PPID 2>/dev/null ; then exit 0 ; fi ; done ; sleep %s ; echo KILLING $PPID WAU WAU >&2 ; kill $PPID) > /dev/null & echo $!",
+        "(for ((i=0;i<%s;i++)) do sleep 10 ; if ! kill -0 $PPID 2>/dev/null ; then exit 0 ; fi ; done ; sleep %s ; echo KILLING $PPID WAU WAU >&2 ; kill $PPID ; sleep 0.5 ; kill -9 $PPID ) > /dev/null & echo $!",
         loops, resttimeout),
     intern = TRUE)
 }
