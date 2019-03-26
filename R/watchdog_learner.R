@@ -22,7 +22,7 @@ makeWatchedLearner <- function(learner, timeouts, kill.on.error = FALSE) {
 
 
 WATCHDOGPID <- NULL
-rbn.setWatchdogTimeout <- function(timeout) {
+rbn.setWatchdogTimeout <- function(timeout, msg = "") {
   if (!is.null(WATCHDOGPID)) {
     system(sprintf("kill %s", WATCHDOGPID))
   }
@@ -39,8 +39,8 @@ rbn.setWatchdogTimeout <- function(timeout) {
 
   WATCHDOGPID <<- system(
     sprintf(
-        "(for ((i=0;i<%s;i++)) do sleep 10 ; if ! kill -0 $PPID 2>/dev/null ; then exit 0 ; fi ; done ; sleep %s ; echo KILLING $PPID WAU WAU >&2 ; kill $PPID ; sleep 0.5 ; kill -9 $PPID ) > /dev/null & echo $!",
-        loops, resttimeout),
+        "(for ((i=0;i<%s;i++)) do sleep 10 ; if ! kill -0 $PPID 2>/dev/null ; then exit 0 ; fi ; done ; sleep %s ; echo \"KILLING $PPID WAU WAU ('%s')\" >&2 ; kill $PPID ; sleep 0.5 ; kill -9 $PPID ) > /dev/null & echo $!",
+        loops, resttimeout, msg),
     intern = TRUE)
 }
 
@@ -50,7 +50,7 @@ trainLearner.WatchedLearner <- function(.learner, ...) {
     iter <- min(iter, length(.learner$timeouts))
     assertInt(iter, lower = 1)  # debug check
     timeout <- .learner$timeouts[iter]
-    rbn.setWatchdogTimeout(timeout)
+    rbn.setWatchdogTimeout(timeout, msg = sprintf("iter: %s, t/o: %s", iter, timeout))
   }, error = function(e) { # if the timeout can't be written we commit sudoku
     cat("Error setting watch timeout!\n")
     if (.learner$kill.on.error) {
