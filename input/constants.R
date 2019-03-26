@@ -1,12 +1,12 @@
 rbn.setEnvToLoad("MUC_R_HOME")
 
-PERCVTIME = 300
+PERCVTIME = 1800
 rbn.registerSetting("RESAMPLINGTIMEOUTS",
   c(0.8, 0.9, 0.9, 1.0, 1.0,
     1.0, 1.0, 1.1, 1.1, 1.2,
     1.5) * PERCVTIME)
 
-rbn.registerSetting("SUPERRATE", 0.1)
+rbn.registerSetting("SUPERRATE", 0.0)
 
 rbn.registerSetting("SAMPLING_TRAFO", "norm")
 
