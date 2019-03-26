@@ -8,11 +8,14 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
   - CONTROL_JOB_COUNT :: Number of dedicated jobs that run. "0" for direct execution.
   - USE_PARALLEL :: "TRUE" or "FALSE", whether to use gnu parallel, see *setup.recipe*
   - TOTAL_SLOT_COUNT :: total number of jobs running at the same time
-  - SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed": one job per seed value. "perparam": one job per param string (given in command line). "whole": one job per CPU which loops through seeds itself. set and exported before calling sbatch, see *setup.recipe*.
+  - SCHEDULING_MODE :: [string] "perseed", "perparam", "percpu": "perseed", "redis": one job per seed value. "perparam": one job per param string (given in command line). "percpu": one job per CPU which loops through seeds itself. set and exported before calling sbatch, see *setup.recipe*. "redis" using redis as task queue
     - for "percpu" scheduling
       - PROGRESS :: set in *invoke_srun.sh*, read by eval_multiple. what seed to start at
       - PERCPU_STEPSIZE :: set in *invoke_srun.sh*, read by eval_multiple. corresponds to number of LEARNER x TASK running instances and is the stepsize when incrementing seed
       - PROGRESSFILE :: set in *runscript.sh*, read by eval_multiple
+    - for "redis" scheduling
+      - REDISHOST :: redis hostname
+      - REDISPORT :: redis port
 - R-Script invocation
   - LEARNERNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
   - TASKNAME :: set in *runscript.sh*, read by eval_single / eval_multiple
@@ -133,7 +136,7 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
      - TOKEN
      - PROGRESSFILE (only for eval_multiple)
    - Does:
-     - after setting up vars calls *eval_single.R* or *eval_multiple.R* as well as *watchdog.sh*
+     - after setting up vars calls *eval_single.R*, *eval_multiple.R* or *eval_redis.R* as well as *watchdog.sh*
 5. eval_single.R
    - Takes arguments:
      - *TOKEN*
@@ -155,6 +158,15 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
      - *WORKDIR*
      - *NODEDIR*
      - *WATCHFILE*
-7. watchdog.sh
+7. eval_redis.R
+   - Takes arguments:
+     - *TOKEN*
+     - *MUC_R_HOME*
+     - *LEARNERNAME*
+     - *TASKNAME*
+     - *WATCHFILE*
+     - *REDISHOST*
+     - *REDISPORT*
+8. watchdog.sh
    - Takes arguments:
      - *WATCHFILE*

@@ -82,6 +82,18 @@ check_env() {
 		    exit 12
 		fi
 		;;
+	    REDISHOST)
+		if [ "$SCHEDULING_MODE" = redis ] && [ -z "$REDISHOST" ] ; then
+		    echo "REDISHOST not given" >&2
+		    exit 13
+		fi
+		;;
+	    REDISPORT)
+		if [ "$SCHEDULING_MODE" = redis ] && ! [ "$REDISPORT" -gt 0 ] ; then
+		    echo "REDISPORT not valid: $REDISPORT" >&2
+		    exit 14
+		fi
+		;;
 	    *)
 		echo "bad check_env argument $WHAT" >&2
 		exit 253

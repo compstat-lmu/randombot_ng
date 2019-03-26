@@ -39,7 +39,7 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 . "$MUC_R_HOME/scheduling/common.sh"
 
 
-check_env BASEDIR SCHEDULING_MODE PERCPU_STEPSIZE PROGRESS
+check_env BASEDIR SCHEDULING_MODE PERCPU_STEPSIZE PROGRESS REDISHOST REDISPORT
 
 cd -P "$BASEDIR/$(echo "$HOSTNAME" | md5sum | cut -c -2)/$HOSTNAME/work" || \
     exit 105
@@ -70,6 +70,8 @@ if [ "$SCHEDULING_MODE" = percpu ] ; then
     echo "$PROGRESSFILE" > "$PROGRESSPOINTER"
     
     evalfile="eval_multiple.R"
+elif [ "$SCHEDULING_MODE" = redis ] ; then
+    evalfile="eval_redis.R"    
 else
     evalfile="eval_single.R"
 fi
