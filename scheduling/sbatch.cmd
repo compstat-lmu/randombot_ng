@@ -34,7 +34,7 @@ export INDIVIDUAL_TASK_SLOTS="$SLURM_NTASKS"
 get_mem_req() {
     # arguments: learner, task
     # TODO
-    echo 80G  # TODO
+    echo 40G  # TODO
 }
 
 DATADIR=$(Rscript -e " \
@@ -46,7 +46,7 @@ DATADIR=$(Rscript -e " \
   cat(rbn.getSetting('DATADIR'))
 ")
 
-check_env DATADIR ONEOFF REDISHOST REDISPORT
+check_env DATADIR ONEOFF REDISHOST REDISPORT REDISPW
 
 SCRIPTDIR="${MUC_R_HOME}/scheduling"
 

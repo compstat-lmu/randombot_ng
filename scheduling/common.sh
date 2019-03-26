@@ -24,15 +24,21 @@ check_env() {
 		fi
 		;;
 	    REDISHOST)
-		if [ "$SCHEDULING_MODE" = redis ] && [ -z "$REDISHOST" ] ; then
+		if [ -z "$REDISHOST" ] ; then
 		    echo "REDISHOST not given" >&2
 		    exit 13
 		fi
 		;;
 	    REDISPORT)
-		if [ "$SCHEDULING_MODE" = redis ] && ! [ "$REDISPORT" -gt 0 ] ; then
+		if ! [ "$REDISPORT" -gt 0 ] ; then
 		    echo "REDISPORT not valid: $REDISPORT" >&2
 		    exit 14
+		fi
+		;;
+	    REDISPW)
+		if [ -z "$REDISPW" ] ; then
+		    echo "Missing REDISPW" >&2
+		    exit 16
 		fi
 		;;
 	    ONEOFF)

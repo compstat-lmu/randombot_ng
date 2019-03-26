@@ -27,13 +27,14 @@ library("redux")
 
 r.host <- Sys.getenv("REDISHOST")
 r.port <- Sys.getenv("REDISPORT")
+r.pass <- Sys.getenv("REDISPW")
 r.port <- as.integer(r.port)
 
 oneoff <- Sys.getenv("ONEOFF")
 
 rcon <- NULL
 catf("----[%s] Connecting to redis %s:%s", token, r.host, r.port)
-rcon <- hiredis(host = r.host, port = r.port)
+rcon <- hiredis(host = r.host, port = r.port, password = r.pass)
 
 
 LEARNERNAME <- Sys.getenv("LEARNERNAME")

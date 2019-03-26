@@ -32,18 +32,23 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 . "$MUC_R_HOME/scheduling/common.sh"
 
 
-check_env ONEOFF REDISHOST REDISPORT
+check_env ONEOFF REDISHOST REDISPORT REDISPW
 
 
-# benchmark stdout
-for ((i = 0 ; i < 10 ; i++)) ; do date +"%s.%N" ; done
-env | cut -c -4095
-for ((i = 0 ; i < 10 ; i++)) ; do date +"%s.%N" ; done
+## benchmark stdout
+# for ((i = 0 ; i < 10 ; i++)) ; do date +"%s.%N" ; done
+# env | cut -c -4095
+# for ((i = 0 ; i < 10 ; i++)) ; do date +"%s.%N" ; done
 
-/usr/bin/time -f "----[$TOKEN] E %E K %Ss U %Us P %P M %MkB O %O" \
-	      Rscript "$MUC_R_HOME/scheduling/eval_redis.R"
-result=$?
+INNERSTEP=0
 
-echo "----[${TOKEN}] ${evalfile} exited with status $result"
+while true ; do
+    /usr/bin/time -f "[[${INNERSTEP}]] ----[$TOKEN] E %E K %Ss U %Us P %P M %MkB O %O" \
+		  Rscript "$MUC_R_HOME/scheduling/eval_redis.R"
+    result=$?
+    
+    echo "[[${INNERSTEP}]] ----[${TOKEN}] ${evalfile} exited with status $result"
+    INNERSTEP=$((INNERSTEP + 1))
+done
 
 exit $result
