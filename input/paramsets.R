@@ -22,6 +22,7 @@ classif.svm = makeParamSet(
   makeNumericParam("tolerance", lower = 0.001, upper = 1),
   makeLogicalParam("shrinking")
 )
+classif.svm.fixed_pars = list("fitted" = FALSE)
 
 prob.classif.svm.radial = 0.075
 classif.svm.radial = makeParamSet( # Only radial basis function kernel
@@ -30,6 +31,7 @@ classif.svm.radial = makeParamSet( # Only radial basis function kernel
   makeNumericParam("tolerance", lower = -5, upper = -1, trafo = function(x) 2^x),
   makeLogicalParam("shrinking")
 )
+classif.svm.radial.fixed_pars = list("fitted" = FALSE)
 
 prob.classif.ranger.pow = 0.15
 # => See RLearner.classif.ranger.pow.R

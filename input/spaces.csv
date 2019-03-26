@@ -55,6 +55,7 @@ classif.svm.radial	gamma		-10	10	2^x
 classif.svm.radial	tolerance		-5	-1	2^x		
 classif.svm.radial	shrinking	TRUE, FALSE					
 classif.svm.radial	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.svm.radial	fitted	FALSE					
 classif.svm	kernel	linear, polynomial, radial					
 classif.svm	cost		-10	10	2^x		
 classif.svm	gamma		-10	10	2^x	kernel == "radial"	
@@ -62,6 +63,7 @@ classif.svm	degree		2	5		kernel == "polynomial"
 classif.svm	tolerance		0.001	1			
 classif.svm	shrinking	TRUE, FALSE					
 classif.svm	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.svm	fitted	FALSE					
 classif.rpart	cp		0	1			
 classif.rpart	maxdepth		1	30			
 classif.rpart	minbucket		1	60			
