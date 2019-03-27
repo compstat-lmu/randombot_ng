@@ -86,6 +86,9 @@ Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_t
      - *ONEOFF*
 * Scriptlets
 
+
+- memory usage info
+
 cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
 
 ( echo "dataset learner invocation restart point evalno walltime kernelseconds userseconds cpupercent memorykb" ;
@@ -96,6 +99,7 @@ cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
         sed 's/\[\[[0-9]\+\]\] ----\[[^]]*\]  exited with status [0-9]*//g' | \
         sed 's/----\[[-0-9:]*_[^]]*\] eval_redis.R//g' | \
         sed 's/----\[[-0-9:]*_[^]]*\] Connecting to redis [^:]*:[0-9]*//g' | \
+	sed 's/----\[[-0-9:]*_[^]]*\] Evaluating seed [0-9]*//g' | \	
 	sed 's/----\[[-0-9:]*_[^]]*\] Done evaluating seed [0-9]*//g' | \
       tr $'\n' '@' | sed 's/@\([^-![]\)/\1/g' | tr '@' $'\n' | \
       grep -v '^!' | grep 'Evaluating point \|^\[.*kB' | tr $'\n' '@' | \
@@ -106,4 +110,26 @@ cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
       grep -v ')$' ; done
 ) > memtable
 
+- writing state to disk
 
+
+outdir <- "/hppfs/work/pn34jo/di39ram3/RESULT_REDIS_3_PACKAGED"
+
+
+repeat {
+  savekeys <- head(unlist(r$KEYS("RESULT_*")), 1000)
+  if (length(savekeys) != 1000) {
+    # sys sleep
+    # continue
+    break
+  }
+  mod1 <- sapply(savekeys, function(x) unserialize(r$GET(x)), simplify = FALSE)
+  digmod1 <- digest::digest(mod1)
+  mod2 <- sapply(savekeys, function(x) unserialize(r$GET(x)), simplify = FALSE)  
+  digmod2 <- digest::digest(mod2)
+  stopifnot(digmod1 == digmod2)
+  prefix <- substr(digmod1, 1, 2)
+  dir.create(file.path(outdir, prefix), recursive = TRUE)
+  saveRDS(mod1, file.path(outdir, prefix, digmod1))
+  r$DEL(savekeys)
+}

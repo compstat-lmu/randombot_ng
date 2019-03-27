@@ -220,3 +220,5 @@ datasizes <- t(sapply(datatable$name, function(dname) {
 }))
 
 # write.csv(datasizes, file = "notes/datasizes.csv")
+
+read.csv("notes/datasizes.csv")
