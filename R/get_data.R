@@ -130,3 +130,16 @@ rbn.loadDataTable <- function(file, ...) {
 
   table
 }
+
+#' Use a data.id and learner to obtain ~max memory requirements
+#' @param data.id [integer(1)]
+#' @param learner [character(1)]
+#' @example
+#' get_memory_requirements_kb(40927, "classif.svm")
+rbn.getMemoryRequirementsKb = function(data.id, learner) {
+  assertString(learner)
+  assertInteger(data.id)
+  tab = read.table("input/memory_requirements.csv")
+  tab[tab$data.id == data.id & tab$learner == learner, "memory_limit"]
+}
+
