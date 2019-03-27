@@ -119,15 +119,14 @@ outdir <- "/hppfs/work/pn34jo/di39ram3/RESULT_REDIS_3_PACKAGED"
 repeat {
   savekeys <- head(unlist(r$KEYS("RESULT_*")), 1000)
   if (length(savekeys) != 1000) {
-    # sys sleep
-    # continue
-    break
+    Sys.sleep(3600)
+    next
   }
   mod1 <- sapply(savekeys, function(x) unserialize(r$GET(x)), simplify = FALSE)
   digmod1 <- digest::digest(mod1)
-  mod2 <- sapply(savekeys, function(x) unserialize(r$GET(x)), simplify = FALSE)  
-  digmod2 <- digest::digest(mod2)
-  stopifnot(digmod1 == digmod2)
+#  mod2 <- sapply(savekeys, function(x) unserialize(r$GET(x)), simplify = FALSE)  
+#  digmod2 <- digest::digest(mod2)
+#  stopifnot(digmod1 == digmod2)
   prefix <- substr(digmod1, 1, 2)
   dir.create(file.path(outdir, prefix), recursive = TRUE)
   saveRDS(mod1, file.path(outdir, prefix, digmod1))
