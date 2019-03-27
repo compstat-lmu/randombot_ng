@@ -136,7 +136,8 @@ rbn.loadDataTable <- function(file, ...) {
 #' @param learner [character(1)]
 #' @example
 #' rbn.getMemoryRequirementsKb("riccardo.41161", "classif.svm")
-rbn.getMemoryRequirementsKb = function(task, learner) {
+rbn.getMemoryRequirementsKb = function(task, learner)
+  # CSV created from /setup/003_predict_memory_requirements.R
   tab = read.table("input/memory_requirements.csv")
   kb = tab[tab$dataset == task & tab$learner == learner, "memory_limit"]
   # Fallback and make sure it is at least 300 MB
