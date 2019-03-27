@@ -7,7 +7,7 @@ library(mlr)
 # library(OpenML)
 
 memtab = read.table("~/Downloads/memtable", header = TRUE)
-memtab %>%
+mm  = memtab %>%
   group_by(dataset, learner) %>%
   summarize(mn = mean(memorykb), sd = sd(memorykb), max = max(memorykb)) %>%
   ungroup() %>%
@@ -15,7 +15,7 @@ memtab %>%
   mutate(sd = if_else(is.na(sd), max(sd, na.rm = TRUE), sd)) %>%
   mutate(memory_limit = max + 0.5 * sd) %>%
   select(dataset, learner, memory_limit) %>%
-  separate(dataset, c("name", "data.id"), "\\.(?=[^\\.][:digit:]*$)") %>%
+  # separate(dataset, c("name", "data.id"), "\\.(?=[^\\.][:digit:]*$)") %>%
   write.table("input/memory_requirements.csv")
 
 

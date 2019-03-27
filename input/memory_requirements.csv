@@ -1,1020 +1,1020 @@
-"name" "data.id" "learner" "memory_limit"
-"1" "CIFAR_10" "40927" "classif.svm" 22417946.8109234
-"2" "CIFAR_10" "40927" "classif.svm.radial" 22417957.162885
-"3" "helena" "41169" "classif.ranger.pow" 28300482.2711503
-"4" "CIFAR_10" "40927" "classif.rpart" 15757273.7659802
-"5" "CIFAR_10" "40927" "classif.ranger.pow" 12525041.3870973
-"6" "CIFAR_10" "40927" "classif.RcppHNSW" 17719618.2711503
-"7" "riccardo" "41161" "classif.svm" 10615124.9998863
-"8" "riccardo" "41161" "classif.svm.radial" 10607126.3684317
-"9" "guillermo" "41159" "classif.svm" 10594771.0310612
-"10" "guillermo" "41159" "classif.svm.radial" 10594700.2006165
-"11" "CIFAR_10" "40927" "classif.xgboost.gblinear" 10287081.2150423
-"12" "CIFAR_10" "40927" "classif.xgboost.gbtree" 10287680.8658292
-"13" "CIFAR_10" "40927" "classif.xgboost.dart" 10286360.6918472
-"14" "CIFAR_10" "40927" "classif.glmnet" 8803073.97089939
-"15" "robert" "41165" "classif.svm.radial" 8538210.32567592
-"16" "robert" "41165" "classif.svm" 8524076.38919542
-"17" "Devnagari.Script" "40923" "classif.svm" 8088572.01608152
-"18" "Devnagari.Script" "40923" "classif.svm.radial" 8057695.8315319
-"19" "riccardo" "41161" "classif.rpart" 8086007.12108821
-"20" "guillermo" "41159" "classif.rpart" 8108847.15257543
-"21" "guillermo" "41159" "classif.glmnet" 7478867.16433412
-"22" "Devnagari.Script" "40923" "classif.ranger.pow" 7707718.20474499
-"23" "numerai28.6" "23517" "classif.ranger.pow" 13944050.2711503
-"24" "robert" "41165" "classif.rpart" 6891572.87813362
-"25" "higgs" "23512" "classif.ranger.pow" 8546669.74694168
-"26" "Devnagari.Script" "40923" "classif.rpart" 6773111.92513111
-"27" "riccardo" "41161" "classif.glmnet" 6594412.92418641
-"28" "volkert" "41166" "classif.ranger.pow" 7756656.29622618
-"29" "Fashion.MNIST" "40996" "classif.svm" 6589526.64242203
-"30" "Fashion.MNIST" "40996" "classif.svm.radial" 6591512.35037189
-"31" "mnist_784" "554" "classif.svm" 6230849.0455242
-"32" "mnist_784" "554" "classif.svm.radial" 6228775.51275025
-"33" "letter" "6" "classif.ranger.pow" 6565956.00202266
-"34" "jannis" "41168" "classif.ranger.pow" 7840270.5083364
-"35" "robert" "41165" "classif.ranger.pow" 6355556.41418198
-"36" "guillermo" "41159" "classif.xgboost.gblinear" 5943436.48921037
-"37" "riccardo" "41161" "classif.xgboost.gblinear" 5951046.98154732
-"38" "riccardo" "41161" "classif.xgboost.gbtree" 5850368.15576524
-"39" "guillermo" "41159" "classif.xgboost.gbtree" 5872086.04471386
-"40" "riccardo" "41161" "classif.RcppHNSW" 5657785.38689842
-"41" "riccardo" "41161" "classif.xgboost.dart" 5240829.80490831
-"42" "Fashion.MNIST" "40996" "classif.rpart" 5190000.99858074
-"43" "guillermo" "41159" "classif.xgboost.dart" 5150511.9853536
-"44" "guillermo" "41159" "classif.RcppHNSW" 5111073.91675817
-"45" "amazon.commerce.reviews" "1457" "classif.svm.radial" 5216679.65793287
-"46" "Fashion.MNIST" "40996" "classif.ranger.pow" 5395787.19289033
-"47" "mnist_784" "554" "classif.rpart" 4949986.37494006
-"48" "KDDCup09_appetency" "1111" "classif.svm.radial" 5579066.36548501
-"49" "kick" "41162" "classif.ranger.pow" 5203675.8365847
-"50" "Devnagari.Script" "40923" "classif.RcppHNSW" 4447308.93875701
-"51" "robert" "41165" "classif.xgboost.dart" 4397209.12743397
-"52" "robert" "41165" "classif.xgboost.gbtree" 4391413.58642642
-"53" "robert" "41165" "classif.xgboost.gblinear" 4384772.12015513
-"54" "Devnagari.Script" "40923" "classif.xgboost.gbtree" 4333242.68840394
-"55" "Devnagari.Script" "40923" "classif.xgboost.dart" 4331487.37318446
-"56" "Devnagari.Script" "40923" "classif.xgboost.gblinear" 4332116.19843946
-"57" "robert" "41165" "classif.RcppHNSW" 4339151.34982567
-"58" "amazon.commerce.reviews" "1457" "classif.svm" 4280555.70778111
-"59" "arcene" "41157" "classif.svm" 4432546.52764322
-"60" "arcene" "41157" "classif.svm.radial" 4457570.89757788
-"61" "guillermo" "41159" "classif.ranger.pow" 11199122.2711503
-"62" "riccardo" "41161" "classif.ranger.pow" 11012470.2711503
-"63" "Devnagari.Script" "40923" "classif.glmnet" 3910203.51551724
-"64" "jungle_chess_2pcs_raw_endgame_complete" "41027" "classif.ranger.pow" 4154679.20848711
-"65" "robert" "41165" "classif.glmnet" 3673884.53528414
-"66" "mnist_784" "554" "classif.RcppHNSW" 3734970.74424972
-"67" "Fashion.MNIST" "40996" "classif.RcppHNSW" 3599826.52209482
-"68" "connect.4" "40668" "classif.ranger.pow" 4113930.40336748
-"69" "amazon.commerce.reviews" "1457" "classif.rpart" 3482398.92397632
-"70" "mnist_784" "554" "classif.xgboost.gbtree" 3481098.56143546
-"71" "mnist_784" "554" "classif.xgboost.gblinear" 3475885.19765002
-"72" "amazon.commerce.reviews" "1457" "classif.glmnet" 10362150.2711503
-"73" "Fashion.MNIST" "40996" "classif.xgboost.dart" 3204252.5003239
-"74" "Fashion.MNIST" "40996" "classif.xgboost.gblinear" 3203558.42544732
-"75" "Fashion.MNIST" "40996" "classif.xgboost.gbtree" 3201985.58007235
-"76" "adult" "1590" "classif.ranger.pow" 3500756.98009212
-"77" "mnist_784" "554" "classif.xgboost.dart" 3039496.15978154
-"78" "KDDCup09_appetency" "1111" "classif.svm" 10074506.2711503
-"79" "helena" "41169" "classif.svm" 3581698.31875083
-"80" "arcene" "41157" "classif.rpart" 2957055.56902671
-"81" "mnist_784" "554" "classif.ranger.pow" 9953178.2711503
-"82" "Fashion.MNIST" "40996" "classif.glmnet" 2865374.46306373
-"83" "KDDCup09_appetency" "1111" "classif.xgboost.gbtree" 3284328.53558935
-"84" "GesturePhaseSegmentationProcessed" "4538" "classif.ranger.pow" 2909613.18221848
-"85" "Dilbert" "41163" "classif.svm.radial" 2642955.04941519
-"86" "KDDCup09_appetency" "1111" "classif.glmnet" 3109542.19148967
-"87" "mnist_784" "554" "classif.glmnet" 2571196.46283443
-"88" "bank.marketing" "1461" "classif.ranger.pow" 2826732.30978263
-"89" "KDDCup09_appetency" "1111" "classif.xgboost.gblinear" 2927292.74227
-"90" "one.hundred.plants.texture" "1493" "classif.ranger.pow" 2699416.62277985
-"91" "electricity" "151" "classif.ranger.pow" 2710002.62811183
-"92" "shuttle" "40685" "classif.ranger.pow" 2621398.75476392
-"93" "Dilbert" "41163" "classif.ranger.pow" 2558190.55077812
-"94" "Dilbert" "41163" "classif.rpart" 2322833.16067818
-"95" "KDDCup09_appetency" "1111" "classif.xgboost.dart" 2593018.44211598
-"96" "wine.quality.white" "40498" "classif.ranger.pow" 2297760.72265922
-"97" "diabetes130US" "4541" "classif.xgboost.gbtree" 2395133.23204767
-"98" "christine" "41142" "classif.svm" 9237186.2711503
-"99" "JapaneseVowels" "375" "classif.ranger.pow" 2311112.84061327
-"100" "KDDCup09_appetency" "1111" "classif.rpart" 2384982.51942018
-"101" "KDDCup09_appetency" "1111" "classif.ranger.pow" 2310502.42065324
-"102" "christine" "41142" "classif.svm.radial" 9155546.2711503
-"103" "diabetes130US" "4541" "classif.xgboost.gblinear" 2309940.38662383
-"104" "Dilbert" "41163" "classif.glmnet" 2094779.44865043
-"105" "diabetes130US" "4541" "classif.glmnet" 1904238.54862256
-"106" "Dilbert" "41163" "classif.xgboost.gblinear" 1964910.52010082
-"107" "first.order.theorem.proving" "1475" "classif.ranger.pow" 2009045.46377331
-"108" "KDDCup09_appetency" "1111" "classif.RcppHNSW" 2142705.06038157
-"109" "Dilbert" "41163" "classif.xgboost.gbtree" 1930065.31156869
-"110" "kick" "41162" "classif.xgboost.gblinear" 1855877.62040806
-"111" "jm1" "1053" "classif.ranger.pow" 1889252.86848423
-"112" "kick" "41162" "classif.xgboost.gbtree" 1937033.51938897
-"113" "cmc" "23" "classif.xgboost.gbtree" 1764481.75050576
-"114" "yeast" "181" "classif.xgboost.gbtree" 1757729.32786863
-"115" "fabert" "41164" "classif.svm" 8748554.2711503
-"116" "kick" "41162" "classif.svm.radial" 1696137.25115795
-"117" "kick" "41162" "classif.svm" 1688993.63620619
-"118" "nomao" "1486" "classif.ranger.pow" 1747501.60056258
-"119" "Bioresponse" "4134" "classif.svm.radial" 1627719.63678599
-"120" "Internet.Advertisements" "40978" "classif.svm" 1644956.06972185
-"121" "Bioresponse" "4134" "classif.svm" 1574506.81164048
-"122" "har" "1478" "classif.svm" 1616135.52594426
-"123" "diabetes130US" "4541" "classif.svm.radial" 1542280.41466757
-"124" "diabetes130US" "4541" "classif.svm" 1536163.51108013
-"125" "diabetes130US" "4541" "classif.RcppHNSW" 1566571.77942701
-"126" "amazon.commerce.reviews" "1457" "classif.ranger.pow" 1578014.18894699
-"127" "Internet.Advertisements" "40978" "classif.svm.radial" 1538359.99598535
-"128" "fabert" "41164" "classif.svm.radial" 8553286.2711503
-"129" "Dilbert" "41163" "classif.RcppHNSW" 1449477.71257861
-"130" "isolet" "300" "classif.svm" 1473366.22938409
-"131" "christine" "41142" "classif.xgboost.gblinear" 1473750.79088296
-"132" "Dilbert" "41163" "classif.xgboost.dart" 1384803.21873951
-"133" "diabetes130US" "4541" "classif.xgboost.dart" 1377404.85365392
-"134" "phoneme" "1489" "classif.ranger.pow" 1430638.16253563
-"135" "isolet" "300" "classif.svm.radial" 8413302.2711503
-"136" "fabert" "41164" "classif.ranger.pow" 8408534.2711503
-"137" "volkert" "41166" "classif.svm" 1314243.23677425
-"138" "volkert" "41166" "classif.svm.radial" 1313542.32368228
-"139" "pendigits" "32" "classif.ranger.pow" 1402086.03988923
-"140" "car" "40975" "classif.xgboost.gbtree" 1334055.04706202
-"141" "volkert" "41166" "classif.rpart" 1316420.03512429
-"142" "isolet" "300" "classif.ranger.pow" 1424289.83575555
-"143" "analcatdata_dmft" "469" "classif.xgboost.gbtree" 1264722.69525983
-"144" "amazon.commerce.reviews" "1457" "classif.RcppHNSW" 1240323.25021859
-"145" "optdigits" "28" "classif.ranger.pow" 1301428.39657006
-"146" "christine" "41142" "classif.ranger.pow" 1304767.3126028
-"147" "kick" "41162" "classif.glmnet" 1211111.99989657
-"148" "one.hundred.plants.texture" "1493" "classif.xgboost.gbtree" 1318147.24917184
-"149" "nomao" "1486" "classif.svm.radial" 8281322.2711503
-"150" "nomao" "1486" "classif.svm" 1296141.10351885
-"151" "waveform.5000" "60" "classif.ranger.pow" 1263158.42941468
-"152" "kick" "41162" "classif.RcppHNSW" 1240462.24397487
-"153" "satimage" "182" "classif.ranger.pow" 1254060.74497947
-"154" "christine" "41142" "classif.rpart" 1167023.80520664
-"155" "volkert" "41166" "classif.glmnet" 1167361.63647753
-"156" "yeast" "181" "classif.ranger.pow" 1181225.61514915
-"157" "amazon.commerce.reviews" "1457" "classif.xgboost.dart" 1142795.49664718
-"158" "amazon.commerce.reviews" "1457" "classif.xgboost.gbtree" 1140727.60813134
-"159" "kick" "41162" "classif.xgboost.dart" 1131159.14025055
-"160" "amazon.commerce.reviews" "1457" "classif.xgboost.gblinear" 1134103.75868195
-"161" "christine" "41142" "classif.glmnet" 1155715.06554402
-"162" "Amazon_employee_access" "4135" "classif.ranger.pow" 1245685.75524797
-"163" "MiniBooNE" "41150" "classif.rpart" 1140841.56600961
-"164" "Internet.Advertisements" "40978" "classif.glmnet" 1124388.04483288
-"165" "vowel" "307" "classif.xgboost.gbtree" 1145278.40641081
-"166" "helena" "41169" "classif.glmnet" 1109964.9701783
-"167" "christine" "41142" "classif.xgboost.gbtree" 1103620.12164046
-"168" "Amazon_employee_access" "4135" "classif.svm" 1104182.06300928
-"169" "Amazon_employee_access" "4135" "classif.svm.radial" 1109375.5417082
-"170" "MiniBooNE" "41150" "classif.svm" 1081268.99429511
-"171" "MiniBooNE" "41150" "classif.svm.radial" 1080803.13210878
-"172" "har" "1478" "classif.ranger.pow" 1125681.46550993
-"173" "volkert" "41166" "classif.xgboost.gbtree" 1107998.27802056
-"174" "MiniBooNE" "41150" "classif.xgboost.gbtree" 1108301.98749214
-"175" "ada" "41156" "classif.ranger.pow" 1102867.96784507
-"176" "MiniBooNE" "41150" "classif.xgboost.gblinear" 1088911.41097949
-"177" "texture" "40499" "classif.ranger.pow" 1114309.27809418
-"178" "eucalyptus" "188" "classif.xgboost.gbtree" 1068427.1150846
-"179" "MiniBooNE" "41150" "classif.glmnet" 1043243.99424704
-"180" "christine" "41142" "classif.xgboost.dart" 8105678.2711503
-"181" "MiniBooNE" "41150" "classif.RcppHNSW" 1020947.63776279
-"182" "mfeat.morphological" "18" "classif.ranger.pow" 1043903.07685717
-"183" "Bioresponse" "4134" "classif.rpart" 1007670.89052456
-"184" "Bioresponse" "4134" "classif.ranger.pow" 1045380.13437723
-"185" "Amazon_employee_access" "4135" "classif.xgboost.gblinear" 997666.366301662
-"186" "sylvine" "41146" "classif.ranger.pow" 1039840.77203181
-"187" "volkert" "41166" "classif.RcppHNSW" 994717.67636065
-"188" "volkert" "41166" "classif.xgboost.gblinear" 1017660.40044639
-"189" "gas.drift" "1476" "classif.ranger.pow" 1042707.57731957
-"190" "fabert" "41164" "classif.rpart" 976371.541616332
-"191" "spambase" "44" "classif.ranger.pow" 1035317.42233372
-"192" "Internet.Advertisements" "40978" "classif.xgboost.gbtree" 980807.26681062
-"193" "Internet.Advertisements" "40978" "classif.xgboost.gblinear" 961941.357724187
-"194" "wall.robot.navigation" "1497" "classif.ranger.pow" 1020337.4598302
-"195" "jannis" "41168" "classif.rpart" 970652.520859779
-"196" "GesturePhaseSegmentationProcessed" "4538" "classif.xgboost.gbtree" 1062107.87236082
-"197" "Bioresponse" "4134" "classif.xgboost.gbtree" 997680.001501676
-"198" "jannis" "41168" "classif.svm" 955016.987660339
-"199" "Internet.Advertisements" "40978" "classif.xgboost.dart" 8041838.2711503
-"200" "jannis" "41168" "classif.svm.radial" 953970.052103886
-"201" "Bioresponse" "4134" "classif.xgboost.gblinear" 961833.453530909
-"202" "fabert" "41164" "classif.glmnet" 938420.535280099
-"203" "phoneme" "1489" "classif.xgboost.gbtree" 963223.589951837
-"204" "isolet" "300" "classif.glmnet" 8020830.2711503
-"205" "MiniBooNE" "41150" "classif.ranger.pow" 8012646.2711503
-"206" "Amazon_employee_access" "4135" "classif.xgboost.gbtree" 973301.072833906
-"207" "connect.4" "40668" "classif.xgboost.gblinear" 7988630.2711503
-"208" "connect.4" "40668" "classif.glmnet" 899388.488663214
-"209" "har" "1478" "classif.rpart" 898710.125186836
-"210" "steel.plates.fault" "40982" "classif.ranger.pow" 913793.109275586
-"211" "sylva_prior" "1040" "classif.ranger.pow" 931798.861477396
-"212" "diabetes130US" "4541" "classif.rpart" 870868.008368164
-"213" "ada" "41156" "classif.xgboost.gbtree" 894130.822263979
-"214" "vehicle" "54" "classif.xgboost.gbtree" 896994.331445495
-"215" "jannis" "41168" "classif.glmnet" 873657.254621687
-"216" "higgs" "23512" "classif.RcppHNSW" 877391.250167387
-"217" "mfeat.fourier" "14" "classif.ranger.pow" 909343.284961218
-"218" "Bioresponse" "4134" "classif.glmnet" 872371.529620267
-"219" "volkert" "41166" "classif.xgboost.dart" 862038.499766781
-"220" "mfeat.karhunen" "16" "classif.ranger.pow" 902552.83030007
-"221" "helena" "41169" "classif.RcppHNSW" 864289.625480306
-"222" "Bioresponse" "4134" "classif.xgboost.dart" 910587.578470076
-"223" "churn" "40701" "classif.ranger.pow" 901431.957344338
-"224" "madelon" "1485" "classif.ranger.pow" 892029.897220242
-"225" "higgs" "23512" "classif.glmnet" 870316.278991425
-"226" "first.order.theorem.proving" "1475" "classif.xgboost.gbtree" 939997.709341067
-"227" "mfeat.zernike" "22" "classif.ranger.pow" 884114.142217234
-"228" "christine" "41142" "classif.RcppHNSW" 837246.886333161
-"229" "nomao" "1486" "classif.xgboost.dart" 850652.699729841
-"230" "adult" "1590" "classif.xgboost.gblinear" 844076.486094171
-"231" "CreditCardSubset" "4154" "classif.ranger.pow" 884143.620291473
-"232" "nomao" "1486" "classif.glmnet" 828678.352714763
-"233" "har" "1478" "classif.xgboost.gbtree" 897782.557113702
-"234" "connect.4" "40668" "classif.svm" 820287.681016898
-"235" "connect.4" "40668" "classif.svm.radial" 819592.479320727
-"236" "Internet.Advertisements" "40978" "classif.rpart" 819862.980689036
-"237" "har" "1478" "classif.glmnet" 831552.736505321
-"238" "jannis" "41168" "classif.xgboost.gbtree" 886358.943412856
-"239" "higgs" "23512" "classif.rpart" 822580.51404096
-"240" "jungle_chess_2pcs_raw_endgame_complete" "41027" "classif.xgboost.gbtree" 889932.930308576
-"241" "cmc" "23" "classif.ranger.pow" 845572.078539084
-"242" "isolet" "300" "classif.rpart" 824539.448301245
-"243" "higgs" "23512" "classif.xgboost.gblinear" 817659.383920274
-"244" "adult" "1590" "classif.svm" 865417.920334745
-"245" "MiniBooNE" "41150" "classif.xgboost.dart" 803815.68964364
-"246" "connect.4" "40668" "classif.RcppHNSW" 809474.301613962
-"247" "fabert" "41164" "classif.RcppHNSW" 797572.55895356
-"248" "sylvine" "41146" "classif.xgboost.gbtree" 808906.478055817
-"249" "higgs" "23512" "classif.xgboost.gbtree" 827395.419358288
-"250" "wine.quality.white" "40498" "classif.xgboost.gbtree" 828417.833893289
-"251" "jannis" "41168" "classif.xgboost.gblinear" 800176.230421869
-"252" "jannis" "41168" "classif.RcppHNSW" 796444.377367956
-"253" "nomao" "1486" "classif.rpart" 788282.005979511
-"254" "helena" "41169" "classif.rpart" 782059.790650502
-"255" "connect.4" "40668" "classif.xgboost.gbtree" 815267.415598295
-"256" "mfeat.zernike" "22" "classif.xgboost.gbtree" 809130.435790387
-"257" "semeion" "1501" "classif.ranger.pow" 810170.594103365
-"258" "numerai28.6" "23517" "classif.RcppHNSW" 780802.883761128
-"259" "higgs" "23512" "classif.svm" 767141.511770332
-"260" "higgs" "23512" "classif.svm.radial" 766895.016241599
-"261" "SpeedDating" "40536" "classif.ranger.pow" 812407.479721048
-"262" "fabert" "41164" "classif.xgboost.gblinear" 797530.109086998
-"263" "splice" "46" "classif.ranger.pow" 790094.427867841
-"264" "numerai28.6" "23517" "classif.xgboost.gblinear" 777238.096322247
-"265" "Internet.Advertisements" "40978" "classif.ranger.pow" 777507.048353476
-"266" "mfeat.karhunen" "16" "classif.xgboost.gbtree" 793590.7646558
-"267" "nomao" "1486" "classif.xgboost.gbtree" 774370.072948901
-"268" "fabert" "41164" "classif.xgboost.gbtree" 796916.636364927
-"269" "kc1" "1067" "classif.ranger.pow" 768083.691718842
-"270" "har" "1478" "classif.RcppHNSW" 755241.465726255
-"271" "hill.valley" "1479" "classif.ranger.pow" 764515.376017732
-"272" "nomao" "1486" "classif.xgboost.gblinear" 750942.00140985
-"273" "steel.plates.fault" "40982" "classif.xgboost.gbtree" 772806.475255673
-"274" "har" "1478" "classif.xgboost.gblinear" 7812834.2711503
-"275" "kick" "41162" "classif.rpart" 737760.682574247
-"276" "adult" "1590" "classif.svm.radial" 7812258.2711503
-"277" "vehicle" "54" "classif.ranger.pow" 735912.148986204
-"278" "wilt" "40983" "classif.ranger.pow" 746880.371183788
-"279" "churn" "40701" "classif.xgboost.gbtree" 734053.413822242
-"280" "numerai28.6" "23517" "classif.xgboost.gbtree" 7802770.2711503
-"281" "gas.drift" "1476" "classif.svm.radial" 731047.030837468
-"282" "Bioresponse" "4134" "classif.RcppHNSW" 721435.345745247
-"283" "spambase" "44" "classif.xgboost.gbtree" 722787.493230068
-"284" "mfeat.pixel" "40979" "classif.ranger.pow" 737192.886564196
-"285" "mfeat.factors" "12" "classif.ranger.pow" 740431.426516114
-"286" "adult" "1590" "classif.xgboost.gbtree" 7788086.2711503
-"287" "nomao" "1486" "classif.RcppHNSW" 726882.047951968
-"288" "kc1" "1067" "classif.xgboost.gbtree" 705384.505529148
-"289" "isolet" "300" "classif.xgboost.gbtree" 735326.869457725
-"290" "Internet.Advertisements" "40978" "classif.RcppHNSW" 690208.540115389
-"291" "micro.mass" "1515" "classif.ranger.pow" 711279.434595396
-"292" "LED.display.domain.7digit" "40496" "classif.xgboost.gbtree" 700303.249689078
-"293" "analcatdata_authorship" "458" "classif.ranger.pow" 688365.130501197
-"294" "PhishingWebsites" "4534" "classif.ranger.pow" 716860.755523224
-"295" "mc1" "1056" "classif.ranger.pow" 714242.331281368
-"296" "gas.drift" "1476" "classif.svm" 682376.306865367
-"297" "tic.tac.toe" "50" "classif.xgboost.gbtree" 681364.880966602
-"298" "cnae.9" "1468" "classif.ranger.pow" 698419.081409599
-"299" "mfeat.morphological" "18" "classif.xgboost.gbtree" 697300.573885061
-"300" "numerai28.6" "23517" "classif.rpart" 670437.405918194
-"301" "vowel" "307" "classif.ranger.pow" 692519.495911583
-"302" "synthetic_control" "377" "classif.xgboost.gbtree" 677598.784942079
-"303" "diabetes" "37" "classif.xgboost.gbtree" 670059.475695934
-"304" "SpeedDating" "40536" "classif.xgboost.gblinear" 668939.309273651
-"305" "SpeedDating" "40536" "classif.xgboost.gbtree" 679653.528298419
-"306" "isolet" "300" "classif.xgboost.gblinear" 683246.517245608
-"307" "JapaneseVowels" "375" "classif.xgboost.gbtree" 690136.804033275
-"308" "credit.g" "31" "classif.xgboost.gbtree" 660266.540595343
-"309" "isolet" "300" "classif.RcppHNSW" 663118.622895409
-"310" "sylva_prior" "1040" "classif.svm.radial" 656503.718927467
-"311" "connect.4" "40668" "classif.xgboost.dart" 644863.690593005
-"312" "letter" "6" "classif.svm" 696639.105857333
-"313" "sylva_prior" "1040" "classif.svm" 660219.660221425
-"314" "SpeedDating" "40536" "classif.svm.radial" 650387.606471239
-"315" "connect.4" "40668" "classif.rpart" 643045.900792721
-"316" "bank.marketing" "1461" "classif.xgboost.gbtree" 650504.749493642
-"317" "bank.marketing" "1461" "classif.xgboost.gblinear" 656792.024159796
-"318" "letter" "6" "classif.svm.radial" 693871.312498473
-"319" "Amazon_employee_access" "4135" "classif.RcppHNSW" 644320.78008181
-"320" "diabetes130US" "4541" "classif.ranger.pow" 7723590.2711503
-"321" "adult" "1590" "classif.glmnet" 635128.631193211
-"322" "bank.marketing" "1461" "classif.svm.radial" 651265.277103064
-"323" "qsar.biodeg" "1494" "classif.xgboost.gbtree" 644798.502934827
-"324" "bank.marketing" "1461" "classif.svm" 668804.601741307
-"325" "Amazon_employee_access" "4135" "classif.glmnet" 632574.406307417
-"326" "waveform.5000" "60" "classif.xgboost.gbtree" 658003.653410493
-"327" "madelon" "1485" "classif.svm.radial" 645804.18633078
-"328" "madelon" "1485" "classif.svm" 638541.444199657
-"329" "soybean" "42" "classif.xgboost.gbtree" 658284.193830276
-"330" "wilt" "40983" "classif.xgboost.gbtree" 633346.806440272
-"331" "numerai28.6" "23517" "classif.svm" 620830.506087058
-"332" "numerai28.6" "23517" "classif.svm.radial" 619051.043733401
-"333" "segment" "40984" "classif.xgboost.gbtree" 639831.726501046
-"334" "monks.problems.2" "334" "classif.xgboost.gbtree" 622217.636625696
-"335" "jannis" "41168" "classif.xgboost.dart" 613048.204790252
-"336" "har" "1478" "classif.xgboost.dart" 611799.376669034
-"337" "SpeedDating" "40536" "classif.svm" 616281.741824882
-"338" "banknote.authentication" "1462" "classif.xgboost.gbtree" 621410.058815525
-"339" "helena" "41169" "classif.svm.radial" 608159.757125709
-"340" "Amazon_employee_access" "4135" "classif.xgboost.dart" 605920.251110296
-"341" "optdigits" "28" "classif.xgboost.gbtree" 642435.686652271
-"342" "higgs" "23512" "classif.xgboost.dart" 604356.712389283
-"343" "MiceProtein" "40966" "classif.xgboost.gbtree" 624765.167662766
-"344" "satimage" "182" "classif.xgboost.gbtree" 637288.078387703
-"345" "balance.scale" "11" "classif.xgboost.gbtree" 615967.328623148
-"346" "adult" "1590" "classif.RcppHNSW" 608376.203882484
-"347" "SpeedDating" "40536" "classif.xgboost.dart" 7687282.2711503
-"348" "segment" "40984" "classif.ranger.pow" 611757.857533368
-"349" "kr.vs.kp" "3" "classif.xgboost.gbtree" 604139.279135647
-"350" "qsar.biodeg" "1494" "classif.ranger.pow" 605450.177425264
-"351" "shuttle" "40685" "classif.RcppHNSW" 606526.819465308
-"352" "pc3" "1050" "classif.ranger.pow" 604854.294520155
-"353" "numerai28.6" "23517" "classif.glmnet" 592242.068332804
-"354" "fabert" "41164" "classif.xgboost.dart" 587946.371566113
-"355" "diabetes" "37" "classif.ranger.pow" 602088.661041022
-"356" "blood.transfusion.service.center" "1464" "classif.ranger.pow" 596839.325145011
-"357" "texture" "40499" "classif.xgboost.gbtree" 613642.539886632
-"358" "analcatdata_dmft" "469" "classif.ranger.pow" 593202.109613503
-"359" "sick" "38" "classif.xgboost.gbtree" 585470.605323085
-"360" "credit.g" "31" "classif.ranger.pow" 594166.136431369
-"361" "bank.marketing" "1461" "classif.RcppHNSW" 584598.151618575
-"362" "SpeedDating" "40536" "classif.glmnet" 584464.557555884
-"363" "analcatdata_authorship" "458" "classif.xgboost.gbtree" 587523.913595038
-"364" "pc3" "1050" "classif.xgboost.gbtree" 582402.579786373
-"365" "Australian" "40981" "classif.xgboost.gbtree" 583056.13447952
-"366" "MiceProtein" "40966" "classif.ranger.pow" 590138.898686566
-"367" "scene" "312" "classif.ranger.pow" 589944.675041209
-"368" "tic.tac.toe" "50" "classif.ranger.pow" 580340.43534853
-"369" "mfeat.fourier" "14" "classif.xgboost.gbtree" 593638.934159144
-"370" "ozone.level.8hr" "1487" "classif.xgboost.gbtree" 575934.917499191
-"371" "semeion" "1501" "classif.xgboost.gbtree" 593761.373172382
-"372" "helena" "41169" "classif.xgboost.gbtree" 566935.26235319
-"373" "kr.vs.kp" "3" "classif.ranger.pow" 578971.812397808
-"374" "ozone.level.8hr" "1487" "classif.ranger.pow" 574588.216908566
-"375" "wall.robot.navigation" "1497" "classif.xgboost.gbtree" 568474.647978304
-"376" "ilpd" "1480" "classif.ranger.pow" 559493.169546518
-"377" "shuttle" "40685" "classif.xgboost.gbtree" 552724.510312273
-"378" "sylva_prior" "1040" "classif.xgboost.gbtree" 556344.386222477
-"379" "bank.marketing" "1461" "classif.glmnet" 546395.591025144
-"380" "micro.mass" "1515" "classif.glmnet" 550161.324722002
-"381" "jungle_chess_2pcs_raw_endgame_complete" "41027" "classif.RcppHNSW" 557040.763744401
-"382" "micro.mass" "1515" "classif.xgboost.gbtree" 561414.076212753
-"383" "ilpd" "1480" "classif.xgboost.gbtree" 550016.202770097
-"384" "pc1" "1068" "classif.ranger.pow" 550340.742146262
-"385" "helena" "41169" "classif.xgboost.dart" 538397.566681311
-"386" "car" "40975" "classif.ranger.pow" 549130.331984244
-"387" "cnae.9" "1468" "classif.svm" 542824.589082769
-"388" "shuttle" "40685" "classif.svm" 562528.167063977
-"389" "isolet" "300" "classif.xgboost.dart" 536321.284096243
-"390" "pendigits" "32" "classif.xgboost.gbtree" 553390.562289803
-"391" "cnae.9" "1468" "classif.svm.radial" 537867.407590196
-"392" "dresses.sales" "23381" "classif.xgboost.gbtree" 536322.266186974
-"393" "synthetic_control" "377" "classif.ranger.pow" 536592.859100096
-"394" "electricity" "151" "classif.RcppHNSW" 539801.588885455
-"395" "credit.approval" "29" "classif.xgboost.gbtree" 535981.918636784
-"396" "numerai28.6" "23517" "classif.xgboost.dart" 527488.808265037
-"397" "gas.drift" "1476" "classif.xgboost.gbtree" 527135.946524456
-"398" "letter" "6" "classif.xgboost.gbtree" 7608946.2711503
-"399" "mfeat.factors" "12" "classif.xgboost.gbtree" 540352.308247157
-"400" "profb" "470" "classif.xgboost.gbtree" 527663.330011971
-"401" "pc4" "1049" "classif.xgboost.gbtree" 524243.504540526
-"402" "Satellite" "40900" "classif.ranger.pow" 537858.257196868
-"403" "cylinder.bands" "6332" "classif.xgboost.gbtree" 521841.086286714
-"404" "arcene" "41157" "classif.glmnet" 516966.48291335
-"405" "one.hundred.plants.texture" "1493" "classif.svm" 551690.280913432
-"406" "one.hundred.plants.texture" "1493" "classif.svm.radial" 550854.157560196
-"407" "madelon" "1485" "classif.xgboost.gbtree" 515162.298999813
-"408" "gas.drift" "1476" "classif.xgboost.gblinear" 528094.805650901
-"409" "electricity" "151" "classif.xgboost.gbtree" 512937.218790349
-"410" "hill.valley" "1479" "classif.xgboost.gbtree" 511639.598635021
-"411" "cnae.9" "1468" "classif.xgboost.gbtree" 518393.391251484
-"412" "pc1" "1068" "classif.xgboost.gbtree" 505571.560496699
-"413" "shuttle" "40685" "classif.xgboost.gblinear" 509758.798417308
-"414" "sick" "38" "classif.ranger.pow" 514440.230615549
-"415" "kc2" "1063" "classif.xgboost.gbtree" 503947.488787719
-"416" "balance.scale" "11" "classif.ranger.pow" 505803.772337164
-"417" "shuttle" "40685" "classif.svm.radial" 491455.100738734
-"418" "adult" "1590" "classif.xgboost.dart" 486873.046253119
-"419" "electricity" "151" "classif.xgboost.gblinear" 494652.120144039
-"420" "blood.transfusion.service.center" "1464" "classif.xgboost.gbtree" 493357.003778391
-"421" "micro.mass" "1515" "classif.svm" 488594.626287009
-"422" "sylva_prior" "1040" "classif.xgboost.gblinear" 490116.962214289
-"423" "cnae.9" "1468" "classif.glmnet" 486999.821087063
-"424" "mfeat.pixel" "40979" "classif.xgboost.gbtree" 502418.030695575
-"425" "jm1" "1053" "classif.xgboost.gbtree" 490640.190996135
-"426" "sylva_prior" "1040" "classif.RcppHNSW" 487391.708327167
-"427" "gas.drift" "1476" "classif.RcppHNSW" 484497.827656326
-"428" "pc4" "1049" "classif.ranger.pow" 488451.432346696
-"429" "micro.mass" "1515" "classif.svm.radial" 479449.730929937
-"430" "eucalyptus" "188" "classif.ranger.pow" 491055.299107819
-"431" "soybean" "42" "classif.ranger.pow" 485642.720990006
-"432" "gas.drift" "1476" "classif.rpart" 475661.275571532
-"433" "scene" "312" "classif.svm" 481640.777329707
-"434" "gas.drift" "1476" "classif.glmnet" 479530.25728202
-"435" "jungle_chess_2pcs_raw_endgame_complete" "41027" "classif.xgboost.gblinear" 478703.662186717
-"436" "SpeedDating" "40536" "classif.RcppHNSW" 470009.569327248
-"437" "dna" "40670" "classif.svm.radial" 483216.168188734
-"438" "PhishingWebsites" "4534" "classif.xgboost.gbtree" 475221.198938666
-"439" "mushroom" "24" "classif.ranger.pow" 480335.784690961
-"440" "madelon" "1485" "classif.xgboost.dart" 485341.623906751
-"441" "dna" "40670" "classif.ranger.pow" 475449.061341701
-"442" "madelon" "1485" "classif.xgboost.gblinear" 463249.986676879
-"443" "scene" "312" "classif.svm.radial" 467620.560134598
-"444" "electricity" "151" "classif.svm.radial" 7545434.2711503
-"445" "dna" "40670" "classif.svm" 471246.620198154
-"446" "dna" "40670" "classif.xgboost.gbtree" 463768.513258486
-"447" "jungle_chess_2pcs_raw_endgame_complete" "41027" "classif.svm" 469439.348793512
-"448" "electricity" "151" "classif.svm" 472022.031144846
-"449" "arcene" "41157" "classif.xgboost.gbtree" 457291.445262891
-"450" "jasmine" "41143" "classif.xgboost.gbtree" 458656.381548772
-"451" "sylva_prior" "1040" "classif.rpart" 455800.392091156
-"452" "arcene" "41157" "classif.xgboost.dart" 455777.606748311
-"453" "arcene" "41157" "classif.xgboost.gblinear" 451860.069109342
-"454" "PhishingWebsites" "4534" "classif.xgboost.gblinear" 452360.495370485
-"455" "splice" "46" "classif.xgboost.gbtree" 453485.201617326
-"456" "adult" "1590" "classif.rpart" 448167.90882838
-"457" "bank.marketing" "1461" "classif.rpart" 443083.150485408
-"458" "jasmine" "41143" "classif.ranger.pow" 453094.135661231
-"459" "LED.display.domain.7digit" "40496" "classif.ranger.pow" 449373.377707601
-"460" "arcene" "41157" "classif.ranger.pow" 444582.577540784
-"461" "shuttle" "40685" "classif.rpart" 440411.45905642
-"462" "madelon" "1485" "classif.rpart" 442861.242721565
-"463" "monks.problems.2" "334" "classif.ranger.pow" 447311.546389784
-"464" "cnae.9" "1468" "classif.rpart" 442331.430818486
-"465" "Satellite" "40900" "classif.xgboost.gbtree" 438941.597997145
-"466" "mushroom" "24" "classif.xgboost.gbtree" 437700.634811695
-"467" "jungle_chess_2pcs_raw_endgame_complete" "41027" "classif.svm.radial" 430699.661038332
-"468" "kc2" "1063" "classif.ranger.pow" 440088.045673294
-"469" "jasmine" "41143" "classif.svm.radial" 440743.440188589
-"470" "jasmine" "41143" "classif.svm" 435898.463951352
-"471" "sylva_prior" "1040" "classif.glmnet" 429774.866647696
-"472" "cnae.9" "1468" "classif.xgboost.gblinear" 433338.260652975
-"473" "madelon" "1485" "classif.glmnet" 435255.767276935
-"474" "dna" "40670" "classif.xgboost.gblinear" 432412.001669403
-"475" "scene" "312" "classif.xgboost.gbtree" 432723.703789935
-"476" "shuttle" "40685" "classif.glmnet" 427140.395655301
-"477" "mushroom" "24" "classif.xgboost.gblinear" 430503.151980417
-"478" "letter" "6" "classif.xgboost.gblinear" 431466.244672529
-"479" "jasmine" "41143" "classif.xgboost.gblinear" 428257.787342229
-"480" "mushroom" "24" "classif.svm" 435087.725475954
-"481" "mfeat.pixel" "40979" "classif.svm" 433395.889783053
-"482" "bank.marketing" "1461" "classif.xgboost.dart" 422030.216565628
-"483" "letter" "6" "classif.RcppHNSW" 427641.235856169
-"484" "mushroom" "24" "classif.svm.radial" 431440.562799588
-"485" "Australian" "40981" "classif.ranger.pow" 431309.990515125
-"486" "mfeat.pixel" "40979" "classif.svm.radial" 426217.794256836
-"487" "profb" "470" "classif.ranger.pow" 430930.850961602
-"488" "jasmine" "41143" "classif.xgboost.dart" 418464.600789663
-"489" "micro.mass" "1515" "classif.rpart" 419493.862803956
-"490" "SpeedDating" "40536" "classif.rpart" 415133.217801501
-"491" "mc1" "1056" "classif.xgboost.gblinear" 419974.815791241
-"492" "dna" "40670" "classif.glmnet" 415131.659568019
-"493" "credit.approval" "29" "classif.ranger.pow" 424507.929310018
-"494" "splice" "46" "classif.xgboost.gblinear" 415133.5661768
-"495" "dresses.sales" "23381" "classif.ranger.pow" 421524.917843959
-"496" "scene" "312" "classif.xgboost.gblinear" 413529.247577013
-"497" "PhishingWebsites" "4534" "classif.RcppHNSW" 414740.698329687
-"498" "PhishingWebsites" "4534" "classif.svm.radial" 415523.915650595
-"499" "CreditCardSubset" "4154" "classif.svm.radial" 413214.957240987
-"500" "banknote.authentication" "1462" "classif.ranger.pow" 421055.637728315
-"501" "scene" "312" "classif.rpart" 419639.696905063
-"502" "climate.model.simulation.crashes" "40994" "classif.xgboost.gbtree" 414880.084525463
-"503" "mc1" "1056" "classif.xgboost.gbtree" 413770.338552031
-"504" "electricity" "151" "classif.glmnet" 407782.672031097
-"505" "splice" "46" "classif.svm" 414653.639982832
-"506" "mushroom" "24" "classif.xgboost.dart" 7493814.2711503
-"507" "scene" "312" "classif.xgboost.dart" 423607.307961609
-"508" "semeion" "1501" "classif.svm" 412704.853687607
-"509" "PhishingWebsites" "4534" "classif.svm" 409669.439355843
-"510" "semeion" "1501" "classif.svm.radial" 413997.493474899
-"511" "CreditCardSubset" "4154" "classif.xgboost.gbtree" 408740.389839071
-"512" "GesturePhaseSegmentationProcessed" "4538" "classif.xgboost.gblinear" 409722.99492642
-"513" "gas.drift" "1476" "classif.xgboost.dart" 405277.724262411
-"514" "arcene" "41157" "classif.RcppHNSW" 404303.298665929
-"515" "splice" "46" "classif.svm.radial" 407746.946787954
-"516" "mfeat.factors" "12" "classif.svm" 407273.012677626
-"517" "one.hundred.plants.texture" "1493" "classif.glmnet" 402626.938935326
-"518" "madelon" "1485" "classif.RcppHNSW" 400356.935695696
-"519" "jm1" "1053" "classif.xgboost.gblinear" 401241.634616045
-"520" "CreditCardSubset" "4154" "classif.svm" 399989.575608078
-"521" "CreditCardSubset" "4154" "classif.xgboost.gblinear" 401729.690980244
-"522" "jungle_chess_2pcs_raw_endgame_complete" "41027" "classif.rpart" 395478.888586986
-"523" "jungle_chess_2pcs_raw_endgame_complete" "41027" "classif.glmnet" 394721.560755281
-"524" "climate.model.simulation.crashes" "40994" "classif.ranger.pow" 399972.680786191
-"525" "mfeat.factors" "12" "classif.svm.radial" 398891.042738606
-"526" "CreditCardSubset" "4154" "classif.RcppHNSW" 393791.467062412
-"527" "letter" "6" "classif.glmnet" 392134.412895538
-"528" "wdbc" "1510" "classif.xgboost.gbtree" 395251.08271403
-"529" "wdbc" "1510" "classif.ranger.pow" 395224.229335519
-"530" "cylinder.bands" "6332" "classif.ranger.pow" 399360.485883931
-"531" "electricity" "151" "classif.rpart" 387320.554676315
-"532" "jasmine" "41143" "classif.glmnet" 388901.845901612
-"533" "Amazon_employee_access" "4135" "classif.rpart" 386767.671933172
-"534" "breast.w" "15" "classif.xgboost.gbtree" 393261.032772827
-"535" "micro.mass" "1515" "classif.xgboost.gblinear" 389150.748937006
-"536" "JapaneseVowels" "375" "classif.RcppHNSW" 389307.674969619
-"537" "mushroom" "24" "classif.RcppHNSW" 384161.019533157
-"538" "mc1" "1056" "classif.svm.radial" 379472.240539131
-"539" "sylva_prior" "1040" "classif.xgboost.dart" 376943.196424865
-"540" "semeion" "1501" "classif.xgboost.gblinear" 382427.935170451
-"541" "breast.w" "15" "classif.ranger.pow" 383668.265643317
-"542" "jm1" "1053" "classif.svm" 378822.614403461
-"543" "jm1" "1053" "classif.svm.radial" 377078.823587886
-"544" "optdigits" "28" "classif.svm" 378693.179432424
-"545" "splice" "46" "classif.glmnet" 376701.646607
-"546" "mfeat.pixel" "40979" "classif.glmnet" 374549.637567934
-"547" "optdigits" "28" "classif.svm.radial" 375693.98820952
-"548" "pendigits" "32" "classif.RcppHNSW" 373498.675810594
-"549" "mc1" "1056" "classif.svm" 371511.982282847
-"550" "GesturePhaseSegmentationProcessed" "4538" "classif.svm.radial" 369270.95939772
-"551" "GesturePhaseSegmentationProcessed" "4538" "classif.svm" 370622.629143899
-"552" "PhishingWebsites" "4534" "classif.glmnet" 368946.486066612
-"553" "spambase" "44" "classif.svm.radial" 370668.014272785
-"554" "shuttle" "40685" "classif.xgboost.dart" 366448.407923376
-"555" "semeion" "1501" "classif.glmnet" 370102.336156225
-"556" "dna" "40670" "classif.rpart" 369285.693425356
-"557" "GesturePhaseSegmentationProcessed" "4538" "classif.RcppHNSW" 366942.066463329
-"558" "scene" "312" "classif.RcppHNSW" 365597.297327121
-"559" "pendigits" "32" "classif.xgboost.gblinear" 364442.388938224
-"560" "letter" "6" "classif.rpart" 363688.265528942
-"561" "mfeat.factors" "12" "classif.glmnet" 365491.673618331
-"562" "jm1" "1053" "classif.RcppHNSW" 364823.878408809
-"563" "JapaneseVowels" "375" "classif.xgboost.gblinear" 363494.32960072
-"564" "phoneme" "1489" "classif.svm.radial" 365415.393775639
-"565" "first.order.theorem.proving" "1475" "classif.xgboost.gblinear" 365978.053705627
-"566" "mfeat.factors" "12" "classif.xgboost.gblinear" 366735.184289243
-"567" "pendigits" "32" "classif.svm.radial" 363320.169723711
-"568" "first.order.theorem.proving" "1475" "classif.svm.radial" 363279.382514889
-"569" "pendigits" "32" "classif.svm" 362710.912710447
-"570" "jasmine" "41143" "classif.RcppHNSW" 360660.806959114
-"571" "synthetic_control" "377" "classif.xgboost.dart" 7447274.2711503
-"572" "sylvine" "41146" "classif.svm.radial" 362546.128218413
-"573" "ada" "41156" "classif.xgboost.gblinear" 361642.635037455
-"574" "churn" "40701" "classif.xgboost.gblinear" 361281.69830062
-"575" "churn" "40701" "classif.svm.radial" 363728.885027048
-"576" "sick" "38" "classif.svm.radial" 363795.260476944
-"577" "phoneme" "1489" "classif.svm" 360513.958886678
-"578" "sylvine" "41146" "classif.xgboost.gblinear" 360477.438459987
-"579" "first.order.theorem.proving" "1475" "classif.svm" 362930.894156636
-"580" "wall.robot.navigation" "1497" "classif.svm" 361634.645435152
-"581" "jasmine" "41143" "classif.rpart" 357962.779288348
-"582" "wall.robot.navigation" "1497" "classif.svm.radial" 362330.263540187
-"583" "ada" "41156" "classif.svm.radial" 360465.413676107
-"584" "dna" "40670" "classif.RcppHNSW" 357565.193815702
-"585" "wine.quality.white" "40498" "classif.xgboost.gblinear" 359590.641142561
-"586" "wilt" "40983" "classif.svm.radial" 362521.026891905
-"587" "sylvine" "41146" "classif.svm" 357612.410314578
-"588" "churn" "40701" "classif.svm" 359322.313734508
-"589" "ada" "41156" "classif.svm" 358207.8177618
-"590" "mc1" "1056" "classif.RcppHNSW" 357126.953633119
-"591" "waveform.5000" "60" "classif.xgboost.gblinear" 357433.302562845
-"592" "wine.quality.white" "40498" "classif.svm.radial" 357900.320735957
-"593" "mfeat.pixel" "40979" "classif.xgboost.gblinear" 357963.119118714
-"594" "analcatdata_authorship" "458" "classif.xgboost.dart" 7442170.2711503
-"595" "CreditCardSubset" "4154" "classif.rpart" 354627.485208999
-"596" "vehicle" "54" "classif.xgboost.dart" 7441562.2711503
-"597" "optdigits" "28" "classif.xgboost.gblinear" 355534.73170543
-"598" "kr.vs.kp" "3" "classif.xgboost.dart" 354349.139535968
-"599" "Satellite" "40900" "classif.svm.radial" 357459.326664933
-"600" "wall.robot.navigation" "1497" "classif.xgboost.gblinear" 354997.215485855
-"601" "JapaneseVowels" "375" "classif.svm.radial" 355702.9608434
-"602" "kr.vs.kp" "3" "classif.xgboost.gblinear" 354226.112069173
-"603" "JapaneseVowels" "375" "classif.svm" 355430.188558373
-"604" "cnae.9" "1468" "classif.RcppHNSW" 352836.533787229
-"605" "wine.quality.white" "40498" "classif.svm" 355518.182546264
-"606" "ozone.level.8hr" "1487" "classif.xgboost.gblinear" 353331.69912236
-"607" "spambase" "44" "classif.xgboost.gblinear" 353401.379287747
-"608" "Satellite" "40900" "classif.xgboost.gblinear" 353311.917356063
-"609" "mc1" "1056" "classif.rpart" 352741.570165217
-"610" "GesturePhaseSegmentationProcessed" "4538" "classif.rpart" 352430.033544625
-"611" "one.hundred.plants.texture" "1493" "classif.xgboost.gblinear" 354363.516730803
-"612" "mushroom" "24" "classif.glmnet" 351214.523018803
-"613" "spambase" "44" "classif.svm" 353738.010764716
-"614" "waveform.5000" "60" "classif.svm.radial" 353937.961623572
-"615" "sick" "38" "classif.xgboost.dart" 7437674.2711503
-"616" "sick" "38" "classif.xgboost.gblinear" 350999.427555079
-"617" "electricity" "151" "classif.xgboost.dart" 349741.742388051
-"618" "cylinder.bands" "6332" "classif.xgboost.dart" 352614.643877225
-"619" "waveform.5000" "60" "classif.svm" 353535.061111557
-"620" "jm1" "1053" "classif.rpart" 349555.352333932
-"621" "CreditCardSubset" "4154" "classif.glmnet" 348262.770677781
-"622" "scene" "312" "classif.glmnet" 350294.3783297
-"623" "kr.vs.kp" "3" "classif.svm.radial" 351944.019833522
-"624" "texture" "40499" "classif.xgboost.gblinear" 349468.615162278
-"625" "Satellite" "40900" "classif.svm" 348676.671367973
-"626" "dresses.sales" "23381" "classif.xgboost.gblinear" 352504.286493057
-"627" "satimage" "182" "classif.xgboost.gblinear" 349369.258653853
-"628" "PhishingWebsites" "4534" "classif.rpart" 347756.830544923
-"629" "cylinder.bands" "6332" "classif.xgboost.gblinear" 350859.433259043
-"630" "kr.vs.kp" "3" "classif.svm" 352000.866885302
-"631" "vehicle" "54" "classif.xgboost.gblinear" 352075.706756466
-"632" "splice" "46" "classif.RcppHNSW" 349663.796507781
-"633" "wilt" "40983" "classif.svm" 348327.937134223
-"634" "LED.display.domain.7digit" "40496" "classif.xgboost.gblinear" 352271.973150988
-"635" "yeast" "181" "classif.xgboost.gblinear" 350581.996449616
-"636" "first.order.theorem.proving" "1475" "classif.RcppHNSW" 347327.180758567
-"637" "blood.transfusion.service.center" "1464" "classif.xgboost.gblinear" 351940.380847316
-"638" "satimage" "182" "classif.svm" 347843.338431502
-"639" "pc1" "1068" "classif.xgboost.gblinear" 350713.541370164
-"640" "satimage" "182" "classif.svm.radial" 347953.511663993
-"641" "balance.scale" "11" "classif.xgboost.gblinear" 351693.816074551
-"642" "ilpd" "1480" "classif.xgboost.dart" 350621.600530829
-"643" "spambase" "44" "classif.xgboost.dart" 351416.220638623
-"644" "jm1" "1053" "classif.glmnet" 345752.926291956
-"645" "Australian" "40981" "classif.xgboost.gblinear" 350865.16667998
-"646" "mfeat.pixel" "40979" "classif.rpart" 347124.902014616
-"647" "eucalyptus" "188" "classif.xgboost.gblinear" 350473.592606251
-"648" "monks.problems.2" "334" "classif.xgboost.gblinear" 351315.2411515
-"649" "letter" "6" "classif.xgboost.dart" 346008.432355286
-"650" "soybean" "42" "classif.glmnet" 347470.327243488
-"651" "dna" "40670" "classif.xgboost.dart" 344754.626421745
-"652" "credit.g" "31" "classif.xgboost.gblinear" 349553.267086693
-"653" "PhishingWebsites" "4534" "classif.xgboost.dart" 344553.493455453
-"654" "tic.tac.toe" "50" "classif.xgboost.gblinear" 350528.600657941
-"655" "analcatdata_dmft" "469" "classif.xgboost.gblinear" 350709.141785755
-"656" "analcatdata_authorship" "458" "classif.xgboost.gblinear" 348277.279578592
-"657" "banknote.authentication" "1462" "classif.xgboost.gblinear" 350038.146777241
-"658" "qsar.biodeg" "1494" "classif.xgboost.gblinear" 348705.987953493
-"659" "profb" "470" "classif.xgboost.gblinear" 349930.776744744
-"660" "ilpd" "1480" "classif.xgboost.gblinear" 350348.303548251
-"661" "kc2" "1063" "classif.xgboost.gblinear" 350202.332423483
-"662" "credit.approval" "29" "classif.xgboost.gblinear" 349523.372955025
-"663" "jungle_chess_2pcs_raw_endgame_complete" "41027" "classif.xgboost.dart" 344469.138616063
-"664" "vowel" "307" "classif.xgboost.gblinear" 349473.709645877
-"665" "diabetes" "37" "classif.xgboost.dart" 348448.337799235
-"666" "profb" "470" "classif.xgboost.dart" 347439.895336471
-"667" "wdbc" "1510" "classif.xgboost.gblinear" 349516.224138279
-"668" "cmc" "23" "classif.xgboost.gblinear" 348855.87265912
-"669" "climate.model.simulation.crashes" "40994" "classif.xgboost.dart" 347140.068468767
-"670" "texture" "40499" "classif.svm" 346009.254207225
-"671" "GesturePhaseSegmentationProcessed" "4538" "classif.glmnet" 344156.39165122
-"672" "diabetes" "37" "classif.xgboost.gblinear" 349551.652677459
-"673" "wdbc" "1510" "classif.xgboost.dart" 346459.995947313
-"674" "car" "40975" "classif.xgboost.gblinear" 348182.667763329
-"675" "climate.model.simulation.crashes" "40994" "classif.xgboost.gblinear" 348750.821904384
-"676" "mfeat.factors" "12" "classif.rpart" 343169.900769778
-"677" "breast.w" "15" "classif.xgboost.gblinear" 348521.091453523
-"678" "cnae.9" "1468" "classif.xgboost.dart" 342248.251262171
-"679" "mc1" "1056" "classif.glmnet" 342279.655613133
-"680" "churn" "40701" "classif.xgboost.dart" 348428.951071243
-"681" "JapaneseVowels" "375" "classif.rpart" 342782.156021896
-"682" "tic.tac.toe" "50" "classif.xgboost.dart" 344623.146835125
-"683" "texture" "40499" "classif.svm.radial" 344143.787630869
-"684" "optdigits" "28" "classif.RcppHNSW" 343028.654730224
-"685" "pendigits" "32" "classif.rpart" 342138.928249619
-"686" "mfeat.morphological" "18" "classif.xgboost.gblinear" 346231.621286078
-"687" "Australian" "40981" "classif.xgboost.dart" 344659.280067406
-"688" "pendigits" "32" "classif.glmnet" 342547.740384424
-"689" "pc3" "1050" "classif.xgboost.gblinear" 343989.528062729
-"690" "MiceProtein" "40966" "classif.xgboost.gblinear" 342621.469700596
-"691" "monks.problems.2" "334" "classif.xgboost.dart" 344844.293317188
-"692" "semeion" "1501" "classif.rpart" 341872.237405497
-"693" "optdigits" "28" "classif.rpart" 343065.572202214
-"694" "micro.mass" "1515" "classif.RcppHNSW" 341521.742627937
-"695" "first.order.theorem.proving" "1475" "classif.rpart" 341139.382930726
-"696" "soybean" "42" "classif.xgboost.gblinear" 344529.904344482
-"697" "pc4" "1049" "classif.xgboost.gblinear" 342319.380266836
-"698" "synthetic_control" "377" "classif.xgboost.gblinear" 344420.150980437
-"699" "wall.robot.navigation" "1497" "classif.RcppHNSW" 341426.129159392
-"700" "breast.w" "15" "classif.xgboost.dart" 343041.549955687
-"701" "dresses.sales" "23381" "classif.xgboost.dart" 339014.322184269
-"702" "churn" "40701" "classif.RcppHNSW" 340800.099070768
-"703" "credit.approval" "29" "classif.xgboost.dart" 340466.483822563
-"704" "ozone.level.8hr" "1487" "classif.xgboost.dart" 344258.628807082
-"705" "sick" "38" "classif.svm" 339950.131131915
-"706" "kc2" "1063" "classif.xgboost.dart" 340520.116812938
-"707" "sick" "38" "classif.RcppHNSW" 340083.834640004
-"708" "kc1" "1067" "classif.xgboost.gblinear" 340523.264860294
-"709" "mfeat.fourier" "14" "classif.xgboost.gblinear" 338816.708771504
-"710" "JapaneseVowels" "375" "classif.glmnet" 337955.451960918
-"711" "GesturePhaseSegmentationProcessed" "4538" "classif.xgboost.dart" 338136.261765
-"712" "ozone.level.8hr" "1487" "classif.svm.radial" 338831.251541153
-"713" "hill.valley" "1479" "classif.xgboost.dart" 336703.577777211
-"714" "CreditCardSubset" "4154" "classif.xgboost.dart" 336757.158849418
-"715" "pc3" "1050" "classif.xgboost.dart" 337303.253100892
-"716" "jm1" "1053" "classif.xgboost.dart" 336536.978092179
-"717" "Satellite" "40900" "classif.xgboost.dart" 7424222.2711503
-"718" "sylvine" "41146" "classif.xgboost.dart" 340098.399431686
-"719" "MiceProtein" "40966" "classif.glmnet" 337093.674464672
-"720" "ada" "41156" "classif.xgboost.dart" 7423590.2711503
-"721" "spambase" "44" "classif.rpart" 336287.8215586
-"722" "ozone.level.8hr" "1487" "classif.svm" 336965.500797993
-"723" "balance.scale" "11" "classif.xgboost.dart" 7422818.2711503
-"724" "hill.valley" "1479" "classif.xgboost.gblinear" 335514.570494011
-"725" "credit.g" "31" "classif.xgboost.dart" 334440.991990773
-"726" "micro.mass" "1515" "classif.xgboost.dart" 335220.12429915
-"727" "satimage" "182" "classif.RcppHNSW" 335945.256385298
-"728" "mfeat.karhunen" "16" "classif.xgboost.gblinear" 335537.387587639
-"729" "segment" "40984" "classif.xgboost.gblinear" 336222.455025096
-"730" "texture" "40499" "classif.RcppHNSW" 335777.063595645
-"731" "mfeat.zernike" "22" "classif.xgboost.gblinear" 335377.177511881
-"732" "sylvine" "41146" "classif.RcppHNSW" 335875.175665496
-"733" "qsar.biodeg" "1494" "classif.xgboost.dart" 333087.806132548
-"734" "steel.plates.fault" "40982" "classif.xgboost.gblinear" 335718.885582187
-"735" "kr.vs.kp" "3" "classif.RcppHNSW" 334873.906689999
-"736" "mfeat.fourier" "14" "classif.svm.radial" 334011.628758843
-"737" "pc1" "1068" "classif.xgboost.dart" 334236.369983347
-"738" "mfeat.pixel" "40979" "classif.RcppHNSW" 334558.60805743
-"739" "pc4" "1049" "classif.xgboost.dart" 331934.426406871
-"740" "blood.transfusion.service.center" "1464" "classif.xgboost.dart" 333486.20937938
-"741" "MiceProtein" "40966" "classif.svm" 332477.761878009
-"742" "Satellite" "40900" "classif.RcppHNSW" 332892.498599056
-"743" "mfeat.fourier" "14" "classif.svm" 332179.23219775
-"744" "texture" "40499" "classif.rpart" 331690.775168346
-"745" "mfeat.factors" "12" "classif.RcppHNSW" 334343.329115795
-"746" "mushroom" "24" "classif.rpart" 331330.888309736
-"747" "mfeat.karhunen" "16" "classif.svm" 331828.506542191
-"748" "banknote.authentication" "1462" "classif.xgboost.dart" 332439.01882837
-"749" "splice" "46" "classif.xgboost.dart" 330299.551480573
-"750" "kc1" "1067" "classif.xgboost.dart" 333379.992144089
-"751" "hill.valley" "1479" "classif.svm.radial" 330873.379439528
-"752" "mfeat.karhunen" "16" "classif.svm.radial" 331178.085375351
-"753" "satimage" "182" "classif.rpart" 330587.263142004
-"754" "phoneme" "1489" "classif.xgboost.dart" 333659.269601124
-"755" "hill.valley" "1479" "classif.svm" 330147.153883939
-"756" "sick" "38" "classif.glmnet" 329712.317925366
-"757" "first.order.theorem.proving" "1475" "classif.glmnet" 329567.889422938
-"758" "MiceProtein" "40966" "classif.svm.radial" 329551.725534768
-"759" "mfeat.pixel" "40979" "classif.xgboost.dart" 329846.397687533
-"760" "ada" "41156" "classif.RcppHNSW" 330050.581393389
-"761" "wilt" "40983" "classif.xgboost.dart" 331414.416838507
-"762" "splice" "46" "classif.rpart" 328661.430226755
-"763" "optdigits" "28" "classif.glmnet" 328896.752678959
-"764" "ozone.level.8hr" "1487" "classif.rpart" 329040.992724484
-"765" "semeion" "1501" "classif.RcppHNSW" 329821.97169328
-"766" "spambase" "44" "classif.RcppHNSW" 328849.927172381
-"767" "waveform.5000" "60" "classif.RcppHNSW" 328743.464528929
-"768" "ada" "41156" "classif.rpart" 328815.840470758
-"769" "wilt" "40983" "classif.xgboost.gblinear" 327630.524679398
-"770" "kr.vs.kp" "3" "classif.glmnet" 326867.697102815
-"771" "semeion" "1501" "classif.xgboost.dart" 327922.765887622
-"772" "waveform.5000" "60" "classif.rpart" 326604.776334471
-"773" "Satellite" "40900" "classif.rpart" 326708.973361363
-"774" "pendigits" "32" "classif.xgboost.dart" 327613.648044403
-"775" "mfeat.fourier" "14" "classif.glmnet" 325628.426495226
-"776" "one.hundred.plants.texture" "1493" "classif.rpart" 325840.184197716
-"777" "phoneme" "1489" "classif.xgboost.gblinear" 325846.586923516
-"778" "churn" "40701" "classif.glmnet" 325222.652678779
-"779" "first.order.theorem.proving" "1475" "classif.xgboost.dart" 325174.152052135
-"780" "satimage" "182" "classif.glmnet" 325484.065477056
-"781" "texture" "40499" "classif.glmnet" 324930.691288172
-"782" "wall.robot.navigation" "1497" "classif.rpart" 324302.094140757
-"783" "waveform.5000" "60" "classif.xgboost.dart" 324723.097420502
-"784" "sick" "38" "classif.rpart" 324166.369248716
-"785" "spambase" "44" "classif.glmnet" 324165.58062088
-"786" "satimage" "182" "classif.xgboost.dart" 324478.641825794
-"787" "mfeat.karhunen" "16" "classif.glmnet" 324030.639769859
-"788" "mfeat.fourier" "14" "classif.rpart" 323471.528396952
-"789" "mfeat.zernike" "22" "classif.svm.radial" 323569.043941648
-"790" "hill.valley" "1479" "classif.rpart" 323845.314895632
-"791" "waveform.5000" "60" "classif.glmnet" 323226.733113914
-"792" "MiceProtein" "40966" "classif.rpart" 323004.709321356
-"793" "optdigits" "28" "classif.xgboost.dart" 324657.57767741
-"794" "ozone.level.8hr" "1487" "classif.RcppHNSW" 323434.25843587
-"795" "ozone.level.8hr" "1487" "classif.glmnet" 322748.747240075
-"796" "kc1" "1067" "classif.svm.radial" 322795.045096984
-"797" "MiceProtein" "40966" "classif.xgboost.dart" 322581.821756074
-"798" "mfeat.zernike" "22" "classif.glmnet" 322176.442478472
-"799" "mfeat.zernike" "22" "classif.svm" 322332.994434428
-"800" "kc1" "1067" "classif.svm" 322250.675754314
-"801" "analcatdata_dmft" "469" "classif.xgboost.dart" 322833.77919634
-"802" "mfeat.factors" "12" "classif.xgboost.dart" 322848.526563383
-"803" "churn" "40701" "classif.rpart" 321734.658760639
-"804" "mfeat.karhunen" "16" "classif.rpart" 322091.214784219
-"805" "pc3" "1050" "classif.svm.radial" 322434.253352562
-"806" "wall.robot.navigation" "1497" "classif.glmnet" 321442.111939983
-"807" "kr.vs.kp" "3" "classif.rpart" 321502.832397944
-"808" "Satellite" "40900" "classif.glmnet" 321409.841753826
-"809" "analcatdata_authorship" "458" "classif.svm.radial" 321805.879904136
-"810" "analcatdata_authorship" "458" "classif.svm" 321795.179800726
-"811" "wine.quality.white" "40498" "classif.RcppHNSW" 322366.660884562
-"812" "pc4" "1049" "classif.svm.radial" 320843.96462463
-"813" "pc3" "1050" "classif.svm" 321104.212033997
-"814" "hill.valley" "1479" "classif.glmnet" 320066.556952963
-"815" "ada" "41156" "classif.glmnet" 319919.040420806
-"816" "phoneme" "1489" "classif.RcppHNSW" 321880.590178011
-"817" "steel.plates.fault" "40982" "classif.svm.radial" 319646.232633043
-"818" "JapaneseVowels" "375" "classif.xgboost.dart" 320714.744275317
-"819" "pc4" "1049" "classif.svm" 319601.54773628
-"820" "sylvine" "41146" "classif.glmnet" 319071.657638288
-"821" "wine.quality.white" "40498" "classif.glmnet" 318859.366693149
-"822" "sylvine" "41146" "classif.rpart" 319008.271055716
-"823" "car" "40975" "classif.svm.radial" 319752.452707056
-"824" "texture" "40499" "classif.xgboost.dart" 318989.209039683
-"825" "steel.plates.fault" "40982" "classif.svm" 318641.579852981
-"826" "wine.quality.white" "40498" "classif.rpart" 318085.747500776
-"827" "LED.display.domain.7digit" "40496" "classif.xgboost.dart" 318579.278031707
-"828" "mfeat.fourier" "14" "classif.xgboost.dart" 319367.672465871
-"829" "car" "40975" "classif.svm" 318890.797071423
-"830" "analcatdata_authorship" "458" "classif.glmnet" 317945.568825993
-"831" "phoneme" "1489" "classif.glmnet" 317742.582854564
-"832" "soybean" "42" "classif.svm" 317909.66887179
-"833" "wilt" "40983" "classif.glmnet" 317320.643143866
-"834" "eucalyptus" "188" "classif.svm.radial" 317581.105792523
-"835" "soybean" "42" "classif.svm.radial" 317533.163064761
-"836" "eucalyptus" "188" "classif.svm" 316826.191769534
-"837" "qsar.biodeg" "1494" "classif.svm.radial" 316533.052722164
-"838" "wilt" "40983" "classif.rpart" 316350.490635626
-"839" "mfeat.zernike" "22" "classif.rpart" 316319.444146494
-"840" "mfeat.fourier" "14" "classif.RcppHNSW" 316753.487819474
-"841" "pc3" "1050" "classif.glmnet" 316178.534747854
-"842" "steel.plates.fault" "40982" "classif.glmnet" 316014.88010867
-"843" "phoneme" "1489" "classif.rpart" 315886.085050396
-"844" "eucalyptus" "188" "classif.glmnet" 316237.178661281
-"845" "pc4" "1049" "classif.glmnet" 315951.282914194
-"846" "steel.plates.fault" "40982" "classif.xgboost.dart" 317872.616437567
-"847" "pc1" "1068" "classif.svm.radial" 315789.230835616
-"848" "kc1" "1067" "classif.glmnet" 315485.849627869
-"849" "credit.g" "31" "classif.svm.radial" 315311.610912325
-"850" "kc1" "1067" "classif.rpart" 315310.047515169
-"851" "cylinder.bands" "6332" "classif.svm" 315430.379888513
-"852" "qsar.biodeg" "1494" "classif.svm" 315133.613150093
-"853" "car" "40975" "classif.xgboost.dart" 315936.955182333
-"854" "wall.robot.navigation" "1497" "classif.xgboost.dart" 315513.512977548
-"855" "steel.plates.fault" "40982" "classif.rpart" 314941.828228985
-"856" "segment" "40984" "classif.svm.radial" 314759.173690702
-"857" "segment" "40984" "classif.glmnet" 315060.008550566
-"858" "segment" "40984" "classif.svm" 314637.123241064
-"859" "analcatdata_authorship" "458" "classif.rpart" 314834.847463417
-"860" "pc3" "1050" "classif.rpart" 314445.632575119
-"861" "synthetic_control" "377" "classif.svm.radial" 314487.632740737
-"862" "synthetic_control" "377" "classif.svm" 314485.710013305
-"863" "pc4" "1049" "classif.rpart" 314488.743990256
-"864" "segment" "40984" "classif.rpart" 314314.905983787
-"865" "cylinder.bands" "6332" "classif.svm.radial" 314493.322774571
-"866" "vowel" "307" "classif.xgboost.dart" 316039.886331491
-"867" "yeast" "181" "classif.svm.radial" 314482.197305904
-"868" "one.hundred.plants.texture" "1493" "classif.RcppHNSW" 314105.87528008
-"869" "cmc" "23" "classif.svm.radial" 314330.658103775
-"870" "mfeat.karhunen" "16" "classif.xgboost.dart" 314937.325919781
-"871" "dresses.sales" "23381" "classif.svm.radial" 314046.991823303
-"872" "mfeat.morphological" "18" "classif.svm.radial" 314284.91550626
-"873" "pc1" "1068" "classif.svm" 313549.890077836
-"874" "dresses.sales" "23381" "classif.svm" 314096.018140023
-"875" "mfeat.karhunen" "16" "classif.RcppHNSW" 314069.184610181
-"876" "vowel" "307" "classif.svm.radial" 313808.20569951
-"877" "wilt" "40983" "classif.RcppHNSW" 314412.271379228
-"878" "vowel" "307" "classif.svm" 313377.77029704
-"879" "mfeat.zernike" "22" "classif.xgboost.dart" 314119.310202291
-"880" "credit.g" "31" "classif.svm" 312353.647794786
-"881" "yeast" "181" "classif.svm" 313460.024770932
-"882" "MiceProtein" "40966" "classif.RcppHNSW" 313219.469095952
-"883" "synthetic_control" "377" "classif.glmnet" 311674.021385233
-"884" "qsar.biodeg" "1494" "classif.rpart" 310970.596579025
-"885" "segment" "40984" "classif.xgboost.dart" 312413.038375998
-"886" "cmc" "23" "classif.svm" 310672.225670363
-"887" "profb" "470" "classif.svm.radial" 310561.259059913
-"888" "qsar.biodeg" "1494" "classif.glmnet" 309422.047612696
-"889" "profb" "470" "classif.svm" 309201.655808574
-"890" "vehicle" "54" "classif.svm" 308756.91204102
-"891" "vehicle" "54" "classif.svm.radial" 308479.381695868
-"892" "mfeat.zernike" "22" "classif.RcppHNSW" 308084.672020927
-"893" "hill.valley" "1479" "classif.RcppHNSW" 307412.012534119
-"894" "wdbc" "1510" "classif.svm" 307573.139156283
-"895" "wdbc" "1510" "classif.svm.radial" 307544.157513245
-"896" "yeast" "181" "classif.xgboost.dart" 308694.956448217
-"897" "soybean" "42" "classif.xgboost.dart" 307625.740354319
-"898" "vowel" "307" "classif.glmnet" 306580.911335886
-"899" "cylinder.bands" "6332" "classif.glmnet" 304725.226544868
-"900" "synthetic_control" "377" "classif.rpart" 304826.418089841
-"901" "credit.approval" "29" "classif.svm.radial" 305203.078633595
-"902" "credit.approval" "29" "classif.svm" 305278.80098278
-"903" "wine.quality.white" "40498" "classif.xgboost.dart" 303627.887137067
-"904" "Australian" "40981" "classif.svm.radial" 303548.871398072
-"905" "one.hundred.plants.texture" "1493" "classif.xgboost.dart" 303330.470373417
-"906" "cmc" "23" "classif.glmnet" 302977.276562321
-"907" "mfeat.morphological" "18" "classif.xgboost.dart" 304339.168034455
-"908" "credit.g" "31" "classif.glmnet" 302353.261260826
-"909" "Australian" "40981" "classif.svm" 302405.090127159
-"910" "mfeat.morphological" "18" "classif.rpart" 301956.65408901
-"911" "mfeat.morphological" "18" "classif.glmnet" 301652.282189605
-"912" "segment" "40984" "classif.RcppHNSW" 301636.08158503
-"913" "car" "40975" "classif.glmnet" 301201.649815028
-"914" "tic.tac.toe" "50" "classif.svm.radial" 301465.499576
-"915" "tic.tac.toe" "50" "classif.svm" 301353.264525944
-"916" "pc1" "1068" "classif.glmnet" 300548.107591366
-"917" "dresses.sales" "23381" "classif.glmnet" 300177.921336074
-"918" "pc1" "1068" "classif.rpart" 300023.991336337
-"919" "banknote.authentication" "1462" "classif.svm.radial" 300288.374841687
-"920" "yeast" "181" "classif.glmnet" 299829.755647909
-"921" "yeast" "181" "classif.rpart" 299758.377193401
-"922" "banknote.authentication" "1462" "classif.svm" 300018.693157296
-"923" "kc2" "1063" "classif.svm.radial" 298737.752279905
-"924" "kc2" "1063" "classif.svm" 297613.286771382
-"925" "cmc" "23" "classif.rpart" 297446.954069345
-"926" "credit.g" "31" "classif.rpart" 297454.846934287
-"927" "vehicle" "54" "classif.glmnet" 297349.267199046
-"928" "steel.plates.fault" "40982" "classif.RcppHNSW" 297329.069909986
-"929" "car" "40975" "classif.rpart" 297133.606900565
-"930" "wdbc" "1510" "classif.glmnet" 296972.825753557
-"931" "climate.model.simulation.crashes" "40994" "classif.svm.radial" 296956.888996857
-"932" "soybean" "42" "classif.rpart" 296101.328940038
-"933" "tic.tac.toe" "50" "classif.glmnet" 296198.797418497
-"934" "analcatdata_dmft" "469" "classif.svm.radial" 296389.924042557
-"935" "profb" "470" "classif.glmnet" 296032.258869711
-"936" "cylinder.bands" "6332" "classif.rpart" 295985.855186936
-"937" "analcatdata_dmft" "469" "classif.svm" 295767.367076354
-"938" "pc3" "1050" "classif.RcppHNSW" 295791.683962676
-"939" "diabetes" "37" "classif.svm.radial" 295715.433724391
-"940" "credit.approval" "29" "classif.glmnet" 295665.863502181
-"941" "climate.model.simulation.crashes" "40994" "classif.svm" 295549.69223215
-"942" "eucalyptus" "188" "classif.rpart" 295372.822462167
-"943" "vehicle" "54" "classif.rpart" 295318.749298515
-"944" "breast.w" "15" "classif.svm.radial" 295038.862984041
-"945" "Australian" "40981" "classif.glmnet" 294955.804416028
-"946" "breast.w" "15" "classif.svm" 294950.720100663
-"947" "banknote.authentication" "1462" "classif.glmnet" 294953.723938674
-"948" "wdbc" "1510" "classif.rpart" 294136.341362667
-"949" "pc4" "1049" "classif.RcppHNSW" 294170.915910216
-"950" "vowel" "307" "classif.rpart" 294056.657917204
-"951" "diabetes" "37" "classif.svm" 294114.71666002
-"952" "banknote.authentication" "1462" "classif.rpart" 293932.790587428
-"953" "kc1" "1067" "classif.RcppHNSW" 293823.294735841
-"954" "analcatdata_dmft" "469" "classif.glmnet" 293353.276078435
-"955" "analcatdata_authorship" "458" "classif.RcppHNSW" 293322.407858893
-"956" "kc2" "1063" "classif.glmnet" 292914.084947676
-"957" "ilpd" "1480" "classif.svm.radial" 292755.44608718
-"958" "ilpd" "1480" "classif.svm" 292340.819562746
-"959" "climate.model.simulation.crashes" "40994" "classif.glmnet" 292481.891947155
-"960" "credit.approval" "29" "classif.rpart" 292226.333359334
-"961" "LED.display.domain.7digit" "40496" "classif.svm" 292452.974560512
-"962" "breast.w" "15" "classif.glmnet" 292096.539519633
-"963" "LED.display.domain.7digit" "40496" "classif.svm.radial" 292171.710729594
-"964" "diabetes" "37" "classif.glmnet" 291375.144876003
-"965" "kc2" "1063" "classif.rpart" 291328.400750976
-"966" "tic.tac.toe" "50" "classif.rpart" 290779.575042652
-"967" "ilpd" "1480" "classif.glmnet" 290671.571727095
-"968" "climate.model.simulation.crashes" "40994" "classif.rpart" 290275.038524261
-"969" "Australian" "40981" "classif.rpart" 290253.744133915
-"970" "breast.w" "15" "classif.rpart" 290252.047098269
-"971" "LED.display.domain.7digit" "40496" "classif.glmnet" 289956.586034377
-"972" "monks.problems.2" "334" "classif.svm.radial" 289517.433183539
-"973" "balance.scale" "11" "classif.svm.radial" 289533.71814779
-"974" "monks.problems.2" "334" "classif.svm" 289374.444375339
-"975" "diabetes" "37" "classif.rpart" 289347.231862738
-"976" "blood.transfusion.service.center" "1464" "classif.glmnet" 289162.44614081
-"977" "blood.transfusion.service.center" "1464" "classif.svm.radial" 288614.409124528
-"978" "monks.problems.2" "334" "classif.glmnet" 288643.494212854
-"979" "profb" "470" "classif.rpart" 288466.822301791
-"980" "ilpd" "1480" "classif.rpart" 288442.61920805
-"981" "blood.transfusion.service.center" "1464" "classif.svm" 289156.296470974
-"982" "qsar.biodeg" "1494" "classif.RcppHNSW" 288494.550799197
-"983" "balance.scale" "11" "classif.glmnet" 287883.881468639
-"984" "dresses.sales" "23381" "classif.rpart" 287572.66854243
-"985" "analcatdata_dmft" "469" "classif.rpart" 287619.004229704
-"986" "blood.transfusion.service.center" "1464" "classif.rpart" 287143.887133816
-"987" "balance.scale" "11" "classif.svm" 286949.120058234
-"988" "LED.display.domain.7digit" "40496" "classif.rpart" 286713.831773252
-"989" "balance.scale" "11" "classif.rpart" 286422.52624169
-"990" "monks.problems.2" "334" "classif.rpart" 286407.253259195
-"991" "credit.g" "31" "classif.RcppHNSW" 285379.349626097
-"992" "synthetic_control" "377" "classif.RcppHNSW" 284828.553004503
-"993" "soybean" "42" "classif.RcppHNSW" 284353.931282087
-"994" "mfeat.morphological" "18" "classif.RcppHNSW" 284473.094438941
-"995" "eucalyptus" "188" "classif.RcppHNSW" 283872.023748917
-"996" "car" "40975" "classif.RcppHNSW" 283927.308179969
-"997" "cmc" "23" "classif.RcppHNSW" 283004.308678195
-"998" "cylinder.bands" "6332" "classif.RcppHNSW" 282505.237273026
-"999" "yeast" "181" "classif.RcppHNSW" 281723.827699258
-"1000" "pc1" "1068" "classif.RcppHNSW" 281513.554591722
-"1001" "dresses.sales" "23381" "classif.RcppHNSW" 278765.756037817
-"1002" "banknote.authentication" "1462" "classif.RcppHNSW" 278623.52188987
-"1003" "vowel" "307" "classif.RcppHNSW" 277876.359967034
-"1004" "wdbc" "1510" "classif.RcppHNSW" 277531.065118947
-"1005" "credit.approval" "29" "classif.RcppHNSW" 277371.619898064
-"1006" "vehicle" "54" "classif.RcppHNSW" 277067.033726145
-"1007" "tic.tac.toe" "50" "classif.RcppHNSW" 276782.920950142
-"1008" "profb" "470" "classif.RcppHNSW" 276401.869166221
-"1009" "Australian" "40981" "classif.RcppHNSW" 275999.439135639
-"1010" "kc2" "1063" "classif.RcppHNSW" 274341.92044269
-"1011" "climate.model.simulation.crashes" "40994" "classif.RcppHNSW" 273890.210418756
-"1012" "breast.w" "15" "classif.RcppHNSW" 273597.696058011
-"1013" "analcatdata_dmft" "469" "classif.RcppHNSW" 273438.608826928
-"1014" "ilpd" "1480" "classif.RcppHNSW" 273062.883868853
-"1015" "diabetes" "37" "classif.RcppHNSW" 272792.311116091
-"1016" "monks.problems.2" "334" "classif.RcppHNSW" 271969.934376234
-"1017" "blood.transfusion.service.center" "1464" "classif.RcppHNSW" 271407.531164706
-"1018" "LED.display.domain.7digit" "40496" "classif.RcppHNSW" 270605.131170577
-"1019" "balance.scale" "11" "classif.RcppHNSW" 270121.784171864
+"dataset" "learner" "memory_limit"
+"1" "CIFAR_10.40927" "classif.svm" 22417946.8109234
+"2" "CIFAR_10.40927" "classif.svm.radial" 22417957.162885
+"3" "helena.41169" "classif.ranger.pow" 28300482.2711503
+"4" "CIFAR_10.40927" "classif.rpart" 15757273.7659802
+"5" "CIFAR_10.40927" "classif.ranger.pow" 12525041.3870973
+"6" "CIFAR_10.40927" "classif.RcppHNSW" 17719618.2711503
+"7" "riccardo.41161" "classif.svm" 10615124.9998863
+"8" "riccardo.41161" "classif.svm.radial" 10607126.3684317
+"9" "guillermo.41159" "classif.svm" 10594771.0310612
+"10" "guillermo.41159" "classif.svm.radial" 10594700.2006165
+"11" "CIFAR_10.40927" "classif.xgboost.gblinear" 10287081.2150423
+"12" "CIFAR_10.40927" "classif.xgboost.gbtree" 10287680.8658292
+"13" "CIFAR_10.40927" "classif.xgboost.dart" 10286360.6918472
+"14" "CIFAR_10.40927" "classif.glmnet" 8803073.97089939
+"15" "robert.41165" "classif.svm.radial" 8538210.32567592
+"16" "robert.41165" "classif.svm" 8524076.38919542
+"17" "Devnagari.Script.40923" "classif.svm" 8088572.01608152
+"18" "Devnagari.Script.40923" "classif.svm.radial" 8057695.8315319
+"19" "riccardo.41161" "classif.rpart" 8086007.12108821
+"20" "guillermo.41159" "classif.rpart" 8108847.15257543
+"21" "guillermo.41159" "classif.glmnet" 7478867.16433412
+"22" "Devnagari.Script.40923" "classif.ranger.pow" 7707718.20474499
+"23" "numerai28.6.23517" "classif.ranger.pow" 13944050.2711503
+"24" "robert.41165" "classif.rpart" 6891572.87813362
+"25" "higgs.23512" "classif.ranger.pow" 8546669.74694168
+"26" "Devnagari.Script.40923" "classif.rpart" 6773111.92513111
+"27" "riccardo.41161" "classif.glmnet" 6594412.92418641
+"28" "volkert.41166" "classif.ranger.pow" 7756656.29622618
+"29" "Fashion.MNIST.40996" "classif.svm" 6589526.64242203
+"30" "Fashion.MNIST.40996" "classif.svm.radial" 6591512.35037189
+"31" "mnist_784.554" "classif.svm" 6230849.0455242
+"32" "mnist_784.554" "classif.svm.radial" 6228775.51275025
+"33" "letter.6" "classif.ranger.pow" 6565956.00202266
+"34" "jannis.41168" "classif.ranger.pow" 7840270.5083364
+"35" "robert.41165" "classif.ranger.pow" 6355556.41418198
+"36" "guillermo.41159" "classif.xgboost.gblinear" 5943436.48921037
+"37" "riccardo.41161" "classif.xgboost.gblinear" 5951046.98154732
+"38" "riccardo.41161" "classif.xgboost.gbtree" 5850368.15576524
+"39" "guillermo.41159" "classif.xgboost.gbtree" 5872086.04471386
+"40" "riccardo.41161" "classif.RcppHNSW" 5657785.38689842
+"41" "riccardo.41161" "classif.xgboost.dart" 5240829.80490831
+"42" "Fashion.MNIST.40996" "classif.rpart" 5190000.99858074
+"43" "guillermo.41159" "classif.xgboost.dart" 5150511.9853536
+"44" "guillermo.41159" "classif.RcppHNSW" 5111073.91675817
+"45" "amazon.commerce.reviews.1457" "classif.svm.radial" 5216679.65793287
+"46" "Fashion.MNIST.40996" "classif.ranger.pow" 5395787.19289033
+"47" "mnist_784.554" "classif.rpart" 4949986.37494006
+"48" "KDDCup09_appetency.1111" "classif.svm.radial" 5579066.36548501
+"49" "kick.41162" "classif.ranger.pow" 5203675.8365847
+"50" "Devnagari.Script.40923" "classif.RcppHNSW" 4447308.93875701
+"51" "robert.41165" "classif.xgboost.dart" 4397209.12743397
+"52" "robert.41165" "classif.xgboost.gbtree" 4391413.58642642
+"53" "robert.41165" "classif.xgboost.gblinear" 4384772.12015513
+"54" "Devnagari.Script.40923" "classif.xgboost.gbtree" 4333242.68840394
+"55" "Devnagari.Script.40923" "classif.xgboost.dart" 4331487.37318446
+"56" "Devnagari.Script.40923" "classif.xgboost.gblinear" 4332116.19843946
+"57" "robert.41165" "classif.RcppHNSW" 4339151.34982567
+"58" "amazon.commerce.reviews.1457" "classif.svm" 4280555.70778111
+"59" "arcene.41157" "classif.svm" 4432546.52764322
+"60" "arcene.41157" "classif.svm.radial" 4457570.89757788
+"61" "guillermo.41159" "classif.ranger.pow" 11199122.2711503
+"62" "riccardo.41161" "classif.ranger.pow" 11012470.2711503
+"63" "Devnagari.Script.40923" "classif.glmnet" 3910203.51551724
+"64" "jungle_chess_2pcs_raw_endgame_complete.41027" "classif.ranger.pow" 4154679.20848711
+"65" "robert.41165" "classif.glmnet" 3673884.53528414
+"66" "mnist_784.554" "classif.RcppHNSW" 3734970.74424972
+"67" "Fashion.MNIST.40996" "classif.RcppHNSW" 3599826.52209482
+"68" "connect.4.40668" "classif.ranger.pow" 4113930.40336748
+"69" "amazon.commerce.reviews.1457" "classif.rpart" 3482398.92397632
+"70" "mnist_784.554" "classif.xgboost.gbtree" 3481098.56143546
+"71" "mnist_784.554" "classif.xgboost.gblinear" 3475885.19765002
+"72" "amazon.commerce.reviews.1457" "classif.glmnet" 10362150.2711503
+"73" "Fashion.MNIST.40996" "classif.xgboost.dart" 3204252.5003239
+"74" "Fashion.MNIST.40996" "classif.xgboost.gblinear" 3203558.42544732
+"75" "Fashion.MNIST.40996" "classif.xgboost.gbtree" 3201985.58007235
+"76" "adult.1590" "classif.ranger.pow" 3500756.98009212
+"77" "mnist_784.554" "classif.xgboost.dart" 3039496.15978154
+"78" "KDDCup09_appetency.1111" "classif.svm" 10074506.2711503
+"79" "helena.41169" "classif.svm" 3581698.31875083
+"80" "arcene.41157" "classif.rpart" 2957055.56902671
+"81" "mnist_784.554" "classif.ranger.pow" 9953178.2711503
+"82" "Fashion.MNIST.40996" "classif.glmnet" 2865374.46306373
+"83" "KDDCup09_appetency.1111" "classif.xgboost.gbtree" 3284328.53558935
+"84" "GesturePhaseSegmentationProcessed.4538" "classif.ranger.pow" 2909613.18221848
+"85" "Dilbert.41163" "classif.svm.radial" 2642955.04941519
+"86" "KDDCup09_appetency.1111" "classif.glmnet" 3109542.19148967
+"87" "mnist_784.554" "classif.glmnet" 2571196.46283443
+"88" "bank.marketing.1461" "classif.ranger.pow" 2826732.30978263
+"89" "KDDCup09_appetency.1111" "classif.xgboost.gblinear" 2927292.74227
+"90" "one.hundred.plants.texture.1493" "classif.ranger.pow" 2699416.62277985
+"91" "electricity.151" "classif.ranger.pow" 2710002.62811183
+"92" "shuttle.40685" "classif.ranger.pow" 2621398.75476392
+"93" "Dilbert.41163" "classif.ranger.pow" 2558190.55077812
+"94" "Dilbert.41163" "classif.rpart" 2322833.16067818
+"95" "KDDCup09_appetency.1111" "classif.xgboost.dart" 2593018.44211598
+"96" "wine.quality.white.40498" "classif.ranger.pow" 2297760.72265922
+"97" "diabetes130US.4541" "classif.xgboost.gbtree" 2395133.23204767
+"98" "christine.41142" "classif.svm" 9237186.2711503
+"99" "JapaneseVowels.375" "classif.ranger.pow" 2311112.84061327
+"100" "KDDCup09_appetency.1111" "classif.rpart" 2384982.51942018
+"101" "KDDCup09_appetency.1111" "classif.ranger.pow" 2310502.42065324
+"102" "christine.41142" "classif.svm.radial" 9155546.2711503
+"103" "diabetes130US.4541" "classif.xgboost.gblinear" 2309940.38662383
+"104" "Dilbert.41163" "classif.glmnet" 2094779.44865043
+"105" "diabetes130US.4541" "classif.glmnet" 1904238.54862256
+"106" "Dilbert.41163" "classif.xgboost.gblinear" 1964910.52010082
+"107" "first.order.theorem.proving.1475" "classif.ranger.pow" 2009045.46377331
+"108" "KDDCup09_appetency.1111" "classif.RcppHNSW" 2142705.06038157
+"109" "Dilbert.41163" "classif.xgboost.gbtree" 1930065.31156869
+"110" "kick.41162" "classif.xgboost.gblinear" 1855877.62040806
+"111" "jm1.1053" "classif.ranger.pow" 1889252.86848423
+"112" "kick.41162" "classif.xgboost.gbtree" 1937033.51938897
+"113" "cmc.23" "classif.xgboost.gbtree" 1764481.75050576
+"114" "yeast.181" "classif.xgboost.gbtree" 1757729.32786863
+"115" "fabert.41164" "classif.svm" 8748554.2711503
+"116" "kick.41162" "classif.svm.radial" 1696137.25115795
+"117" "kick.41162" "classif.svm" 1688993.63620619
+"118" "nomao.1486" "classif.ranger.pow" 1747501.60056258
+"119" "Bioresponse.4134" "classif.svm.radial" 1627719.63678599
+"120" "Internet.Advertisements.40978" "classif.svm" 1644956.06972185
+"121" "Bioresponse.4134" "classif.svm" 1574506.81164048
+"122" "har.1478" "classif.svm" 1616135.52594426
+"123" "diabetes130US.4541" "classif.svm.radial" 1542280.41466757
+"124" "diabetes130US.4541" "classif.svm" 1536163.51108013
+"125" "diabetes130US.4541" "classif.RcppHNSW" 1566571.77942701
+"126" "amazon.commerce.reviews.1457" "classif.ranger.pow" 1578014.18894699
+"127" "Internet.Advertisements.40978" "classif.svm.radial" 1538359.99598535
+"128" "fabert.41164" "classif.svm.radial" 8553286.2711503
+"129" "Dilbert.41163" "classif.RcppHNSW" 1449477.71257861
+"130" "isolet.300" "classif.svm" 1473366.22938409
+"131" "christine.41142" "classif.xgboost.gblinear" 1473750.79088296
+"132" "Dilbert.41163" "classif.xgboost.dart" 1384803.21873951
+"133" "diabetes130US.4541" "classif.xgboost.dart" 1377404.85365392
+"134" "phoneme.1489" "classif.ranger.pow" 1430638.16253563
+"135" "isolet.300" "classif.svm.radial" 8413302.2711503
+"136" "fabert.41164" "classif.ranger.pow" 8408534.2711503
+"137" "volkert.41166" "classif.svm" 1314243.23677425
+"138" "volkert.41166" "classif.svm.radial" 1313542.32368228
+"139" "pendigits.32" "classif.ranger.pow" 1402086.03988923
+"140" "car.40975" "classif.xgboost.gbtree" 1334055.04706202
+"141" "volkert.41166" "classif.rpart" 1316420.03512429
+"142" "isolet.300" "classif.ranger.pow" 1424289.83575555
+"143" "analcatdata_dmft.469" "classif.xgboost.gbtree" 1264722.69525983
+"144" "amazon.commerce.reviews.1457" "classif.RcppHNSW" 1240323.25021859
+"145" "optdigits.28" "classif.ranger.pow" 1301428.39657006
+"146" "christine.41142" "classif.ranger.pow" 1304767.3126028
+"147" "kick.41162" "classif.glmnet" 1211111.99989657
+"148" "one.hundred.plants.texture.1493" "classif.xgboost.gbtree" 1318147.24917184
+"149" "nomao.1486" "classif.svm.radial" 8281322.2711503
+"150" "nomao.1486" "classif.svm" 1296141.10351885
+"151" "waveform.5000.60" "classif.ranger.pow" 1263158.42941468
+"152" "kick.41162" "classif.RcppHNSW" 1240462.24397487
+"153" "satimage.182" "classif.ranger.pow" 1254060.74497947
+"154" "christine.41142" "classif.rpart" 1167023.80520664
+"155" "volkert.41166" "classif.glmnet" 1167361.63647753
+"156" "yeast.181" "classif.ranger.pow" 1181225.61514915
+"157" "amazon.commerce.reviews.1457" "classif.xgboost.dart" 1142795.49664718
+"158" "amazon.commerce.reviews.1457" "classif.xgboost.gbtree" 1140727.60813134
+"159" "kick.41162" "classif.xgboost.dart" 1131159.14025055
+"160" "amazon.commerce.reviews.1457" "classif.xgboost.gblinear" 1134103.75868195
+"161" "christine.41142" "classif.glmnet" 1155715.06554402
+"162" "Amazon_employee_access.4135" "classif.ranger.pow" 1245685.75524797
+"163" "MiniBooNE.41150" "classif.rpart" 1140841.56600961
+"164" "Internet.Advertisements.40978" "classif.glmnet" 1124388.04483288
+"165" "vowel.307" "classif.xgboost.gbtree" 1145278.40641081
+"166" "helena.41169" "classif.glmnet" 1109964.9701783
+"167" "christine.41142" "classif.xgboost.gbtree" 1103620.12164046
+"168" "Amazon_employee_access.4135" "classif.svm" 1104182.06300928
+"169" "Amazon_employee_access.4135" "classif.svm.radial" 1109375.5417082
+"170" "MiniBooNE.41150" "classif.svm" 1081268.99429511
+"171" "MiniBooNE.41150" "classif.svm.radial" 1080803.13210878
+"172" "har.1478" "classif.ranger.pow" 1125681.46550993
+"173" "volkert.41166" "classif.xgboost.gbtree" 1107998.27802056
+"174" "MiniBooNE.41150" "classif.xgboost.gbtree" 1108301.98749214
+"175" "ada.41156" "classif.ranger.pow" 1102867.96784507
+"176" "MiniBooNE.41150" "classif.xgboost.gblinear" 1088911.41097949
+"177" "texture.40499" "classif.ranger.pow" 1114309.27809418
+"178" "eucalyptus.188" "classif.xgboost.gbtree" 1068427.1150846
+"179" "MiniBooNE.41150" "classif.glmnet" 1043243.99424704
+"180" "christine.41142" "classif.xgboost.dart" 8105678.2711503
+"181" "MiniBooNE.41150" "classif.RcppHNSW" 1020947.63776279
+"182" "mfeat.morphological.18" "classif.ranger.pow" 1043903.07685717
+"183" "Bioresponse.4134" "classif.rpart" 1007670.89052456
+"184" "Bioresponse.4134" "classif.ranger.pow" 1045380.13437723
+"185" "Amazon_employee_access.4135" "classif.xgboost.gblinear" 997666.366301662
+"186" "sylvine.41146" "classif.ranger.pow" 1039840.77203181
+"187" "volkert.41166" "classif.RcppHNSW" 994717.67636065
+"188" "volkert.41166" "classif.xgboost.gblinear" 1017660.40044639
+"189" "gas.drift.1476" "classif.ranger.pow" 1042707.57731957
+"190" "fabert.41164" "classif.rpart" 976371.541616332
+"191" "spambase.44" "classif.ranger.pow" 1035317.42233372
+"192" "Internet.Advertisements.40978" "classif.xgboost.gbtree" 980807.26681062
+"193" "Internet.Advertisements.40978" "classif.xgboost.gblinear" 961941.357724187
+"194" "wall.robot.navigation.1497" "classif.ranger.pow" 1020337.4598302
+"195" "jannis.41168" "classif.rpart" 970652.520859779
+"196" "GesturePhaseSegmentationProcessed.4538" "classif.xgboost.gbtree" 1062107.87236082
+"197" "Bioresponse.4134" "classif.xgboost.gbtree" 997680.001501676
+"198" "jannis.41168" "classif.svm" 955016.987660339
+"199" "Internet.Advertisements.40978" "classif.xgboost.dart" 8041838.2711503
+"200" "jannis.41168" "classif.svm.radial" 953970.052103886
+"201" "Bioresponse.4134" "classif.xgboost.gblinear" 961833.453530909
+"202" "fabert.41164" "classif.glmnet" 938420.535280099
+"203" "phoneme.1489" "classif.xgboost.gbtree" 963223.589951837
+"204" "isolet.300" "classif.glmnet" 8020830.2711503
+"205" "MiniBooNE.41150" "classif.ranger.pow" 8012646.2711503
+"206" "Amazon_employee_access.4135" "classif.xgboost.gbtree" 973301.072833906
+"207" "connect.4.40668" "classif.xgboost.gblinear" 7988630.2711503
+"208" "connect.4.40668" "classif.glmnet" 899388.488663214
+"209" "har.1478" "classif.rpart" 898710.125186836
+"210" "steel.plates.fault.40982" "classif.ranger.pow" 913793.109275586
+"211" "sylva_prior.1040" "classif.ranger.pow" 931798.861477396
+"212" "diabetes130US.4541" "classif.rpart" 870868.008368164
+"213" "ada.41156" "classif.xgboost.gbtree" 894130.822263979
+"214" "vehicle.54" "classif.xgboost.gbtree" 896994.331445495
+"215" "jannis.41168" "classif.glmnet" 873657.254621687
+"216" "higgs.23512" "classif.RcppHNSW" 877391.250167387
+"217" "mfeat.fourier.14" "classif.ranger.pow" 909343.284961218
+"218" "Bioresponse.4134" "classif.glmnet" 872371.529620267
+"219" "volkert.41166" "classif.xgboost.dart" 862038.499766781
+"220" "mfeat.karhunen.16" "classif.ranger.pow" 902552.83030007
+"221" "helena.41169" "classif.RcppHNSW" 864289.625480306
+"222" "Bioresponse.4134" "classif.xgboost.dart" 910587.578470076
+"223" "churn.40701" "classif.ranger.pow" 901431.957344338
+"224" "madelon.1485" "classif.ranger.pow" 892029.897220242
+"225" "higgs.23512" "classif.glmnet" 870316.278991425
+"226" "first.order.theorem.proving.1475" "classif.xgboost.gbtree" 939997.709341067
+"227" "mfeat.zernike.22" "classif.ranger.pow" 884114.142217234
+"228" "christine.41142" "classif.RcppHNSW" 837246.886333161
+"229" "nomao.1486" "classif.xgboost.dart" 850652.699729841
+"230" "adult.1590" "classif.xgboost.gblinear" 844076.486094171
+"231" "CreditCardSubset.4154" "classif.ranger.pow" 884143.620291473
+"232" "nomao.1486" "classif.glmnet" 828678.352714763
+"233" "har.1478" "classif.xgboost.gbtree" 897782.557113702
+"234" "connect.4.40668" "classif.svm" 820287.681016898
+"235" "connect.4.40668" "classif.svm.radial" 819592.479320727
+"236" "Internet.Advertisements.40978" "classif.rpart" 819862.980689036
+"237" "har.1478" "classif.glmnet" 831552.736505321
+"238" "jannis.41168" "classif.xgboost.gbtree" 886358.943412856
+"239" "higgs.23512" "classif.rpart" 822580.51404096
+"240" "jungle_chess_2pcs_raw_endgame_complete.41027" "classif.xgboost.gbtree" 889932.930308576
+"241" "cmc.23" "classif.ranger.pow" 845572.078539084
+"242" "isolet.300" "classif.rpart" 824539.448301245
+"243" "higgs.23512" "classif.xgboost.gblinear" 817659.383920274
+"244" "adult.1590" "classif.svm" 865417.920334745
+"245" "MiniBooNE.41150" "classif.xgboost.dart" 803815.68964364
+"246" "connect.4.40668" "classif.RcppHNSW" 809474.301613962
+"247" "fabert.41164" "classif.RcppHNSW" 797572.55895356
+"248" "sylvine.41146" "classif.xgboost.gbtree" 808906.478055817
+"249" "higgs.23512" "classif.xgboost.gbtree" 827395.419358288
+"250" "wine.quality.white.40498" "classif.xgboost.gbtree" 828417.833893289
+"251" "jannis.41168" "classif.xgboost.gblinear" 800176.230421869
+"252" "jannis.41168" "classif.RcppHNSW" 796444.377367956
+"253" "nomao.1486" "classif.rpart" 788282.005979511
+"254" "helena.41169" "classif.rpart" 782059.790650502
+"255" "connect.4.40668" "classif.xgboost.gbtree" 815267.415598295
+"256" "mfeat.zernike.22" "classif.xgboost.gbtree" 809130.435790387
+"257" "semeion.1501" "classif.ranger.pow" 810170.594103365
+"258" "numerai28.6.23517" "classif.RcppHNSW" 780802.883761128
+"259" "higgs.23512" "classif.svm" 767141.511770332
+"260" "higgs.23512" "classif.svm.radial" 766895.016241599
+"261" "SpeedDating.40536" "classif.ranger.pow" 812407.479721048
+"262" "fabert.41164" "classif.xgboost.gblinear" 797530.109086998
+"263" "splice.46" "classif.ranger.pow" 790094.427867841
+"264" "numerai28.6.23517" "classif.xgboost.gblinear" 777238.096322247
+"265" "Internet.Advertisements.40978" "classif.ranger.pow" 777507.048353476
+"266" "mfeat.karhunen.16" "classif.xgboost.gbtree" 793590.7646558
+"267" "nomao.1486" "classif.xgboost.gbtree" 774370.072948901
+"268" "fabert.41164" "classif.xgboost.gbtree" 796916.636364927
+"269" "kc1.1067" "classif.ranger.pow" 768083.691718842
+"270" "har.1478" "classif.RcppHNSW" 755241.465726255
+"271" "hill.valley.1479" "classif.ranger.pow" 764515.376017732
+"272" "nomao.1486" "classif.xgboost.gblinear" 750942.00140985
+"273" "steel.plates.fault.40982" "classif.xgboost.gbtree" 772806.475255673
+"274" "har.1478" "classif.xgboost.gblinear" 7812834.2711503
+"275" "kick.41162" "classif.rpart" 737760.682574247
+"276" "adult.1590" "classif.svm.radial" 7812258.2711503
+"277" "vehicle.54" "classif.ranger.pow" 735912.148986204
+"278" "wilt.40983" "classif.ranger.pow" 746880.371183788
+"279" "churn.40701" "classif.xgboost.gbtree" 734053.413822242
+"280" "numerai28.6.23517" "classif.xgboost.gbtree" 7802770.2711503
+"281" "gas.drift.1476" "classif.svm.radial" 731047.030837468
+"282" "Bioresponse.4134" "classif.RcppHNSW" 721435.345745247
+"283" "spambase.44" "classif.xgboost.gbtree" 722787.493230068
+"284" "mfeat.pixel.40979" "classif.ranger.pow" 737192.886564196
+"285" "mfeat.factors.12" "classif.ranger.pow" 740431.426516114
+"286" "adult.1590" "classif.xgboost.gbtree" 7788086.2711503
+"287" "nomao.1486" "classif.RcppHNSW" 726882.047951968
+"288" "kc1.1067" "classif.xgboost.gbtree" 705384.505529148
+"289" "isolet.300" "classif.xgboost.gbtree" 735326.869457725
+"290" "Internet.Advertisements.40978" "classif.RcppHNSW" 690208.540115389
+"291" "micro.mass.1515" "classif.ranger.pow" 711279.434595396
+"292" "LED.display.domain.7digit.40496" "classif.xgboost.gbtree" 700303.249689078
+"293" "analcatdata_authorship.458" "classif.ranger.pow" 688365.130501197
+"294" "PhishingWebsites.4534" "classif.ranger.pow" 716860.755523224
+"295" "mc1.1056" "classif.ranger.pow" 714242.331281368
+"296" "gas.drift.1476" "classif.svm" 682376.306865367
+"297" "tic.tac.toe.50" "classif.xgboost.gbtree" 681364.880966602
+"298" "cnae.9.1468" "classif.ranger.pow" 698419.081409599
+"299" "mfeat.morphological.18" "classif.xgboost.gbtree" 697300.573885061
+"300" "numerai28.6.23517" "classif.rpart" 670437.405918194
+"301" "vowel.307" "classif.ranger.pow" 692519.495911583
+"302" "synthetic_control.377" "classif.xgboost.gbtree" 677598.784942079
+"303" "diabetes.37" "classif.xgboost.gbtree" 670059.475695934
+"304" "SpeedDating.40536" "classif.xgboost.gblinear" 668939.309273651
+"305" "SpeedDating.40536" "classif.xgboost.gbtree" 679653.528298419
+"306" "isolet.300" "classif.xgboost.gblinear" 683246.517245608
+"307" "JapaneseVowels.375" "classif.xgboost.gbtree" 690136.804033275
+"308" "credit.g.31" "classif.xgboost.gbtree" 660266.540595343
+"309" "isolet.300" "classif.RcppHNSW" 663118.622895409
+"310" "sylva_prior.1040" "classif.svm.radial" 656503.718927467
+"311" "connect.4.40668" "classif.xgboost.dart" 644863.690593005
+"312" "letter.6" "classif.svm" 696639.105857333
+"313" "sylva_prior.1040" "classif.svm" 660219.660221425
+"314" "SpeedDating.40536" "classif.svm.radial" 650387.606471239
+"315" "connect.4.40668" "classif.rpart" 643045.900792721
+"316" "bank.marketing.1461" "classif.xgboost.gbtree" 650504.749493642
+"317" "bank.marketing.1461" "classif.xgboost.gblinear" 656792.024159796
+"318" "letter.6" "classif.svm.radial" 693871.312498473
+"319" "Amazon_employee_access.4135" "classif.RcppHNSW" 644320.78008181
+"320" "diabetes130US.4541" "classif.ranger.pow" 7723590.2711503
+"321" "adult.1590" "classif.glmnet" 635128.631193211
+"322" "bank.marketing.1461" "classif.svm.radial" 651265.277103064
+"323" "qsar.biodeg.1494" "classif.xgboost.gbtree" 644798.502934827
+"324" "bank.marketing.1461" "classif.svm" 668804.601741307
+"325" "Amazon_employee_access.4135" "classif.glmnet" 632574.406307417
+"326" "waveform.5000.60" "classif.xgboost.gbtree" 658003.653410493
+"327" "madelon.1485" "classif.svm.radial" 645804.18633078
+"328" "madelon.1485" "classif.svm" 638541.444199657
+"329" "soybean.42" "classif.xgboost.gbtree" 658284.193830276
+"330" "wilt.40983" "classif.xgboost.gbtree" 633346.806440272
+"331" "numerai28.6.23517" "classif.svm" 620830.506087058
+"332" "numerai28.6.23517" "classif.svm.radial" 619051.043733401
+"333" "segment.40984" "classif.xgboost.gbtree" 639831.726501046
+"334" "monks.problems.2.334" "classif.xgboost.gbtree" 622217.636625696
+"335" "jannis.41168" "classif.xgboost.dart" 613048.204790252
+"336" "har.1478" "classif.xgboost.dart" 611799.376669034
+"337" "SpeedDating.40536" "classif.svm" 616281.741824882
+"338" "banknote.authentication.1462" "classif.xgboost.gbtree" 621410.058815525
+"339" "helena.41169" "classif.svm.radial" 608159.757125709
+"340" "Amazon_employee_access.4135" "classif.xgboost.dart" 605920.251110296
+"341" "optdigits.28" "classif.xgboost.gbtree" 642435.686652271
+"342" "higgs.23512" "classif.xgboost.dart" 604356.712389283
+"343" "MiceProtein.40966" "classif.xgboost.gbtree" 624765.167662766
+"344" "satimage.182" "classif.xgboost.gbtree" 637288.078387703
+"345" "balance.scale.11" "classif.xgboost.gbtree" 615967.328623148
+"346" "adult.1590" "classif.RcppHNSW" 608376.203882484
+"347" "SpeedDating.40536" "classif.xgboost.dart" 7687282.2711503
+"348" "segment.40984" "classif.ranger.pow" 611757.857533368
+"349" "kr.vs.kp.3" "classif.xgboost.gbtree" 604139.279135647
+"350" "qsar.biodeg.1494" "classif.ranger.pow" 605450.177425264
+"351" "shuttle.40685" "classif.RcppHNSW" 606526.819465308
+"352" "pc3.1050" "classif.ranger.pow" 604854.294520155
+"353" "numerai28.6.23517" "classif.glmnet" 592242.068332804
+"354" "fabert.41164" "classif.xgboost.dart" 587946.371566113
+"355" "diabetes.37" "classif.ranger.pow" 602088.661041022
+"356" "blood.transfusion.service.center.1464" "classif.ranger.pow" 596839.325145011
+"357" "texture.40499" "classif.xgboost.gbtree" 613642.539886632
+"358" "analcatdata_dmft.469" "classif.ranger.pow" 593202.109613503
+"359" "sick.38" "classif.xgboost.gbtree" 585470.605323085
+"360" "credit.g.31" "classif.ranger.pow" 594166.136431369
+"361" "bank.marketing.1461" "classif.RcppHNSW" 584598.151618575
+"362" "SpeedDating.40536" "classif.glmnet" 584464.557555884
+"363" "analcatdata_authorship.458" "classif.xgboost.gbtree" 587523.913595038
+"364" "pc3.1050" "classif.xgboost.gbtree" 582402.579786373
+"365" "Australian.40981" "classif.xgboost.gbtree" 583056.13447952
+"366" "MiceProtein.40966" "classif.ranger.pow" 590138.898686566
+"367" "scene.312" "classif.ranger.pow" 589944.675041209
+"368" "tic.tac.toe.50" "classif.ranger.pow" 580340.43534853
+"369" "mfeat.fourier.14" "classif.xgboost.gbtree" 593638.934159144
+"370" "ozone.level.8hr.1487" "classif.xgboost.gbtree" 575934.917499191
+"371" "semeion.1501" "classif.xgboost.gbtree" 593761.373172382
+"372" "helena.41169" "classif.xgboost.gbtree" 566935.26235319
+"373" "kr.vs.kp.3" "classif.ranger.pow" 578971.812397808
+"374" "ozone.level.8hr.1487" "classif.ranger.pow" 574588.216908566
+"375" "wall.robot.navigation.1497" "classif.xgboost.gbtree" 568474.647978304
+"376" "ilpd.1480" "classif.ranger.pow" 559493.169546518
+"377" "shuttle.40685" "classif.xgboost.gbtree" 552724.510312273
+"378" "sylva_prior.1040" "classif.xgboost.gbtree" 556344.386222477
+"379" "bank.marketing.1461" "classif.glmnet" 546395.591025144
+"380" "micro.mass.1515" "classif.glmnet" 550161.324722002
+"381" "jungle_chess_2pcs_raw_endgame_complete.41027" "classif.RcppHNSW" 557040.763744401
+"382" "micro.mass.1515" "classif.xgboost.gbtree" 561414.076212753
+"383" "ilpd.1480" "classif.xgboost.gbtree" 550016.202770097
+"384" "pc1.1068" "classif.ranger.pow" 550340.742146262
+"385" "helena.41169" "classif.xgboost.dart" 538397.566681311
+"386" "car.40975" "classif.ranger.pow" 549130.331984244
+"387" "cnae.9.1468" "classif.svm" 542824.589082769
+"388" "shuttle.40685" "classif.svm" 562528.167063977
+"389" "isolet.300" "classif.xgboost.dart" 536321.284096243
+"390" "pendigits.32" "classif.xgboost.gbtree" 553390.562289803
+"391" "cnae.9.1468" "classif.svm.radial" 537867.407590196
+"392" "dresses.sales.23381" "classif.xgboost.gbtree" 536322.266186974
+"393" "synthetic_control.377" "classif.ranger.pow" 536592.859100096
+"394" "electricity.151" "classif.RcppHNSW" 539801.588885455
+"395" "credit.approval.29" "classif.xgboost.gbtree" 535981.918636784
+"396" "numerai28.6.23517" "classif.xgboost.dart" 527488.808265037
+"397" "gas.drift.1476" "classif.xgboost.gbtree" 527135.946524456
+"398" "letter.6" "classif.xgboost.gbtree" 7608946.2711503
+"399" "mfeat.factors.12" "classif.xgboost.gbtree" 540352.308247157
+"400" "profb.470" "classif.xgboost.gbtree" 527663.330011971
+"401" "pc4.1049" "classif.xgboost.gbtree" 524243.504540526
+"402" "Satellite.40900" "classif.ranger.pow" 537858.257196868
+"403" "cylinder.bands.6332" "classif.xgboost.gbtree" 521841.086286714
+"404" "arcene.41157" "classif.glmnet" 516966.48291335
+"405" "one.hundred.plants.texture.1493" "classif.svm" 551690.280913432
+"406" "one.hundred.plants.texture.1493" "classif.svm.radial" 550854.157560196
+"407" "madelon.1485" "classif.xgboost.gbtree" 515162.298999813
+"408" "gas.drift.1476" "classif.xgboost.gblinear" 528094.805650901
+"409" "electricity.151" "classif.xgboost.gbtree" 512937.218790349
+"410" "hill.valley.1479" "classif.xgboost.gbtree" 511639.598635021
+"411" "cnae.9.1468" "classif.xgboost.gbtree" 518393.391251484
+"412" "pc1.1068" "classif.xgboost.gbtree" 505571.560496699
+"413" "shuttle.40685" "classif.xgboost.gblinear" 509758.798417308
+"414" "sick.38" "classif.ranger.pow" 514440.230615549
+"415" "kc2.1063" "classif.xgboost.gbtree" 503947.488787719
+"416" "balance.scale.11" "classif.ranger.pow" 505803.772337164
+"417" "shuttle.40685" "classif.svm.radial" 491455.100738734
+"418" "adult.1590" "classif.xgboost.dart" 486873.046253119
+"419" "electricity.151" "classif.xgboost.gblinear" 494652.120144039
+"420" "blood.transfusion.service.center.1464" "classif.xgboost.gbtree" 493357.003778391
+"421" "micro.mass.1515" "classif.svm" 488594.626287009
+"422" "sylva_prior.1040" "classif.xgboost.gblinear" 490116.962214289
+"423" "cnae.9.1468" "classif.glmnet" 486999.821087063
+"424" "mfeat.pixel.40979" "classif.xgboost.gbtree" 502418.030695575
+"425" "jm1.1053" "classif.xgboost.gbtree" 490640.190996135
+"426" "sylva_prior.1040" "classif.RcppHNSW" 487391.708327167
+"427" "gas.drift.1476" "classif.RcppHNSW" 484497.827656326
+"428" "pc4.1049" "classif.ranger.pow" 488451.432346696
+"429" "micro.mass.1515" "classif.svm.radial" 479449.730929937
+"430" "eucalyptus.188" "classif.ranger.pow" 491055.299107819
+"431" "soybean.42" "classif.ranger.pow" 485642.720990006
+"432" "gas.drift.1476" "classif.rpart" 475661.275571532
+"433" "scene.312" "classif.svm" 481640.777329707
+"434" "gas.drift.1476" "classif.glmnet" 479530.25728202
+"435" "jungle_chess_2pcs_raw_endgame_complete.41027" "classif.xgboost.gblinear" 478703.662186717
+"436" "SpeedDating.40536" "classif.RcppHNSW" 470009.569327248
+"437" "dna.40670" "classif.svm.radial" 483216.168188734
+"438" "PhishingWebsites.4534" "classif.xgboost.gbtree" 475221.198938666
+"439" "mushroom.24" "classif.ranger.pow" 480335.784690961
+"440" "madelon.1485" "classif.xgboost.dart" 485341.623906751
+"441" "dna.40670" "classif.ranger.pow" 475449.061341701
+"442" "madelon.1485" "classif.xgboost.gblinear" 463249.986676879
+"443" "scene.312" "classif.svm.radial" 467620.560134598
+"444" "electricity.151" "classif.svm.radial" 7545434.2711503
+"445" "dna.40670" "classif.svm" 471246.620198154
+"446" "dna.40670" "classif.xgboost.gbtree" 463768.513258486
+"447" "jungle_chess_2pcs_raw_endgame_complete.41027" "classif.svm" 469439.348793512
+"448" "electricity.151" "classif.svm" 472022.031144846
+"449" "arcene.41157" "classif.xgboost.gbtree" 457291.445262891
+"450" "jasmine.41143" "classif.xgboost.gbtree" 458656.381548772
+"451" "sylva_prior.1040" "classif.rpart" 455800.392091156
+"452" "arcene.41157" "classif.xgboost.dart" 455777.606748311
+"453" "arcene.41157" "classif.xgboost.gblinear" 451860.069109342
+"454" "PhishingWebsites.4534" "classif.xgboost.gblinear" 452360.495370485
+"455" "splice.46" "classif.xgboost.gbtree" 453485.201617326
+"456" "adult.1590" "classif.rpart" 448167.90882838
+"457" "bank.marketing.1461" "classif.rpart" 443083.150485408
+"458" "jasmine.41143" "classif.ranger.pow" 453094.135661231
+"459" "LED.display.domain.7digit.40496" "classif.ranger.pow" 449373.377707601
+"460" "arcene.41157" "classif.ranger.pow" 444582.577540784
+"461" "shuttle.40685" "classif.rpart" 440411.45905642
+"462" "madelon.1485" "classif.rpart" 442861.242721565
+"463" "monks.problems.2.334" "classif.ranger.pow" 447311.546389784
+"464" "cnae.9.1468" "classif.rpart" 442331.430818486
+"465" "Satellite.40900" "classif.xgboost.gbtree" 438941.597997145
+"466" "mushroom.24" "classif.xgboost.gbtree" 437700.634811695
+"467" "jungle_chess_2pcs_raw_endgame_complete.41027" "classif.svm.radial" 430699.661038332
+"468" "kc2.1063" "classif.ranger.pow" 440088.045673294
+"469" "jasmine.41143" "classif.svm.radial" 440743.440188589
+"470" "jasmine.41143" "classif.svm" 435898.463951352
+"471" "sylva_prior.1040" "classif.glmnet" 429774.866647696
+"472" "cnae.9.1468" "classif.xgboost.gblinear" 433338.260652975
+"473" "madelon.1485" "classif.glmnet" 435255.767276935
+"474" "dna.40670" "classif.xgboost.gblinear" 432412.001669403
+"475" "scene.312" "classif.xgboost.gbtree" 432723.703789935
+"476" "shuttle.40685" "classif.glmnet" 427140.395655301
+"477" "mushroom.24" "classif.xgboost.gblinear" 430503.151980417
+"478" "letter.6" "classif.xgboost.gblinear" 431466.244672529
+"479" "jasmine.41143" "classif.xgboost.gblinear" 428257.787342229
+"480" "mushroom.24" "classif.svm" 435087.725475954
+"481" "mfeat.pixel.40979" "classif.svm" 433395.889783053
+"482" "bank.marketing.1461" "classif.xgboost.dart" 422030.216565628
+"483" "letter.6" "classif.RcppHNSW" 427641.235856169
+"484" "mushroom.24" "classif.svm.radial" 431440.562799588
+"485" "Australian.40981" "classif.ranger.pow" 431309.990515125
+"486" "mfeat.pixel.40979" "classif.svm.radial" 426217.794256836
+"487" "profb.470" "classif.ranger.pow" 430930.850961602
+"488" "jasmine.41143" "classif.xgboost.dart" 418464.600789663
+"489" "micro.mass.1515" "classif.rpart" 419493.862803956
+"490" "SpeedDating.40536" "classif.rpart" 415133.217801501
+"491" "mc1.1056" "classif.xgboost.gblinear" 419974.815791241
+"492" "dna.40670" "classif.glmnet" 415131.659568019
+"493" "credit.approval.29" "classif.ranger.pow" 424507.929310018
+"494" "splice.46" "classif.xgboost.gblinear" 415133.5661768
+"495" "dresses.sales.23381" "classif.ranger.pow" 421524.917843959
+"496" "scene.312" "classif.xgboost.gblinear" 413529.247577013
+"497" "PhishingWebsites.4534" "classif.RcppHNSW" 414740.698329687
+"498" "PhishingWebsites.4534" "classif.svm.radial" 415523.915650595
+"499" "CreditCardSubset.4154" "classif.svm.radial" 413214.957240987
+"500" "banknote.authentication.1462" "classif.ranger.pow" 421055.637728315
+"501" "scene.312" "classif.rpart" 419639.696905063
+"502" "climate.model.simulation.crashes.40994" "classif.xgboost.gbtree" 414880.084525463
+"503" "mc1.1056" "classif.xgboost.gbtree" 413770.338552031
+"504" "electricity.151" "classif.glmnet" 407782.672031097
+"505" "splice.46" "classif.svm" 414653.639982832
+"506" "mushroom.24" "classif.xgboost.dart" 7493814.2711503
+"507" "scene.312" "classif.xgboost.dart" 423607.307961609
+"508" "semeion.1501" "classif.svm" 412704.853687607
+"509" "PhishingWebsites.4534" "classif.svm" 409669.439355843
+"510" "semeion.1501" "classif.svm.radial" 413997.493474899
+"511" "CreditCardSubset.4154" "classif.xgboost.gbtree" 408740.389839071
+"512" "GesturePhaseSegmentationProcessed.4538" "classif.xgboost.gblinear" 409722.99492642
+"513" "gas.drift.1476" "classif.xgboost.dart" 405277.724262411
+"514" "arcene.41157" "classif.RcppHNSW" 404303.298665929
+"515" "splice.46" "classif.svm.radial" 407746.946787954
+"516" "mfeat.factors.12" "classif.svm" 407273.012677626
+"517" "one.hundred.plants.texture.1493" "classif.glmnet" 402626.938935326
+"518" "madelon.1485" "classif.RcppHNSW" 400356.935695696
+"519" "jm1.1053" "classif.xgboost.gblinear" 401241.634616045
+"520" "CreditCardSubset.4154" "classif.svm" 399989.575608078
+"521" "CreditCardSubset.4154" "classif.xgboost.gblinear" 401729.690980244
+"522" "jungle_chess_2pcs_raw_endgame_complete.41027" "classif.rpart" 395478.888586986
+"523" "jungle_chess_2pcs_raw_endgame_complete.41027" "classif.glmnet" 394721.560755281
+"524" "climate.model.simulation.crashes.40994" "classif.ranger.pow" 399972.680786191
+"525" "mfeat.factors.12" "classif.svm.radial" 398891.042738606
+"526" "CreditCardSubset.4154" "classif.RcppHNSW" 393791.467062412
+"527" "letter.6" "classif.glmnet" 392134.412895538
+"528" "wdbc.1510" "classif.xgboost.gbtree" 395251.08271403
+"529" "wdbc.1510" "classif.ranger.pow" 395224.229335519
+"530" "cylinder.bands.6332" "classif.ranger.pow" 399360.485883931
+"531" "electricity.151" "classif.rpart" 387320.554676315
+"532" "jasmine.41143" "classif.glmnet" 388901.845901612
+"533" "Amazon_employee_access.4135" "classif.rpart" 386767.671933172
+"534" "breast.w.15" "classif.xgboost.gbtree" 393261.032772827
+"535" "micro.mass.1515" "classif.xgboost.gblinear" 389150.748937006
+"536" "JapaneseVowels.375" "classif.RcppHNSW" 389307.674969619
+"537" "mushroom.24" "classif.RcppHNSW" 384161.019533157
+"538" "mc1.1056" "classif.svm.radial" 379472.240539131
+"539" "sylva_prior.1040" "classif.xgboost.dart" 376943.196424865
+"540" "semeion.1501" "classif.xgboost.gblinear" 382427.935170451
+"541" "breast.w.15" "classif.ranger.pow" 383668.265643317
+"542" "jm1.1053" "classif.svm" 378822.614403461
+"543" "jm1.1053" "classif.svm.radial" 377078.823587886
+"544" "optdigits.28" "classif.svm" 378693.179432424
+"545" "splice.46" "classif.glmnet" 376701.646607
+"546" "mfeat.pixel.40979" "classif.glmnet" 374549.637567934
+"547" "optdigits.28" "classif.svm.radial" 375693.98820952
+"548" "pendigits.32" "classif.RcppHNSW" 373498.675810594
+"549" "mc1.1056" "classif.svm" 371511.982282847
+"550" "GesturePhaseSegmentationProcessed.4538" "classif.svm.radial" 369270.95939772
+"551" "GesturePhaseSegmentationProcessed.4538" "classif.svm" 370622.629143899
+"552" "PhishingWebsites.4534" "classif.glmnet" 368946.486066612
+"553" "spambase.44" "classif.svm.radial" 370668.014272785
+"554" "shuttle.40685" "classif.xgboost.dart" 366448.407923376
+"555" "semeion.1501" "classif.glmnet" 370102.336156225
+"556" "dna.40670" "classif.rpart" 369285.693425356
+"557" "GesturePhaseSegmentationProcessed.4538" "classif.RcppHNSW" 366942.066463329
+"558" "scene.312" "classif.RcppHNSW" 365597.297327121
+"559" "pendigits.32" "classif.xgboost.gblinear" 364442.388938224
+"560" "letter.6" "classif.rpart" 363688.265528942
+"561" "mfeat.factors.12" "classif.glmnet" 365491.673618331
+"562" "jm1.1053" "classif.RcppHNSW" 364823.878408809
+"563" "JapaneseVowels.375" "classif.xgboost.gblinear" 363494.32960072
+"564" "phoneme.1489" "classif.svm.radial" 365415.393775639
+"565" "first.order.theorem.proving.1475" "classif.xgboost.gblinear" 365978.053705627
+"566" "mfeat.factors.12" "classif.xgboost.gblinear" 366735.184289243
+"567" "pendigits.32" "classif.svm.radial" 363320.169723711
+"568" "first.order.theorem.proving.1475" "classif.svm.radial" 363279.382514889
+"569" "pendigits.32" "classif.svm" 362710.912710447
+"570" "jasmine.41143" "classif.RcppHNSW" 360660.806959114
+"571" "synthetic_control.377" "classif.xgboost.dart" 7447274.2711503
+"572" "sylvine.41146" "classif.svm.radial" 362546.128218413
+"573" "ada.41156" "classif.xgboost.gblinear" 361642.635037455
+"574" "churn.40701" "classif.xgboost.gblinear" 361281.69830062
+"575" "churn.40701" "classif.svm.radial" 363728.885027048
+"576" "sick.38" "classif.svm.radial" 363795.260476944
+"577" "phoneme.1489" "classif.svm" 360513.958886678
+"578" "sylvine.41146" "classif.xgboost.gblinear" 360477.438459987
+"579" "first.order.theorem.proving.1475" "classif.svm" 362930.894156636
+"580" "wall.robot.navigation.1497" "classif.svm" 361634.645435152
+"581" "jasmine.41143" "classif.rpart" 357962.779288348
+"582" "wall.robot.navigation.1497" "classif.svm.radial" 362330.263540187
+"583" "ada.41156" "classif.svm.radial" 360465.413676107
+"584" "dna.40670" "classif.RcppHNSW" 357565.193815702
+"585" "wine.quality.white.40498" "classif.xgboost.gblinear" 359590.641142561
+"586" "wilt.40983" "classif.svm.radial" 362521.026891905
+"587" "sylvine.41146" "classif.svm" 357612.410314578
+"588" "churn.40701" "classif.svm" 359322.313734508
+"589" "ada.41156" "classif.svm" 358207.8177618
+"590" "mc1.1056" "classif.RcppHNSW" 357126.953633119
+"591" "waveform.5000.60" "classif.xgboost.gblinear" 357433.302562845
+"592" "wine.quality.white.40498" "classif.svm.radial" 357900.320735957
+"593" "mfeat.pixel.40979" "classif.xgboost.gblinear" 357963.119118714
+"594" "analcatdata_authorship.458" "classif.xgboost.dart" 7442170.2711503
+"595" "CreditCardSubset.4154" "classif.rpart" 354627.485208999
+"596" "vehicle.54" "classif.xgboost.dart" 7441562.2711503
+"597" "optdigits.28" "classif.xgboost.gblinear" 355534.73170543
+"598" "kr.vs.kp.3" "classif.xgboost.dart" 354349.139535968
+"599" "Satellite.40900" "classif.svm.radial" 357459.326664933
+"600" "wall.robot.navigation.1497" "classif.xgboost.gblinear" 354997.215485855
+"601" "JapaneseVowels.375" "classif.svm.radial" 355702.9608434
+"602" "kr.vs.kp.3" "classif.xgboost.gblinear" 354226.112069173
+"603" "JapaneseVowels.375" "classif.svm" 355430.188558373
+"604" "cnae.9.1468" "classif.RcppHNSW" 352836.533787229
+"605" "wine.quality.white.40498" "classif.svm" 355518.182546264
+"606" "ozone.level.8hr.1487" "classif.xgboost.gblinear" 353331.69912236
+"607" "spambase.44" "classif.xgboost.gblinear" 353401.379287747
+"608" "Satellite.40900" "classif.xgboost.gblinear" 353311.917356063
+"609" "mc1.1056" "classif.rpart" 352741.570165217
+"610" "GesturePhaseSegmentationProcessed.4538" "classif.rpart" 352430.033544625
+"611" "one.hundred.plants.texture.1493" "classif.xgboost.gblinear" 354363.516730803
+"612" "mushroom.24" "classif.glmnet" 351214.523018803
+"613" "spambase.44" "classif.svm" 353738.010764716
+"614" "waveform.5000.60" "classif.svm.radial" 353937.961623572
+"615" "sick.38" "classif.xgboost.dart" 7437674.2711503
+"616" "sick.38" "classif.xgboost.gblinear" 350999.427555079
+"617" "electricity.151" "classif.xgboost.dart" 349741.742388051
+"618" "cylinder.bands.6332" "classif.xgboost.dart" 352614.643877225
+"619" "waveform.5000.60" "classif.svm" 353535.061111557
+"620" "jm1.1053" "classif.rpart" 349555.352333932
+"621" "CreditCardSubset.4154" "classif.glmnet" 348262.770677781
+"622" "scene.312" "classif.glmnet" 350294.3783297
+"623" "kr.vs.kp.3" "classif.svm.radial" 351944.019833522
+"624" "texture.40499" "classif.xgboost.gblinear" 349468.615162278
+"625" "Satellite.40900" "classif.svm" 348676.671367973
+"626" "dresses.sales.23381" "classif.xgboost.gblinear" 352504.286493057
+"627" "satimage.182" "classif.xgboost.gblinear" 349369.258653853
+"628" "PhishingWebsites.4534" "classif.rpart" 347756.830544923
+"629" "cylinder.bands.6332" "classif.xgboost.gblinear" 350859.433259043
+"630" "kr.vs.kp.3" "classif.svm" 352000.866885302
+"631" "vehicle.54" "classif.xgboost.gblinear" 352075.706756466
+"632" "splice.46" "classif.RcppHNSW" 349663.796507781
+"633" "wilt.40983" "classif.svm" 348327.937134223
+"634" "LED.display.domain.7digit.40496" "classif.xgboost.gblinear" 352271.973150988
+"635" "yeast.181" "classif.xgboost.gblinear" 350581.996449616
+"636" "first.order.theorem.proving.1475" "classif.RcppHNSW" 347327.180758567
+"637" "blood.transfusion.service.center.1464" "classif.xgboost.gblinear" 351940.380847316
+"638" "satimage.182" "classif.svm" 347843.338431502
+"639" "pc1.1068" "classif.xgboost.gblinear" 350713.541370164
+"640" "satimage.182" "classif.svm.radial" 347953.511663993
+"641" "balance.scale.11" "classif.xgboost.gblinear" 351693.816074551
+"642" "ilpd.1480" "classif.xgboost.dart" 350621.600530829
+"643" "spambase.44" "classif.xgboost.dart" 351416.220638623
+"644" "jm1.1053" "classif.glmnet" 345752.926291956
+"645" "Australian.40981" "classif.xgboost.gblinear" 350865.16667998
+"646" "mfeat.pixel.40979" "classif.rpart" 347124.902014616
+"647" "eucalyptus.188" "classif.xgboost.gblinear" 350473.592606251
+"648" "monks.problems.2.334" "classif.xgboost.gblinear" 351315.2411515
+"649" "letter.6" "classif.xgboost.dart" 346008.432355286
+"650" "soybean.42" "classif.glmnet" 347470.327243488
+"651" "dna.40670" "classif.xgboost.dart" 344754.626421745
+"652" "credit.g.31" "classif.xgboost.gblinear" 349553.267086693
+"653" "PhishingWebsites.4534" "classif.xgboost.dart" 344553.493455453
+"654" "tic.tac.toe.50" "classif.xgboost.gblinear" 350528.600657941
+"655" "analcatdata_dmft.469" "classif.xgboost.gblinear" 350709.141785755
+"656" "analcatdata_authorship.458" "classif.xgboost.gblinear" 348277.279578592
+"657" "banknote.authentication.1462" "classif.xgboost.gblinear" 350038.146777241
+"658" "qsar.biodeg.1494" "classif.xgboost.gblinear" 348705.987953493
+"659" "profb.470" "classif.xgboost.gblinear" 349930.776744744
+"660" "ilpd.1480" "classif.xgboost.gblinear" 350348.303548251
+"661" "kc2.1063" "classif.xgboost.gblinear" 350202.332423483
+"662" "credit.approval.29" "classif.xgboost.gblinear" 349523.372955025
+"663" "jungle_chess_2pcs_raw_endgame_complete.41027" "classif.xgboost.dart" 344469.138616063
+"664" "vowel.307" "classif.xgboost.gblinear" 349473.709645877
+"665" "diabetes.37" "classif.xgboost.dart" 348448.337799235
+"666" "profb.470" "classif.xgboost.dart" 347439.895336471
+"667" "wdbc.1510" "classif.xgboost.gblinear" 349516.224138279
+"668" "cmc.23" "classif.xgboost.gblinear" 348855.87265912
+"669" "climate.model.simulation.crashes.40994" "classif.xgboost.dart" 347140.068468767
+"670" "texture.40499" "classif.svm" 346009.254207225
+"671" "GesturePhaseSegmentationProcessed.4538" "classif.glmnet" 344156.39165122
+"672" "diabetes.37" "classif.xgboost.gblinear" 349551.652677459
+"673" "wdbc.1510" "classif.xgboost.dart" 346459.995947313
+"674" "car.40975" "classif.xgboost.gblinear" 348182.667763329
+"675" "climate.model.simulation.crashes.40994" "classif.xgboost.gblinear" 348750.821904384
+"676" "mfeat.factors.12" "classif.rpart" 343169.900769778
+"677" "breast.w.15" "classif.xgboost.gblinear" 348521.091453523
+"678" "cnae.9.1468" "classif.xgboost.dart" 342248.251262171
+"679" "mc1.1056" "classif.glmnet" 342279.655613133
+"680" "churn.40701" "classif.xgboost.dart" 348428.951071243
+"681" "JapaneseVowels.375" "classif.rpart" 342782.156021896
+"682" "tic.tac.toe.50" "classif.xgboost.dart" 344623.146835125
+"683" "texture.40499" "classif.svm.radial" 344143.787630869
+"684" "optdigits.28" "classif.RcppHNSW" 343028.654730224
+"685" "pendigits.32" "classif.rpart" 342138.928249619
+"686" "mfeat.morphological.18" "classif.xgboost.gblinear" 346231.621286078
+"687" "Australian.40981" "classif.xgboost.dart" 344659.280067406
+"688" "pendigits.32" "classif.glmnet" 342547.740384424
+"689" "pc3.1050" "classif.xgboost.gblinear" 343989.528062729
+"690" "MiceProtein.40966" "classif.xgboost.gblinear" 342621.469700596
+"691" "monks.problems.2.334" "classif.xgboost.dart" 344844.293317188
+"692" "semeion.1501" "classif.rpart" 341872.237405497
+"693" "optdigits.28" "classif.rpart" 343065.572202214
+"694" "micro.mass.1515" "classif.RcppHNSW" 341521.742627937
+"695" "first.order.theorem.proving.1475" "classif.rpart" 341139.382930726
+"696" "soybean.42" "classif.xgboost.gblinear" 344529.904344482
+"697" "pc4.1049" "classif.xgboost.gblinear" 342319.380266836
+"698" "synthetic_control.377" "classif.xgboost.gblinear" 344420.150980437
+"699" "wall.robot.navigation.1497" "classif.RcppHNSW" 341426.129159392
+"700" "breast.w.15" "classif.xgboost.dart" 343041.549955687
+"701" "dresses.sales.23381" "classif.xgboost.dart" 339014.322184269
+"702" "churn.40701" "classif.RcppHNSW" 340800.099070768
+"703" "credit.approval.29" "classif.xgboost.dart" 340466.483822563
+"704" "ozone.level.8hr.1487" "classif.xgboost.dart" 344258.628807082
+"705" "sick.38" "classif.svm" 339950.131131915
+"706" "kc2.1063" "classif.xgboost.dart" 340520.116812938
+"707" "sick.38" "classif.RcppHNSW" 340083.834640004
+"708" "kc1.1067" "classif.xgboost.gblinear" 340523.264860294
+"709" "mfeat.fourier.14" "classif.xgboost.gblinear" 338816.708771504
+"710" "JapaneseVowels.375" "classif.glmnet" 337955.451960918
+"711" "GesturePhaseSegmentationProcessed.4538" "classif.xgboost.dart" 338136.261765
+"712" "ozone.level.8hr.1487" "classif.svm.radial" 338831.251541153
+"713" "hill.valley.1479" "classif.xgboost.dart" 336703.577777211
+"714" "CreditCardSubset.4154" "classif.xgboost.dart" 336757.158849418
+"715" "pc3.1050" "classif.xgboost.dart" 337303.253100892
+"716" "jm1.1053" "classif.xgboost.dart" 336536.978092179
+"717" "Satellite.40900" "classif.xgboost.dart" 7424222.2711503
+"718" "sylvine.41146" "classif.xgboost.dart" 340098.399431686
+"719" "MiceProtein.40966" "classif.glmnet" 337093.674464672
+"720" "ada.41156" "classif.xgboost.dart" 7423590.2711503
+"721" "spambase.44" "classif.rpart" 336287.8215586
+"722" "ozone.level.8hr.1487" "classif.svm" 336965.500797993
+"723" "balance.scale.11" "classif.xgboost.dart" 7422818.2711503
+"724" "hill.valley.1479" "classif.xgboost.gblinear" 335514.570494011
+"725" "credit.g.31" "classif.xgboost.dart" 334440.991990773
+"726" "micro.mass.1515" "classif.xgboost.dart" 335220.12429915
+"727" "satimage.182" "classif.RcppHNSW" 335945.256385298
+"728" "mfeat.karhunen.16" "classif.xgboost.gblinear" 335537.387587639
+"729" "segment.40984" "classif.xgboost.gblinear" 336222.455025096
+"730" "texture.40499" "classif.RcppHNSW" 335777.063595645
+"731" "mfeat.zernike.22" "classif.xgboost.gblinear" 335377.177511881
+"732" "sylvine.41146" "classif.RcppHNSW" 335875.175665496
+"733" "qsar.biodeg.1494" "classif.xgboost.dart" 333087.806132548
+"734" "steel.plates.fault.40982" "classif.xgboost.gblinear" 335718.885582187
+"735" "kr.vs.kp.3" "classif.RcppHNSW" 334873.906689999
+"736" "mfeat.fourier.14" "classif.svm.radial" 334011.628758843
+"737" "pc1.1068" "classif.xgboost.dart" 334236.369983347
+"738" "mfeat.pixel.40979" "classif.RcppHNSW" 334558.60805743
+"739" "pc4.1049" "classif.xgboost.dart" 331934.426406871
+"740" "blood.transfusion.service.center.1464" "classif.xgboost.dart" 333486.20937938
+"741" "MiceProtein.40966" "classif.svm" 332477.761878009
+"742" "Satellite.40900" "classif.RcppHNSW" 332892.498599056
+"743" "mfeat.fourier.14" "classif.svm" 332179.23219775
+"744" "texture.40499" "classif.rpart" 331690.775168346
+"745" "mfeat.factors.12" "classif.RcppHNSW" 334343.329115795
+"746" "mushroom.24" "classif.rpart" 331330.888309736
+"747" "mfeat.karhunen.16" "classif.svm" 331828.506542191
+"748" "banknote.authentication.1462" "classif.xgboost.dart" 332439.01882837
+"749" "splice.46" "classif.xgboost.dart" 330299.551480573
+"750" "kc1.1067" "classif.xgboost.dart" 333379.992144089
+"751" "hill.valley.1479" "classif.svm.radial" 330873.379439528
+"752" "mfeat.karhunen.16" "classif.svm.radial" 331178.085375351
+"753" "satimage.182" "classif.rpart" 330587.263142004
+"754" "phoneme.1489" "classif.xgboost.dart" 333659.269601124
+"755" "hill.valley.1479" "classif.svm" 330147.153883939
+"756" "sick.38" "classif.glmnet" 329712.317925366
+"757" "first.order.theorem.proving.1475" "classif.glmnet" 329567.889422938
+"758" "MiceProtein.40966" "classif.svm.radial" 329551.725534768
+"759" "mfeat.pixel.40979" "classif.xgboost.dart" 329846.397687533
+"760" "ada.41156" "classif.RcppHNSW" 330050.581393389
+"761" "wilt.40983" "classif.xgboost.dart" 331414.416838507
+"762" "splice.46" "classif.rpart" 328661.430226755
+"763" "optdigits.28" "classif.glmnet" 328896.752678959
+"764" "ozone.level.8hr.1487" "classif.rpart" 329040.992724484
+"765" "semeion.1501" "classif.RcppHNSW" 329821.97169328
+"766" "spambase.44" "classif.RcppHNSW" 328849.927172381
+"767" "waveform.5000.60" "classif.RcppHNSW" 328743.464528929
+"768" "ada.41156" "classif.rpart" 328815.840470758
+"769" "wilt.40983" "classif.xgboost.gblinear" 327630.524679398
+"770" "kr.vs.kp.3" "classif.glmnet" 326867.697102815
+"771" "semeion.1501" "classif.xgboost.dart" 327922.765887622
+"772" "waveform.5000.60" "classif.rpart" 326604.776334471
+"773" "Satellite.40900" "classif.rpart" 326708.973361363
+"774" "pendigits.32" "classif.xgboost.dart" 327613.648044403
+"775" "mfeat.fourier.14" "classif.glmnet" 325628.426495226
+"776" "one.hundred.plants.texture.1493" "classif.rpart" 325840.184197716
+"777" "phoneme.1489" "classif.xgboost.gblinear" 325846.586923516
+"778" "churn.40701" "classif.glmnet" 325222.652678779
+"779" "first.order.theorem.proving.1475" "classif.xgboost.dart" 325174.152052135
+"780" "satimage.182" "classif.glmnet" 325484.065477056
+"781" "texture.40499" "classif.glmnet" 324930.691288172
+"782" "wall.robot.navigation.1497" "classif.rpart" 324302.094140757
+"783" "waveform.5000.60" "classif.xgboost.dart" 324723.097420502
+"784" "sick.38" "classif.rpart" 324166.369248716
+"785" "spambase.44" "classif.glmnet" 324165.58062088
+"786" "satimage.182" "classif.xgboost.dart" 324478.641825794
+"787" "mfeat.karhunen.16" "classif.glmnet" 324030.639769859
+"788" "mfeat.fourier.14" "classif.rpart" 323471.528396952
+"789" "mfeat.zernike.22" "classif.svm.radial" 323569.043941648
+"790" "hill.valley.1479" "classif.rpart" 323845.314895632
+"791" "waveform.5000.60" "classif.glmnet" 323226.733113914
+"792" "MiceProtein.40966" "classif.rpart" 323004.709321356
+"793" "optdigits.28" "classif.xgboost.dart" 324657.57767741
+"794" "ozone.level.8hr.1487" "classif.RcppHNSW" 323434.25843587
+"795" "ozone.level.8hr.1487" "classif.glmnet" 322748.747240075
+"796" "kc1.1067" "classif.svm.radial" 322795.045096984
+"797" "MiceProtein.40966" "classif.xgboost.dart" 322581.821756074
+"798" "mfeat.zernike.22" "classif.glmnet" 322176.442478472
+"799" "mfeat.zernike.22" "classif.svm" 322332.994434428
+"800" "kc1.1067" "classif.svm" 322250.675754314
+"801" "analcatdata_dmft.469" "classif.xgboost.dart" 322833.77919634
+"802" "mfeat.factors.12" "classif.xgboost.dart" 322848.526563383
+"803" "churn.40701" "classif.rpart" 321734.658760639
+"804" "mfeat.karhunen.16" "classif.rpart" 322091.214784219
+"805" "pc3.1050" "classif.svm.radial" 322434.253352562
+"806" "wall.robot.navigation.1497" "classif.glmnet" 321442.111939983
+"807" "kr.vs.kp.3" "classif.rpart" 321502.832397944
+"808" "Satellite.40900" "classif.glmnet" 321409.841753826
+"809" "analcatdata_authorship.458" "classif.svm.radial" 321805.879904136
+"810" "analcatdata_authorship.458" "classif.svm" 321795.179800726
+"811" "wine.quality.white.40498" "classif.RcppHNSW" 322366.660884562
+"812" "pc4.1049" "classif.svm.radial" 320843.96462463
+"813" "pc3.1050" "classif.svm" 321104.212033997
+"814" "hill.valley.1479" "classif.glmnet" 320066.556952963
+"815" "ada.41156" "classif.glmnet" 319919.040420806
+"816" "phoneme.1489" "classif.RcppHNSW" 321880.590178011
+"817" "steel.plates.fault.40982" "classif.svm.radial" 319646.232633043
+"818" "JapaneseVowels.375" "classif.xgboost.dart" 320714.744275317
+"819" "pc4.1049" "classif.svm" 319601.54773628
+"820" "sylvine.41146" "classif.glmnet" 319071.657638288
+"821" "wine.quality.white.40498" "classif.glmnet" 318859.366693149
+"822" "sylvine.41146" "classif.rpart" 319008.271055716
+"823" "car.40975" "classif.svm.radial" 319752.452707056
+"824" "texture.40499" "classif.xgboost.dart" 318989.209039683
+"825" "steel.plates.fault.40982" "classif.svm" 318641.579852981
+"826" "wine.quality.white.40498" "classif.rpart" 318085.747500776
+"827" "LED.display.domain.7digit.40496" "classif.xgboost.dart" 318579.278031707
+"828" "mfeat.fourier.14" "classif.xgboost.dart" 319367.672465871
+"829" "car.40975" "classif.svm" 318890.797071423
+"830" "analcatdata_authorship.458" "classif.glmnet" 317945.568825993
+"831" "phoneme.1489" "classif.glmnet" 317742.582854564
+"832" "soybean.42" "classif.svm" 317909.66887179
+"833" "wilt.40983" "classif.glmnet" 317320.643143866
+"834" "eucalyptus.188" "classif.svm.radial" 317581.105792523
+"835" "soybean.42" "classif.svm.radial" 317533.163064761
+"836" "eucalyptus.188" "classif.svm" 316826.191769534
+"837" "qsar.biodeg.1494" "classif.svm.radial" 316533.052722164
+"838" "wilt.40983" "classif.rpart" 316350.490635626
+"839" "mfeat.zernike.22" "classif.rpart" 316319.444146494
+"840" "mfeat.fourier.14" "classif.RcppHNSW" 316753.487819474
+"841" "pc3.1050" "classif.glmnet" 316178.534747854
+"842" "steel.plates.fault.40982" "classif.glmnet" 316014.88010867
+"843" "phoneme.1489" "classif.rpart" 315886.085050396
+"844" "eucalyptus.188" "classif.glmnet" 316237.178661281
+"845" "pc4.1049" "classif.glmnet" 315951.282914194
+"846" "steel.plates.fault.40982" "classif.xgboost.dart" 317872.616437567
+"847" "pc1.1068" "classif.svm.radial" 315789.230835616
+"848" "kc1.1067" "classif.glmnet" 315485.849627869
+"849" "credit.g.31" "classif.svm.radial" 315311.610912325
+"850" "kc1.1067" "classif.rpart" 315310.047515169
+"851" "cylinder.bands.6332" "classif.svm" 315430.379888513
+"852" "qsar.biodeg.1494" "classif.svm" 315133.613150093
+"853" "car.40975" "classif.xgboost.dart" 315936.955182333
+"854" "wall.robot.navigation.1497" "classif.xgboost.dart" 315513.512977548
+"855" "steel.plates.fault.40982" "classif.rpart" 314941.828228985
+"856" "segment.40984" "classif.svm.radial" 314759.173690702
+"857" "segment.40984" "classif.glmnet" 315060.008550566
+"858" "segment.40984" "classif.svm" 314637.123241064
+"859" "analcatdata_authorship.458" "classif.rpart" 314834.847463417
+"860" "pc3.1050" "classif.rpart" 314445.632575119
+"861" "synthetic_control.377" "classif.svm.radial" 314487.632740737
+"862" "synthetic_control.377" "classif.svm" 314485.710013305
+"863" "pc4.1049" "classif.rpart" 314488.743990256
+"864" "segment.40984" "classif.rpart" 314314.905983787
+"865" "cylinder.bands.6332" "classif.svm.radial" 314493.322774571
+"866" "vowel.307" "classif.xgboost.dart" 316039.886331491
+"867" "yeast.181" "classif.svm.radial" 314482.197305904
+"868" "one.hundred.plants.texture.1493" "classif.RcppHNSW" 314105.87528008
+"869" "cmc.23" "classif.svm.radial" 314330.658103775
+"870" "mfeat.karhunen.16" "classif.xgboost.dart" 314937.325919781
+"871" "dresses.sales.23381" "classif.svm.radial" 314046.991823303
+"872" "mfeat.morphological.18" "classif.svm.radial" 314284.91550626
+"873" "pc1.1068" "classif.svm" 313549.890077836
+"874" "dresses.sales.23381" "classif.svm" 314096.018140023
+"875" "mfeat.karhunen.16" "classif.RcppHNSW" 314069.184610181
+"876" "vowel.307" "classif.svm.radial" 313808.20569951
+"877" "wilt.40983" "classif.RcppHNSW" 314412.271379228
+"878" "vowel.307" "classif.svm" 313377.77029704
+"879" "mfeat.zernike.22" "classif.xgboost.dart" 314119.310202291
+"880" "credit.g.31" "classif.svm" 312353.647794786
+"881" "yeast.181" "classif.svm" 313460.024770932
+"882" "MiceProtein.40966" "classif.RcppHNSW" 313219.469095952
+"883" "synthetic_control.377" "classif.glmnet" 311674.021385233
+"884" "qsar.biodeg.1494" "classif.rpart" 310970.596579025
+"885" "segment.40984" "classif.xgboost.dart" 312413.038375998
+"886" "cmc.23" "classif.svm" 310672.225670363
+"887" "profb.470" "classif.svm.radial" 310561.259059913
+"888" "qsar.biodeg.1494" "classif.glmnet" 309422.047612696
+"889" "profb.470" "classif.svm" 309201.655808574
+"890" "vehicle.54" "classif.svm" 308756.91204102
+"891" "vehicle.54" "classif.svm.radial" 308479.381695868
+"892" "mfeat.zernike.22" "classif.RcppHNSW" 308084.672020927
+"893" "hill.valley.1479" "classif.RcppHNSW" 307412.012534119
+"894" "wdbc.1510" "classif.svm" 307573.139156283
+"895" "wdbc.1510" "classif.svm.radial" 307544.157513245
+"896" "yeast.181" "classif.xgboost.dart" 308694.956448217
+"897" "soybean.42" "classif.xgboost.dart" 307625.740354319
+"898" "vowel.307" "classif.glmnet" 306580.911335886
+"899" "cylinder.bands.6332" "classif.glmnet" 304725.226544868
+"900" "synthetic_control.377" "classif.rpart" 304826.418089841
+"901" "credit.approval.29" "classif.svm.radial" 305203.078633595
+"902" "credit.approval.29" "classif.svm" 305278.80098278
+"903" "wine.quality.white.40498" "classif.xgboost.dart" 303627.887137067
+"904" "Australian.40981" "classif.svm.radial" 303548.871398072
+"905" "one.hundred.plants.texture.1493" "classif.xgboost.dart" 303330.470373417
+"906" "cmc.23" "classif.glmnet" 302977.276562321
+"907" "mfeat.morphological.18" "classif.xgboost.dart" 304339.168034455
+"908" "credit.g.31" "classif.glmnet" 302353.261260826
+"909" "Australian.40981" "classif.svm" 302405.090127159
+"910" "mfeat.morphological.18" "classif.rpart" 301956.65408901
+"911" "mfeat.morphological.18" "classif.glmnet" 301652.282189605
+"912" "segment.40984" "classif.RcppHNSW" 301636.08158503
+"913" "car.40975" "classif.glmnet" 301201.649815028
+"914" "tic.tac.toe.50" "classif.svm.radial" 301465.499576
+"915" "tic.tac.toe.50" "classif.svm" 301353.264525944
+"916" "pc1.1068" "classif.glmnet" 300548.107591366
+"917" "dresses.sales.23381" "classif.glmnet" 300177.921336074
+"918" "pc1.1068" "classif.rpart" 300023.991336337
+"919" "banknote.authentication.1462" "classif.svm.radial" 300288.374841687
+"920" "yeast.181" "classif.glmnet" 299829.755647909
+"921" "yeast.181" "classif.rpart" 299758.377193401
+"922" "banknote.authentication.1462" "classif.svm" 300018.693157296
+"923" "kc2.1063" "classif.svm.radial" 298737.752279905
+"924" "kc2.1063" "classif.svm" 297613.286771382
+"925" "cmc.23" "classif.rpart" 297446.954069345
+"926" "credit.g.31" "classif.rpart" 297454.846934287
+"927" "vehicle.54" "classif.glmnet" 297349.267199046
+"928" "steel.plates.fault.40982" "classif.RcppHNSW" 297329.069909986
+"929" "car.40975" "classif.rpart" 297133.606900565
+"930" "wdbc.1510" "classif.glmnet" 296972.825753557
+"931" "climate.model.simulation.crashes.40994" "classif.svm.radial" 296956.888996857
+"932" "soybean.42" "classif.rpart" 296101.328940038
+"933" "tic.tac.toe.50" "classif.glmnet" 296198.797418497
+"934" "analcatdata_dmft.469" "classif.svm.radial" 296389.924042557
+"935" "profb.470" "classif.glmnet" 296032.258869711
+"936" "cylinder.bands.6332" "classif.rpart" 295985.855186936
+"937" "analcatdata_dmft.469" "classif.svm" 295767.367076354
+"938" "pc3.1050" "classif.RcppHNSW" 295791.683962676
+"939" "diabetes.37" "classif.svm.radial" 295715.433724391
+"940" "credit.approval.29" "classif.glmnet" 295665.863502181
+"941" "climate.model.simulation.crashes.40994" "classif.svm" 295549.69223215
+"942" "eucalyptus.188" "classif.rpart" 295372.822462167
+"943" "vehicle.54" "classif.rpart" 295318.749298515
+"944" "breast.w.15" "classif.svm.radial" 295038.862984041
+"945" "Australian.40981" "classif.glmnet" 294955.804416028
+"946" "breast.w.15" "classif.svm" 294950.720100663
+"947" "banknote.authentication.1462" "classif.glmnet" 294953.723938674
+"948" "wdbc.1510" "classif.rpart" 294136.341362667
+"949" "pc4.1049" "classif.RcppHNSW" 294170.915910216
+"950" "vowel.307" "classif.rpart" 294056.657917204
+"951" "diabetes.37" "classif.svm" 294114.71666002
+"952" "banknote.authentication.1462" "classif.rpart" 293932.790587428
+"953" "kc1.1067" "classif.RcppHNSW" 293823.294735841
+"954" "analcatdata_dmft.469" "classif.glmnet" 293353.276078435
+"955" "analcatdata_authorship.458" "classif.RcppHNSW" 293322.407858893
+"956" "kc2.1063" "classif.glmnet" 292914.084947676
+"957" "ilpd.1480" "classif.svm.radial" 292755.44608718
+"958" "ilpd.1480" "classif.svm" 292340.819562746
+"959" "climate.model.simulation.crashes.40994" "classif.glmnet" 292481.891947155
+"960" "credit.approval.29" "classif.rpart" 292226.333359334
+"961" "LED.display.domain.7digit.40496" "classif.svm" 292452.974560512
+"962" "breast.w.15" "classif.glmnet" 292096.539519633
+"963" "LED.display.domain.7digit.40496" "classif.svm.radial" 292171.710729594
+"964" "diabetes.37" "classif.glmnet" 291375.144876003
+"965" "kc2.1063" "classif.rpart" 291328.400750976
+"966" "tic.tac.toe.50" "classif.rpart" 290779.575042652
+"967" "ilpd.1480" "classif.glmnet" 290671.571727095
+"968" "climate.model.simulation.crashes.40994" "classif.rpart" 290275.038524261
+"969" "Australian.40981" "classif.rpart" 290253.744133915
+"970" "breast.w.15" "classif.rpart" 290252.047098269
+"971" "LED.display.domain.7digit.40496" "classif.glmnet" 289956.586034377
+"972" "monks.problems.2.334" "classif.svm.radial" 289517.433183539
+"973" "balance.scale.11" "classif.svm.radial" 289533.71814779
+"974" "monks.problems.2.334" "classif.svm" 289374.444375339
+"975" "diabetes.37" "classif.rpart" 289347.231862738
+"976" "blood.transfusion.service.center.1464" "classif.glmnet" 289162.44614081
+"977" "blood.transfusion.service.center.1464" "classif.svm.radial" 288614.409124528
+"978" "monks.problems.2.334" "classif.glmnet" 288643.494212854
+"979" "profb.470" "classif.rpart" 288466.822301791
+"980" "ilpd.1480" "classif.rpart" 288442.61920805
+"981" "blood.transfusion.service.center.1464" "classif.svm" 289156.296470974
+"982" "qsar.biodeg.1494" "classif.RcppHNSW" 288494.550799197
+"983" "balance.scale.11" "classif.glmnet" 287883.881468639
+"984" "dresses.sales.23381" "classif.rpart" 287572.66854243
+"985" "analcatdata_dmft.469" "classif.rpart" 287619.004229704
+"986" "blood.transfusion.service.center.1464" "classif.rpart" 287143.887133816
+"987" "balance.scale.11" "classif.svm" 286949.120058234
+"988" "LED.display.domain.7digit.40496" "classif.rpart" 286713.831773252
+"989" "balance.scale.11" "classif.rpart" 286422.52624169
+"990" "monks.problems.2.334" "classif.rpart" 286407.253259195
+"991" "credit.g.31" "classif.RcppHNSW" 285379.349626097
+"992" "synthetic_control.377" "classif.RcppHNSW" 284828.553004503
+"993" "soybean.42" "classif.RcppHNSW" 284353.931282087
+"994" "mfeat.morphological.18" "classif.RcppHNSW" 284473.094438941
+"995" "eucalyptus.188" "classif.RcppHNSW" 283872.023748917
+"996" "car.40975" "classif.RcppHNSW" 283927.308179969
+"997" "cmc.23" "classif.RcppHNSW" 283004.308678195
+"998" "cylinder.bands.6332" "classif.RcppHNSW" 282505.237273026
+"999" "yeast.181" "classif.RcppHNSW" 281723.827699258
+"1000" "pc1.1068" "classif.RcppHNSW" 281513.554591722
+"1001" "dresses.sales.23381" "classif.RcppHNSW" 278765.756037817
+"1002" "banknote.authentication.1462" "classif.RcppHNSW" 278623.52188987
+"1003" "vowel.307" "classif.RcppHNSW" 277876.359967034
+"1004" "wdbc.1510" "classif.RcppHNSW" 277531.065118947
+"1005" "credit.approval.29" "classif.RcppHNSW" 277371.619898064
+"1006" "vehicle.54" "classif.RcppHNSW" 277067.033726145
+"1007" "tic.tac.toe.50" "classif.RcppHNSW" 276782.920950142
+"1008" "profb.470" "classif.RcppHNSW" 276401.869166221
+"1009" "Australian.40981" "classif.RcppHNSW" 275999.439135639
+"1010" "kc2.1063" "classif.RcppHNSW" 274341.92044269
+"1011" "climate.model.simulation.crashes.40994" "classif.RcppHNSW" 273890.210418756
+"1012" "breast.w.15" "classif.RcppHNSW" 273597.696058011
+"1013" "analcatdata_dmft.469" "classif.RcppHNSW" 273438.608826928
+"1014" "ilpd.1480" "classif.RcppHNSW" 273062.883868853
+"1015" "diabetes.37" "classif.RcppHNSW" 272792.311116091
+"1016" "monks.problems.2.334" "classif.RcppHNSW" 271969.934376234
+"1017" "blood.transfusion.service.center.1464" "classif.RcppHNSW" 271407.531164706
+"1018" "LED.display.domain.7digit.40496" "classif.RcppHNSW" 270605.131170577
+"1019" "balance.scale.11" "classif.RcppHNSW" 270121.784171864
