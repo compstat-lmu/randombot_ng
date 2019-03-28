@@ -43,8 +43,9 @@ check_env ONEOFF REDISHOST REDISPORT REDISPW
 INNERSTEP=0
 
 while true ; do
+    # absolutely need to pipe stderr into stdout, otherwise srun mixes the two streams
     /usr/bin/time -f "[[${INNERSTEP}]] ----[$TOKEN] E %E K %Ss U %Us P %P M %MkB O %O" \
-		  Rscript "$MUC_R_HOME/scheduling/eval_redis.R"
+		  Rscript "$MUC_R_HOME/scheduling/eval_redis.R" 2>&1
     result=$?
     
     echo "[[${INNERSTEP}]] ----[${TOKEN}] ${evalfile} exited with status $result"
