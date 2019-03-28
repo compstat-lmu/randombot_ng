@@ -51,11 +51,10 @@ check_env DATADIR ONEOFF REDISHOST REDISPORT REDISPW
 SCRIPTDIR="${MUC_R_HOME}/scheduling"
 
 INVOCATION=0
-SUBINVOCATION=0
-
-call_srun() {  # arguments: <learner> <task>
+call_srun() {  # arguments: <learner> <task> <message to prepend output>
     learner="$1"
     task="$2"
+    si="$3"
     # TODO: infer memory requirement from $1 and $2
     memreq="$(get_mem_req "$learner" "$task")"  # TODO
 
@@ -63,7 +62,7 @@ call_srun() {  # arguments: <learner> <task>
 	--mem="${memreq}" --nodes=1 --ntasks=1 --exclusive \
 	"${SCRIPTDIR}/runscript.sh" \
 	"$task" "$learner" "$ONEOFF" 2>&1 | \
-	sed -u "s'^'[${task},${learner},${INVOCATION},${SUBINVOCATION}]: '" | \
+	sed -u "s'^'[${task},${learner},${INVOCATION},${si}]: '" | \
 	grep --line-buffered '^'
     # About the `grep --line-buffered`: not sure if `sed -u` suffices, but:
     # We want each write to stdout be atomic, so different output lines
@@ -75,8 +74,9 @@ NUMTASKS="$(grep -v '^ *$' "${DATADIR}/TASKS" | wc -l)"
 while read -u 6 LEARNERNAME ; do
     while read -u 5 TASKNAME ; do
 	(
+	    SUBINVOCATION=0
 	    while true ; do
-		call_srun "${LEARNERNAME}" "${TASKNAME}"
+		call_srun "${LEARNERNAME}" "${TASKNAME}" "${SUBINVOCATION}"
 		SUBINVOCATION=$((SUBINVOCATION + 1))
 	    done
 	) &
