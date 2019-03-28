@@ -101,9 +101,9 @@ prob.classif.RcppHNSW = 0.075
 classif.RcppHNSW = makeParamSet(
   makeIntegerParam(id = "k", lower = 1L, upper = 50),
   makeDiscreteParam(id = "distance", values = c("l2", "cosine", "ip"), default = "l2"),
-  makeIntegerParam(id = "M", lower = 10, upper = 50),
-  makeNumericParam(id = "ef", lower = 0, upper = 7, trafo = function(x) round(2^x)),
-  makeNumericParam(id = "ef_construction", lower = 0, upper = 7, trafo = function(x) round(2^x))
+  makeIntegerParam(id = "M", lower = 18, upper = 50),
+  makeNumericParam(id = "ef", lower = 4, upper = 8, trafo = function(x) round(2^x)),
+  makeNumericParam(id = "ef_construction", lower = 4, upper = 8, trafo = function(x) round(2^x))
 )
 
 prob.classif.kerasff = 0.075
