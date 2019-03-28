@@ -110,25 +110,226 @@ cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
       grep -v ')$' ; done
 ) > memtable
 
+#+BEGIN_SRC R
+
+sapply(strsplit(as.character(memtable$walltime), ":"), function(tv) {
+  sum((60 ^ seq(length(tv) - 1, 0)) * as.numeric(tv))
+})
+
+#+END_SRC
+
 - writing state to disk
 
+#+BEGIN_SRC R
 
 outdir <- "/hppfs/work/pn34jo/di39ram3/RESULT_REDIS_3_PACKAGED"
-
+options(warn=1)
 
 repeat {
-  savekeys <- head(unlist(r$KEYS("RESULT_*")), 1000)
-  if (length(savekeys) != 1000) {
-    Sys.sleep(3600)
+  savekeys <- head(unlist(r$KEYS("RESULT_*")), 10000)
+  if (length(savekeys) != 10000) {
+    cat("clear\n")
+    Sys.sleep(600)
     next
   }
-  mod1 <- sapply(savekeys, function(x) unserialize(r$GET(x)), simplify = FALSE)
-  digmod1 <- digest::digest(mod1)
+  mod1 <- sapply(savekeys, function(x) r$GET(x), simplify = FALSE)
+  ret <- parallel::mclapply(split(mod1, 1:10), function(modx) {
+    modx <- lapply(modx, unserialize)
+    digmod1 <- digest::digest(modx)
 #  mod2 <- sapply(savekeys, function(x) unserialize(r$GET(x)), simplify = FALSE)  
 #  digmod2 <- digest::digest(mod2)
 #  stopifnot(digmod1 == digmod2)
-  prefix <- substr(digmod1, 1, 2)
-  dir.create(file.path(outdir, prefix), recursive = TRUE)
-  saveRDS(mod1, file.path(outdir, prefix, digmod1))
+    prefix <- substr(digmod1, 1, 2)
+    dir.create(file.path(outdir, prefix), recursive = TRUE, showWarnings = FALSE)
+    cat(sprintf("Saving %s\n", digmod1))
+    saveRDS(modx, file.path(outdir, prefix, digmod1))
+    TRUE
+  }, mc.cores = 10)
+  stopifnot(all(sapply(ret, isTRUE)))
   r$DEL(savekeys)
 }
+
+#+END_SRC
+
+
+#+BEGIN_SRC R
+
+collatedfs <- function(lrname, dfname) {
+  memdf <- memtable[memtable$dataset == dfname & memtable$learner == lrname, ]
+  rundf <- runinfo[runinfo$dataset == dfname & runinfo$learner == lrname, ]
+
+  stopifnot(all(duplicated(rundf$seed) == duplicated(rundf)))
+
+  rundf <- rundf[!duplicated(rundf), ]
+
+  memdf <- memdf[order(memdf$evalno), ]
+  rundf <- rundf[order(rundf$seed), ]
+
+  memdfline <- 1
+  rundfline <- 1
+  reslist <- list()
+
+  colnames.memdf <- setdiff(colnames(memdf), c("dataset", "learner", "point"))
+  colnames.rundf <- setdiff(colnames(rundf), c("dataset", "learner", "point"))
+
+  if (nrow(rundf) == 0) {
+    rundf <- rundf[NA, ]
+    rundf$dataset <- memdf$dataset[1]
+    rundf$learner <- memdf$learner[1]
+    rundf$point <- memdf$point[1]
+    rundfline <- 2
+  }
+
+  if (nrow(memdf) == 0) {
+    memdf <- memdf[NA, ]
+    memdf$dataset <- rundf$dataset[1]
+    memdf$learner <- rundf$learner[1]
+    memdf$point <- rundf$point[1]
+    memdfline <- 2
+  }
+
+  repeat {
+    if (memdfline > nrow(memdf)) {
+      if (rundfline > nrow(rundf)) {
+        break
+      }
+      remaining <- cbind(memdf[memdfline - 1, ], rundf[seq(rundfline, nrow(rundf)), colnames.rundf])
+      remaining$point <- rundf[seq(rundfline, nrow(rundf)), "point"]
+      for (makena in colnames.memdf) {
+        remaining[seq_len(nrow(remaining)), makena] <- NA  # the seq_len is needed to preserve mode
+      }
+      reslist <- c(reslist, list(remaining))
+      break
+    }
+    if (rundfline > nrow(rundf)) {
+      remaining <- cbind(memdf[seq(memdfline, nrow(memdf)), ], rundf[rundfline - 1, colnames.rundf])
+      for (makena in colnames.rundf) {
+        remaining[seq_len(nrow(remaining)), makena] <- NA  # the seq_len is needed to preserve mode
+      }
+      reslist <- c(reslist, list(remaining))
+      break
+    }
+    memdfpoint <- memdf[memdfline, "point"]
+    memdfpoint.upcoming <- memdf[seq(memdfline + 1, min(nrow(memdf), memdfline + 50)), "point"]
+    rundfpoint <- rundf[rundfline, "point"]
+    rundfpoint.upcoming <- rundf[seq(rundfline + 1, min(nrow(rundf), rundfline + 50)), "point"]
+    combinedline <- cbind(memdf[memdfline, ],
+      rundf[rundfline, colnames.rundf])
+    if (memdfpoint == rundfpoint) {
+      reslist <- c(reslist, list(combinedline))
+      memdfline <- memdfline + 1
+      rundfline <- rundfline + 1
+      next
+    }
+    if (memdfpoint %in% rundfpoint.upcoming ||
+        (length(rundfpoint.upcoming) < 50 && !rundfpoint %in% memdfpoint.upcoming)) {
+      combinedline$point <- rundfpoint
+      for (makena in colnames.memdf) {
+        combinedline[1, makena] <- NA  # [1, ..] to preserve mode
+      }
+      reslist <- c(reslist, list(combinedline))
+      rundfline <- rundfline + 1
+      next
+    } 
+    if (rundfpoint %in% memdfpoint.upcoming) {
+      for (makena in colnames.rundf) {
+        combinedline[1, makena] <- NA  # [1, ..] to preserve mode
+      }
+      reslist <- c(reslist, list(combinedline))
+      memdfline <- memdfline + 1
+      next
+    }
+    stop(sprintf("bad configuration: %s %s %s %s", lrname, dfname, memdfline, rundfline))
+  }
+  resulttable <- do.call(rbind, reslist)
+  resulttable$errors.msg <- factor(resulttable$errors.msg, levels = levels(rundf$errors.msg))
+  
+  if (!anyDuplicated(memdf$point) && !anyDuplicated(rundf$point)) {
+    candidate <- merge(x = memdf, y = rundf, by = c("dataset", "learner", "point"), all = TRUE)
+    stopifnot(all(colnames(candidate) %in% colnames(resulttable)))
+    stopifnot(all(colnames(resulttable) %in% colnames(candidate)))
+    stopifnot(isTRUE(all(sort(resulttable$point) == sort(candidate$point))))
+    stopifnot(nrow(resulttable) == nrow(candidate))
+    stopifnot(!anyDuplicated(resulttable$point))
+    candidate <- candidate[match(resulttable$point, candidate$point), colnames(resulttable)]
+    attr(candidate, "row.names") <- attr(resulttable, "row.names")
+    stopifnot(isTRUE(all.equal(resulttable, candidate)))
+  }
+  resulttable
+}
+
+rxx <- parallel::mclapply(levels(memtable$dataset), function(dfname) {
+  do.call(rbind, lapply(levels(memtable$learner), function(lrname) {
+    collatedfs(lrname, dfname)
+  }))
+}, mc.cores = 70)
+
+allruninfo <- do.call(rbind, rxx)
+
+#+END_SRC
+
+
+** tabulating results
+
+#+BEGIN_SRC R
+
+outdir <- "/hppfs/work/pn34jo/di39ram3/RESULT_REDIS_3_PACKAGED"
+resdir <- "/hppfs/work/pn34jo/di39ram3/memanalysis"
+options(warn=1)
+library("data.table")
+library("mlr")
+
+outfiles <- list.files(outdir, recursive = TRUE, full.names = TRUE, include.dirs = FALSE)
+
+result.to.table <- function(filename) {
+  content <- readRDS(filename)
+  rbindlist(lapply(names(content), function(idn) {
+    lname <- gsub("_tsk:.*", "", gsub("RESULT_lrn:", "", idn))
+    tname <- gsub("_SD:[0-9].*", "", gsub("RESULT_.*_tsk:", "", idn))
+    seed <- as.integer(gsub("_val:.*", "", gsub("RESULT_.*_SD:", "", idn)))
+    stopifnot(is.finite(seed) && is.integer(seed))
+    point <- gsub(".*_val:", "", idn)
+    rres <- content[[idn]]
+    stopifnot(isTRUE(rres$learner.id == lname))
+    stopifnot(isTRUE(rres$task.id == tname))
+
+    naresults <- aggregate(is.na(rres$pred$data$response), by = list(iter = rres$pred$data$iter), FUN = any)$x
+    
+    list(
+      dataset = tname,
+      learner = lname,
+      point = point,
+      seed = seed,
+      evals = nrow(rres$measures.test),
+      perf.mmce = performance(rres$pred, list(mlr::mmce)),
+      perf.logloss = performance(rres$pred, list(mlr::logloss)),
+      traintime = sum(rres$measures.test$timetrain),
+      predicttime = sum(rres$measures.test$timepredict),
+      totaltime = rres$runtime,
+      errors.num = sum(naresults),
+      errors.all = all(naresults),
+      errors.any = any(naresults),
+      errors.msg = c(na.omit(c(t(as.matrix(rres$err.msgs[c("train", "predict")])))), NA)[1]
+    )
+  }))
+}
+
+alltable <- rbindlist(parallel::mclapply(outfiles, result.to.table, mc.cores = 70))
+
+#+END_SRC
+
+* TODO
+
+- [ ] 200 runs for each learner x task on average, that's a lot.
+  - [ ] learner-wise data sinks
+  - [ ] raw file writing?
+  - [ ] 512kB/s
+- [ ] info to write out
+  - [ ] write out slurm step number
+  - [ ] write out how many NAs in prediction
+  - [ ] date / time of day
+  - [ ] give run number to R session as TOKEN and print it
+- [ ] learner sampling
+  - [ ] "low discrepancy": number of instances as close to expected number as possible
+- [X] stdout / stderr confusion
+- [ ] don't write out so much at all
