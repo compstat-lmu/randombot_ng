@@ -34,7 +34,7 @@ export INDIVIDUAL_TASK_SLOTS="$SLURM_NTASKS"
 get_mem_req() {  # arguments: <learner> <task >
   learner="$1"
   task="$2"
-  Rscript -e 'source("R/get_data.R"); rbn.getMemoryRequirementsKb(task, learner)'
+  Rscript -e "source(file.path(Sys.getenv('MUC_R_HOME'), 'R', 'get_data.R'); rbn.getMemoryRequirementsKb('${task}', '${learner}')"
 }
 
 DATADIR=$(Rscript -e " \
