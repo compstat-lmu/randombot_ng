@@ -117,8 +117,8 @@ We currently sample numerics using the following strategy:
 Integers and discrete variables are sampled with equal probabilities.
 
 ## Evaluation Strategies
-- 10-fold stratified CV (80%)
-- 10 x 10-fold stratified CV (10%)
-- Subsampling (10%)
+- 10-fold stratified CV (80%) [OpenML Tasks]
+- 10 x 10-fold stratified CV (10%) [OpenML Tasks]
+- Subsampling (10%) [Subsampled OpenML Tasks]
 
 
