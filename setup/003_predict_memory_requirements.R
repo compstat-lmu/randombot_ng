@@ -90,8 +90,10 @@ err = df %>%
   group_by(errors.msg) %>%
   tally()
 
+err$errors.msg[7]
+
 p = df %>%
-  filter(errors.msg == err$errors.msg[6]) %>%
+  filter(errors.msg == err$errors.msg[7]) %>%
   filter(errors.all)
 
 p %>% group_by(dataset) %>% tally()
@@ -110,6 +112,9 @@ gini = "gini"
 partition = "partition"
 extratrees = "extratrees"
 order = "order"
+dart = "dart"
+gblinear = "gblinear"
+gbtree = "gbtree"
 
 
 # Error in ann$getNNsList(X[i, ], k, TRUE) : \n
@@ -120,8 +125,8 @@ pp %>% summary()
 
 
 p2 = df %>%
-  filter(learner %in% c("classif.RcppHNSW")) %>%
-  filter(!errors.all) %>% sample_frac(0.001)
+  filter(dataset == "KDDCup09_appetency.1111") %>%
+  filter(!errors.all) %>% sample_frac(1)
 pp2 = lapply(p2$point, function(x) {eval(parse(text=x))})
 pp2 = do.call(bind_rows, pp2)
 
