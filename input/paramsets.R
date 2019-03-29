@@ -101,9 +101,9 @@ prob.classif.RcppHNSW = 0.075
 classif.RcppHNSW = makeParamSet(
   makeIntegerParam(id = "k", lower = 1L, upper = 50),
   makeDiscreteParam(id = "distance", values = c("l2", "cosine", "ip"), default = "l2"),
-  makeIntegerParam(id = "M", lower = 10, upper = 50),
-  makeNumericParam(id = "ef", lower = 0, upper = 7, trafo = function(x) round(2^x)),
-  makeNumericParam(id = "ef_construction", lower = 0, upper = 7, trafo = function(x) round(2^x))
+  makeIntegerParam(id = "M", lower = 18, upper = 50),
+  makeNumericParam(id = "ef", lower = 4, upper = 8, trafo = function(x) round(2^x)),
+  makeNumericParam(id = "ef_construction", lower = 4, upper = 8, trafo = function(x) round(2^x))
 )
 
 prob.classif.kerasff = 0.075
@@ -126,10 +126,10 @@ classif.kerasff = makeParamSet(
       makeNumericParam(id = "input_dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
       makeNumericParam(id = "dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
       # Neurons / Layers
-      makeIntegerParam(id = "units_layer1", lower = 1L, upper = 512),
-      makeIntegerParam(id = "units_layer2", lower = 1L, upper = 512, requires = quote(layers >= 2)),
-      makeIntegerParam(id = "units_layer3", lower = 1L, upper = 512, requires = quote(layers >= 3)),
-      makeIntegerParam(id = "units_layer4", lower = 1L, upper = 512, requires = quote(layers >= 4)),
+      makeIntegerParam(id = "units_layer1", lower = 10L, upper = 512),
+      makeIntegerParam(id = "units_layer2", lower = 10L, upper = 512, requires = quote(layers >= 2)),
+      makeIntegerParam(id = "units_layer3", lower = 10L, upper = 512, requires = quote(layers >= 3)),
+      makeIntegerParam(id = "units_layer4", lower = 10L, upper = 512, requires = quote(layers >= 4)),
       # Activations
       makeDiscreteParam(id = "act_layer",
         values = c("elu", "relu", "selu", "tanh", "sigmoid")),
@@ -143,7 +143,7 @@ classif.kerasff = makeParamSet(
         lower = -10, upper = -1, trafo = function(x) 5^x),
       makeLogicalParam(id = "learning_rate_scheduler", default = FALSE)
     )
-classif.kerasff.fixed_pars = list(early_stopping_patience = 0L, validation_split = 0)
+classif.kerasff.fixed_pars = list(early_stopping_patience = 0L, validation_split = 0, nthread = 1L)
 
 
 preproc.pipeline <- pSS(
