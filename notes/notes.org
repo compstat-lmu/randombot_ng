@@ -21,6 +21,8 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
   - DATA_TABLE_OPTS :: options to be given to =read.csv= when reading DATA_TABLE. set by *constants.R*
   - SEARCHSPACE_TABLE :: filename of search space csv. set by *constants.R*
   - SEARCHSPACE_TABLE_OPTS :: options to be given to =read.csv= when reading SEARCHSPACE_TABLE. set by *constants.R*
+  - SEARCHSPACE_PROP_TABLE :: filename of learner proportions csv. set by *constants.R*
+  - SEARCHSPACE_PROP_TABLE_OPTS :: options to be given to =read.csv= when reading SEARCHSPACE_PROP_TABLE. set by *constants.R*
 - Sampling Configuration
   - SUPERRATE :: [numeric 0..1] fraction of evaluation points that have supererogatory evaluations
   - SUPERCV_PROPORTIONS :: [numeric 0..1] subsampling proportions to sample
@@ -89,6 +91,9 @@ Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_t
 
 - memory usage info
 
+#+BEGIN_SRC bash
+
+
 cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
 
 ( echo "dataset learner invocation restart point evalno walltime kernelseconds userseconds cpupercent memorykb" ;
@@ -109,6 +114,8 @@ cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
       sed 's/^\[\([^,]*\),\([^,]*\),\([0-9]\+\),\([0-9]\+\)\]/\1 \2 \3 \4 /' | \
       grep -v ')$' ; done
 ) > memtable
+
+#+END_SRC
 
 #+BEGIN_SRC R
 
