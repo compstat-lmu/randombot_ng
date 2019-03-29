@@ -18,7 +18,7 @@ rbn.getParamLengthOrOne <- function(param) {
 # - learner's ParamSet has no unfulfilled requires where given paramset doesn't
 rbn.checkParamTbl <- function(table) {
   assertNumeric(table$proportion, lower = 0, finite = TRUE, any.missing = FALSE)
-
+  assertTRUE(all(aggregate(table$proportion, by = table["learner"], FUN = sd)$x == 0))
   convertToParamType <- function(value, param, trafo) {
     if (isNumeric(param)) {
       val <- as.numeric(value)
