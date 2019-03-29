@@ -72,9 +72,17 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
   init_seed = NULL) {
 
   require("keras")
+
+  # Configure Keras: 1) nthread 2) seed
   K = backend()
   sess = K$tf$Session(config = K$tf$ConfigProto(intra_op_parallelism_threads = nthread, inter_op_parallelism_threads = nthread))
   K$set_session(sess)
+
+  if(!is.null(init_seed)) {
+    npr = reticulate::import("numpy.random")
+    npr$seed(init_seed)
+    K$tf$set_random_seed(init_seed)
+  }
 
   input_shape = getTaskNFeats(.task)
   output_shape = length(getTaskClassLevels(.task))
@@ -84,10 +92,10 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
   # Dense -> Act -> [BN] -> [Dropout]
   regularizer = regularizer_l1_l2(l1 = l1_reg_layer, l2 = l2_reg_layer)
   initializer = switch(init_layer,
-    "glorot_normal" = initializer_glorot_normal(seed = init_seed),
-    "glorot_uniform" = initializer_glorot_uniform(seed = init_seed),
-    "he_normal" = initializer_he_normal(seed = init_seed),
-    "he_uniform" = initializer_he_uniform(seed = init_seed)
+    "glorot_normal" = initializer_glorot_normal(),
+    "glorot_uniform" = initializer_glorot_uniform(),
+    "he_normal" = initializer_he_normal(),
+    "he_uniform" = initializer_he_uniform()
   )
   optimizer = switch(optimizer,
     "sgd" = optimizer_sgd(lr, momentum, decay = decay),
@@ -111,7 +119,8 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
 
   for (i in seq_len(layers)) {
     model = model %>%
-      layer_dense(units = units_layers[i], input_shape = input_shape, kernel_regularizer = regularizer, kernel_initializer = initializer,
+      layer_dense(units = units_layers[i], input_shape = input_shape,
+        kernel_regularizer = regularizer, kernel_initializer = initializer,
         bias_regularizer = regularizer, bias_initializer = initializer)
     model = model %>% layer_activation(act_layer)
     if (batchnorm_dropout == "batchnorm")   model = model %>% layer_batch_normalization()
