@@ -27,6 +27,7 @@ xgboost.constructor <- function() {
 ranger.constructor <- function() {
   lrn <- makeLearner("classif.ranger")
   lrn$par.set$pars$sample.fraction$lower <- 0.01
+  lrn
 }
 rbn.registerLearner("classif.ranger", ranger.constructor)
 
