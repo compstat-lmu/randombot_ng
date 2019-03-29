@@ -24,6 +24,7 @@ classif.kerasff	num.impute.selected.cpo	impute.mean, impute.median, impute.hist
 classif.kerasff	early_stopping_patience	0					
 classif.kerasff	validation_split	0					
 classif.kerasff	nthread	1					
+classif.kerasff	init_seed	1444					
 classif.RcppHNSW	k		1	50			
 classif.RcppHNSW	distance	l2, cosine, ip					
 classif.RcppHNSW	M		18	50			
