@@ -1,4 +1,28 @@
 learner	parameter	values	lower	upper	trafo	requires	condition
+classif.kerasff	epochs		10	100			
+classif.kerasff	optimizer	sgd, rmsprop, adam, nadam					
+classif.kerasff	lr		-8	0	5^x		
+classif.kerasff	decay		-8	0	5^x		
+classif.kerasff	momentum		-8	0	5^x	optimizer == "sgd"	
+classif.kerasff	rho		-8	0	5^x	optimizer == "rmsprop"	
+classif.kerasff	beta_1		-8	0	1 - 5^x	optimizer %in% c("adam", "nadam")	
+classif.kerasff	beta_2		-8	0	1 - 5^x	optimizer %in% c("adam", "nadam")	
+classif.kerasff	layers		1	4			
+classif.kerasff	batchnorm_dropout	batchnorm, dropout, none					
+classif.kerasff	input_dropout_rate		0	1		batchnorm_dropout == "dropout"	
+classif.kerasff	dropout_rate		0	1		batchnorm_dropout == "dropout"	
+classif.kerasff	units_layer1		1	512			
+classif.kerasff	units_layer2		1	512		layers >= 2	
+classif.kerasff	units_layer3		1	512		layers >= 3	
+classif.kerasff	units_layer4		1	512		layers >= 4	
+classif.kerasff	act_layer	elu, relu, selu, tanh, sigmoid					
+classif.kerasff	init_layer	glorot_normal, glorot_uniform, he_normal, he_uniform					
+classif.kerasff	l1_reg_layer		-10	-1	5^x		
+classif.kerasff	l2_reg_layer		-10	-1	5^x		
+classif.kerasff	learning_rate_scheduler	TRUE, FALSE					
+classif.kerasff	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
+classif.kerasff	early_stopping_patience	0					
+classif.kerasff	validation_split	0					
 classif.RcppHNSW	k		1	50			
 classif.RcppHNSW	distance	l2, cosine, ip					
 classif.RcppHNSW	M		10	50			
