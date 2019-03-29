@@ -126,14 +126,14 @@ outdir <- "/hppfs/work/pn34jo/di39ram3/RESULT_REDIS_3_PACKAGED"
 options(warn=1)
 
 repeat {
-  savekeys <- head(unlist(r$KEYS("RESULT_*")), 10000)
-  if (length(savekeys) != 10000) {
+  savekeys <- head(unlist(r$KEYS("RESULT_*")), 30000)
+  if (length(savekeys) != 30000) {
     cat("clear\n")
-    Sys.sleep(600)
+    Sys.sleep(60)
     next
   }
   mod1 <- sapply(savekeys, function(x) r$GET(x), simplify = FALSE)
-  ret <- parallel::mclapply(split(mod1, 1:10), function(modx) {
+  ret <- parallel::mclapply(split(mod1, 1:30), function(modx) {
     modx <- lapply(modx, unserialize)
     digmod1 <- digest::digest(modx)
 #  mod2 <- sapply(savekeys, function(x) unserialize(r$GET(x)), simplify = FALSE)  
@@ -142,9 +142,9 @@ repeat {
     prefix <- substr(digmod1, 1, 2)
     dir.create(file.path(outdir, prefix), recursive = TRUE, showWarnings = FALSE)
     cat(sprintf("Saving %s\n", digmod1))
-    saveRDS(modx, file.path(outdir, prefix, digmod1))
+    saveRDS(modx, file.path(outdir, prefix, digmod1), compress = FALSE)
     TRUE
-  }, mc.cores = 10)
+  }, mc.cores = 30)
   stopifnot(all(sapply(ret, isTRUE)))
   r$DEL(savekeys)
 }
@@ -318,12 +318,23 @@ alltable <- rbindlist(parallel::mclapply(outfiles, result.to.table, mc.cores = 7
 
 #+END_SRC
 
+
+#+BEGIN_SRC R
+
+ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable$point), function(x) eval(parse(text = x))), fill = TRUE)
+
+
+#+END_SRC
+
+
+
 * TODO
 
 - [ ] 200 runs for each learner x task on average, that's a lot.
   - [ ] learner-wise data sinks
   - [ ] raw file writing?
   - [ ] 512kB/s
+  - [ ] test with a bunch of jobs that generate loads of fake data
 - [ ] info to write out
   - [ ] write out slurm step number
   - [ ] write out how many NAs in prediction

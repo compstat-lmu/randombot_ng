@@ -9,7 +9,7 @@ rbn.registerLearner("MODIFIER", function(lrn) {
           list(
               cpoImputeMean(affect.type = "numeric"),
               cpoImputeMedian(affect.type = "numeric"),
-              cpoImputeHist(affect.type = "numeric")),
+              cpoImputeHist(use.mids = FALSE, affect.type = "numeric")),
           selected.cpo = "impute.hist"),
         MISSING = cpoSelect(type = "numeric") %>>% cpoMissingIndicators()) %>>%
     cpoMaxFact(32) %>>%
