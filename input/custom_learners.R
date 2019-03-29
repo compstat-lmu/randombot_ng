@@ -24,11 +24,11 @@ xgboost.constructor <- function() {
   cpoDummyEncode(reference.cat = TRUE, infixdot = TRUE) %>>% lrn
 }
 
-ranger.constructor <- function() {
+
+rbn.registerLearner("classif.ranger", function() {
   lrn <- makeLearner("classif.ranger")
   lrn$par.set$pars$sample.fraction$lower <- 0.01
-}
-rbn.registerLearner("classif.ranger", ranger.constructor)
+})
 
 rbn.registerLearner("classif.xgboost.gblinear", xgboost.constructor)
 rbn.registerLearner("classif.xgboost.gbtree", xgboost.constructor)
