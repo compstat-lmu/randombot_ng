@@ -43,6 +43,7 @@ makeRLearner.classif.kerasff = function() {
       makeDiscreteLearnerParam(id = "init_layer",
         values = c("glorot_normal", "glorot_uniform", "he_normal", "he_uniform"),
         default = "glorot_uniform"),
+      makeIntegerLearnerParam(id = "init_seed", lower = 1L, upper = Inf, special.vals = list(NULL)),
       # Regularizers
       makeNumericLearnerParam(id = "l1_reg_layer",
         lower = 0, upper = 1, default = 0),
@@ -67,7 +68,8 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
   rho = 0.9, loss = "categorical_crossentropy", batch_size = 128L, layers = 1,
   batchnorm_dropout = "dropout", input_dropout_rate = 0, dropout_rate = 0,
   units_layer1 = 32, units_layer2 = 32, units_layer3 = 32, units_layer4 = 32, init_layer = "glorot_uniform",
-  act_layer = "relu", l1_reg_layer = 0.01, l2_reg_layer = 0.01, validation_split = 0.2, nthread = 32L) {
+  act_layer = "relu", l1_reg_layer = 0.01, l2_reg_layer = 0.01, validation_split = 0.2, nthread = 32L,
+  init_seed = NULL) {
 
   require("keras")
   K = backend()
@@ -82,10 +84,10 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
   # Dense -> Act -> [BN] -> [Dropout]
   regularizer = regularizer_l1_l2(l1 = l1_reg_layer, l2 = l2_reg_layer)
   initializer = switch(init_layer,
-    "glorot_normal" = initializer_glorot_normal(),
-    "glorot_uniform" = initializer_glorot_uniform(),
-    "he_normal" = initializer_he_normal(),
-    "he_uniform" = initializer_he_uniform()
+    "glorot_normal" = initializer_glorot_normal(seed = init_seed),
+    "glorot_uniform" = initializer_glorot_uniform(seed = init_seed),
+    "he_normal" = initializer_he_normal(seed = init_seed),
+    "he_uniform" = initializer_he_uniform(seed = init_seed)
   )
   optimizer = switch(optimizer,
     "sgd" = optimizer_sgd(lr, momentum, decay = decay),

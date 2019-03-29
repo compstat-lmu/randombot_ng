@@ -143,7 +143,7 @@ classif.kerasff = makeParamSet(
         lower = -10, upper = -1, trafo = function(x) 5^x),
       makeLogicalParam(id = "learning_rate_scheduler", default = FALSE)
     )
-classif.kerasff.fixed_pars = list(early_stopping_patience = 0L, validation_split = 0, nthread = 1L)
+classif.kerasff.fixed_pars = list(early_stopping_patience = 0L, validation_split = 0, nthread = 1L, init_seed = 1444L)
 
 
 preproc.pipeline <- pSS(
