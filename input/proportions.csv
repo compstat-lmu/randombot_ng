@@ -1,0 +1,11 @@
+learner	proportion
+classif.kerasff	0.075
+classif.RcppHNSW	0.075
+classif.xgboost.dart	0.075
+classif.xgboost.gbtree	0.35
+classif.xgboost.gblinear	0.075
+classif.ranger.pow	0.15
+classif.svm.radial	0.075
+classif.svm	0.1
+classif.rpart	0.1
+classif.glmnet	0.075
