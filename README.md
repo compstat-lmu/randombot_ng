@@ -89,20 +89,20 @@ Mostly in `/R/` directory, with exception of `load_all.R`.
 ## Benchmark Setup:
 
 ### Datasets
-OpenML CC-18 + AutoML Datasets; ~102 Datasets in Total
+OpenML CC-18 + AutoML Datasets; ~115 Datasets in Total
 
 [Tasks](https://docs.google.com/spreadsheets/d/1IlcB98LZsG9y6veYivH05mN4yC8Qf2y2kB2HZHPsaMI/edit?usp=sharing)
 
 ### Learners
 - xgboost (xgboost)
-- svm (e1071) (without linear, possibly without poly kernel if we use liblinear)
+- svm (e1071) [LibSVM]
 - random forest (ranger)
 - rpart (rpart)
 - LiblineaR (LiblineaR) / Glmnet (glmnet)
+- Approximate Nearest Neighbours (RcppHNSW) wrapps [https://github.com/nmslib/hnswlib]
 
-For now we exclude:
-  - Fnn / Approx NN / KNN  (falls wir es zum laufen kriegen)
-  - Keras/Mxnet Fully Connected NN’s
+To be added:
+  - Keras Fully Connected NN’s up to XYZ layers.
   - Other boosting?
 
 ### Hyperparam Spaces
@@ -117,8 +117,8 @@ We currently sample numerics using the following strategy:
 Integers and discrete variables are sampled with equal probabilities.
 
 ## Evaluation Strategies
-- 10-fold stratified CV (80%)
-- 10 x 10-fold stratified CV (10%)
-- Subsampling (10%)
+- 10-fold stratified CV (80%) [OpenML Tasks]
+- 10 x 10-fold stratified CV (10%) [OpenML Tasks]
+- Subsampling (10%) [Subsampled OpenML Tasks]
 
 
