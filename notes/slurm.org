@@ -13,6 +13,9 @@
   - MaxMemPerCPU
 - sacct --job=<jobid>
 
+- interactive job :: srun -t 1:00:00 -A pn34jo -p micro --pty bash
+- connect to running job :: srun -t 12:00:00 -A pn34jo -p fat --jobid 48760 --pty bash
+
 
 * Things to keep in mind
 
@@ -139,3 +142,65 @@ SLURM_STEP_NODELIST=mpp3r02c01s05
 SLURM_CPU_BIND=quiet,mask_cpu:0x0000020000000000000002000000000000000200000000000000020000000000
 SLURM_MEM_PER_NODE=92000
 _=/usr/bin/env
+
+
+* So how does this sbatch / srun thing work?
+
+
+sbatch takes a few options and a script name, allocates a job and copies that script somewhere. Options are things like --mem (memory per node), --nodes, --ntasks, --cpus-per-task (default is 1). Based on this, we get a reservation and finally a job somewhere in the cluster. The job runs with a certain environment, with information about the job:
+ - SLURM_NODELIST, SLURM_JOB_NODELIST :: nodes allocated to job
+ - SLURM_JOB_NAME ::
+ - SLURM_NODENAME :: name of the node running the job script
+ - HOSTNAME, HOST :: these differ! HOSTNAME seems to be SLURM_NODENAME
+ - SLURM_EXPORT_ENV :: given to the --export argument, where the script file seems to override the cmdline args given to sbatch; this does NOT influence SBATCH behaviour (apparently) but instead the behaviour of srun calls ????????. also interacts with *--get-user-env*
+ - SLURM_NNODES, SLURM_JOB_NUM_NODES :: number of allocated nodes
+ - SLURM_JOBID, SLURM_JOB_ID :: job ID given to the job
+ - SLURM_NTASKS :: number of tasks allocated to the job
+ - SLURM_NODEID :: "id of the nodes allocated", but seems to be 0 ??????????
+ - SLURM_SUBMIT_DIR :: directory from which sbatch was invoked
+ - SLURM_TASK_PID :: PID of the slurm script executing bash instance
+ - SLURM_NTASKS, SLURM_NPROCS :: number of tasks allocated: --ntasks
+ - SLURM_CPUS_ON_NODE :: number of CPUs on allocated node
+ - SLURM_JOB_CPUS_PER_NODE :: number of CPUs actually available to the job, with postfix (xN) N being number of tasks
+ - SLURM_PROCID :: "mpi rank" i.e. relative process ID, is 0
+ - SLURM_LOCALID :: node local task id, probably 0
+ - SLURM_GET_USER_ENV :: whether --get-user-env is set
+ - SLURM_SUBMIT_HOST :: host from where the job was submit
+ - SLURM_JOB_PARTITION :: partition
+ - SLURM_MEM_PER_NODE :: available memory, in MB
+
+sbatch also gets some options for output. the documentation is not very clear on this, but the way output works is this: Executables being run by srun print messages to their stdout, that gets captured by the srun remotely and sent to the point where srun is being executed (e.g. inside an sbatch-script). so the `srun` call behaves as if it is giving the output itself. The output of all the things run within the sbatch script gets sent to the sbatch output file. this includes srun output, but also output of things run inside the sbatch script that are not srun. This means in particular that the output can, at this point, not be done per job-step, but will be for the whole job, so things like '%s' in the -o option are ignored (or put to 0, idk). If one wants output per job-step, then one needs to set the SLURM_STDOUTMODE varibale or give the -o option to the individual srun calls.
+
+srun gets called inside sbatch and causes a process to be spawned on the same or a different node. By default it launches the same executable multiple times, depending on --ntasks. Relevant input variables that are set in sbatch that can be overwritten:
+ - SLURM_CPUS_PER_TASK :: --cpus-per-task
+ - SLURM_JOB_ID :: --jobid -- this makes it possible to run a job step in another job
+ - SLURM_JOB_NUM_NODES, SLURM_JOB_NNODES :: --nodes
+ - SLURM_MEM_PER_CPU :: --mem-per-cpu
+ - SLURM_MEM_PER_NODE :: --mem
+ - SLURM_NTASKS :: --ntasks
+ - SLURM_NTASKS_PER_NODE ::  --ntasks-per-node
+ - SLURM_PARTITION :: --partition
+
+The following relevant environment variables are set:
+ - SLURMD_NODENAME :: name of the node running the task
+ - SLURM_NNODES, SLURM_STEP_NUM_NODES :: number of nodes in the job step. documentation says SLURM_NNODES follows SLURM_JOB_NUM_NODES, but that is WRONG.
+ - SLURM_CPU_BIND_LIST :: list of allocated CPU binds for the current node; comma separated for all tasks of that job-step running on that node
+ - SLURM_TASKS_PER_NODE :: tasks per node, in the form N(xK),N(xK)... how many times each number of tasks on a node is run. E.g. two jobs each on three nodes, one more task on one node gives '2(x3),1'
+ - SLURM_STEPID, SLURM_STEP_ID :: slurm step id
+ - SLURM_NTASKS :: number of tasks launched
+ - SLURM_PROCID :: "mpi rank" / relative process ID, counting from 0
+ - SLURM_LOCALID :: node-local task id, counting from 0
+ - SLURM_NODEID :: relative id of the current node: node of the job-step, counts from 0
+ - SLURM_CPUS_PER_TASK :: number of CPUS requested
+ - SLURM_CPUS_ON_NODE :: number of CPUs that are being used by this job-step on this node. counts all cpus used by all tasks launched on the node.
+ - SLURM_NPROCS, SLURM_NTASKS :: number of tasks launched
+
+some insight:
+ - --nodes is not respected if it can't be because of already used ressources (but srun will fail if too few ressources are allocated for the  job)
+ - --mem is per job step and per node, but not (automatically) per task
+ - if a step can't be started because of missing memory or missing CPUs (if --exclusive is given), the srun lingers in the background and retries in some interval
+ - --exclusive is only respected when *launching* a task, so non-exclusives can always be launched, --exclusive always wait until CPU slots are free
+ - --exclusive does not put tasks on sensible nodes: if all CPUs on node 0 are taken but there is still free memory, the task still gets scheduled on node 0 and waits.
+ - the sbatch script itself gets one cpu-slot, so --exclusive with the number of CPUs given as the number available on the node is a problem
+ - --relative runs a job step relative to node n
+ - --distribution controls how things are allocated. its best to start from 0 and do block distribution if one wants to save memory I guess
