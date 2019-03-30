@@ -28,9 +28,6 @@ fi
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
-export TOTAL_TASK_SLOTS=""
-export INDIVIDUAL_TASK_SLOTS="$SLURM_NTASKS"
-
 get_mem_req() {  # arguments: <learner> <task >
   learner="$1"
   task="$2"
@@ -56,10 +53,10 @@ call_srun() {  # arguments: <learner> <task> <message to prepend output>
     task="$2"
     si="$3"
     # TODO: infer memory requirement from $1 and $2
-    memreq="$(get_mem_req "$learner" "$task")"  # TODO
+    memreq="$4"
 
-    srun --unbuffered --export=ALL \
-	--mem="${memreq}" --nodes=1 --ntasks=1 --exclusive \
+    srun --unbuffered --export=ALL --exclusive \
+	--mem="${memreq}" --nodes=1 --ntasks=1 \
 	"${SCRIPTDIR}/runscript.sh" \
 	"$task" "$learner" "$ONEOFF" 2>&1 | \
 	sed -u "s'^'[${task},${learner},${INVOCATION},${si}]: '" | \
@@ -71,20 +68,19 @@ call_srun() {  # arguments: <learner> <task> <message to prepend output>
 
 NUMTASKS="$(grep -v '^ *$' "${DATADIR}/TASKS" | wc -l)"
 
+NUM_CPUS="$(echo "$SLURM_JOB_CPUS_PER_NODE" | tr ',(x)' $'\n'' ' | awk '{ x += $1 * ($2?$2:1) } END { print x }')"
+
 while read -u 6 LEARNERNAME ; do
     while read -u 5 TASKNAME ; do
+	MEMREQ="$(get_mem_req "$learner" "$task")"
 	(
 	    SUBINVOCATION=0
 	    while true ; do
-		call_srun "${LEARNERNAME}" "${TASKNAME}" "${SUBINVOCATION}"
+		call_srun "${LEARNERNAME}" "${TASKNAME}" "${SUBINVOCATION}" "${MEMREQ}"
 		SUBINVOCATION=$((SUBINVOCATION + 1))
 	    done
 	) &
 	INVOCATION=$((INVOCATION + 1))
     done 5<"${DATADIR}/TASKS"
-    if ! [ "$SLURM_NTASKS" -ge $((INVOCATION + NUMTASKS)) ] ; then
-	# as many workers running as there are tasks
-	break
-    fi
-done 6<"${DATADIR}/LEARNERS"
+done 6<( "$SCRIPTDIR/sample_learners.R" $((NUM_CPUS / 2)) )
 wait

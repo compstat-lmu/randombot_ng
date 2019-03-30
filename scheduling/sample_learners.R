@@ -28,21 +28,28 @@ proptable$x <- proptable$x / sum(proptable$x)
 
 proptable$whole <- floor(proptable$x * numlearners)
 
-proptable$given <- 0
+proptable$given <- 1
+wholeout <- sum(proptable$whole)
+giveiter <- 1
 
 ## We want to give the learners according to the proportion specified.
 # If the proportions times the number of learners lead to an expected
 # number of learners greater than one, we return those learners until
 # the remaining expected learners are only fractional.
-for (iter in seq_len(sum(proptable$whole))) {
-  togive <- which.max(proptable$x * iter - proptable$given)
-  cat(paste0(proptable$learner[togive], "\n"))
-  proptable$given[togive] <- proptable$given[togive] + 1
+while (giveiter <= wholeout) {
+  cmax <- giveiter - proptable$given / proptable$x
+  alltogive <- which(cmax == max(cmax))
+  for (togive in alltogive[sample.int(length(alltogive))]) {
+    cat(paste0(proptable$learner[togive], "\n"))
+    proptable$given[togive] <- proptable$given[togive] + 1
+    stopifnot(giveiter <= wholeout)
+    giveiter <- giveiter + 1
+  }
 }
 
-stopifnot(all(proptable$given == proptable$whole))
+stopifnot(all(proptable$given - 1 == proptable$whole))
 
-proptable$x <- proptable$x * numlearners - proptable$given
+proptable$x <- proptable$x * numlearners - proptable$whole
 
 stopifnot(all(proptable$x <= 1 & proptable$x >= 0))
 
