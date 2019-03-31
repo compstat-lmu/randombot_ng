@@ -12,7 +12,7 @@ while [ -h "$path" ] ; do
 done
 export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
-export REDISHOST="${HOST}"
+export REDISHOST="${SLURMD_NODENAME}opa.sng.lrz.de"  # need to hardcode this :-/
 
 export REDISPW="$(head -c 128 /dev/urandom | sha1sum -b - | cut -c -40)"
 
