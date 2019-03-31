@@ -49,6 +49,7 @@ Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_t
    - Takes arguments:
      - *JOBCOUNT*
      - ONEOFF
+     - STRESSTEST
    - Exports further arguments:
      - MUC_R_HOME
    - Does:
@@ -57,6 +58,7 @@ Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_t
    - Takes arguments:
      - *MUC_R_HOME*
      - ONEOFF
+     - STRESSTEST
    - SLURM arguments:
      - SLURM_JOB_NAME (not essential)
      - SLURM_JOB_ID (not essential)
@@ -75,19 +77,21 @@ Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_t
      - *TASKNAME* (from arg 1)
      - *LEARNERNAME* (from arg 2)
      - ONEOFF (from arg 3)
+     - STRESSTEST
    - Exports further arguments:
      - TOKEN
    - Does:
      - calls *eval_redis.R*, also traces the process's memory usage.
 4. eval_redis.R
    - Takes arguments:
-     - *TOKEN*
+     - *TOKEN* :: printed as part of info message to match them with a certain run
      - *MUC_R_HOME*
      - *LEARNERNAME*
      - *TASKNAME*
      - *REDISHOST*
      - *REDISPORT*
      - *ONEOFF*
+     - *STRESSTEST*
 * Scriptlets
 
 
