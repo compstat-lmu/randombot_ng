@@ -12,7 +12,7 @@ check_env() {
 	case "$WHAT" in
 	    STARTSEED)
 		if [ -z "${STARTSEED}" ] || \
-		       ! [ "$STARTSEED" -gt 0 ] 2>/dev/null ; then
+		       ! [ "$STARTSEED" -ge 0 ] 2>/dev/null ; then
 		    echo "No valid STARTSEED: $STARTSEED"
 		    exit 2
 		fi
