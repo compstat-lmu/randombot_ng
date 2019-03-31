@@ -8,6 +8,7 @@ suppressPackageStartupMessages({
   library("BBmisc")
   library("redux")
 })
+options(warn=1)
 r.host <- Sys.getenv("REDISHOST")
 r.port <- Sys.getenv("REDISPORT")
 r.pass <- Sys.getenv("REDISPW")
@@ -31,7 +32,7 @@ rcon <- hiredis(host = r.host, port = r.port, password = r.pass)
 
 # there is one queue RESULTQUEUE that the different threads write into, and
 # different PENDING_x queues for each running thread.
-incomingqueue <- "RESULTQUEUE"
+incomingqueue <- "RESULTS"
 allpending <- sprintf("PENDING_%s", seq_len(maxrunindex))
 ownpending <- allpending[runindex]
 
@@ -43,7 +44,7 @@ while (!is.null(rcon$RPOPLPUSH(ownpending, incomingqueue))) { }
 # higher than the one currently running, in case something was run
 # previously that had more draining instances.
 if (runindex == maxrunindex) {
-  foundqueues <- setdiff(unlist(rcon$KEYS("PENDING_*")), allqueues)
+  foundqueues <- setdiff(unlist(rcon$KEYS("PENDING_*")), allpending)
   catf("[%s] Draining %s queues beyond my own", runindex, length(foundqueues))
   for (fq in foundqueues) {
     while (!is.null(rcon$RPOPLPUSH(fq, incomingqueue))) { }
@@ -60,11 +61,15 @@ catf("[%s] Ready for action. Waiting for %s and caching in %s",
 repeat {
   # get 1000 results, but also store them in PENDING_x
   if (noblock) {
-    tosave <- replicate(1000, unserialize(rcon$RPOPLPUSH(incomingqueue, ownpending)),
+    tosave <- replicate(1000, rcon$RPOPLPUSH(incomingqueue, ownpending),
       simplify = FALSE)
-    tosave <- Filter(Negate(is.null), tosave)
+    tosave <- lapply(Filter(Negate(is.null), tosave), unserialize)
+    if (!length(tosave)) {
+      break
+    }
   } else {
-    tosave <- replicate(1000, unserialize(rcon$BRPOPLPUSH(incomingqueue, ownpending)),
+    tosave <- replicate(1000,
+      unserialize(rcon$BRPOPLPUSH(incomingqueue, ownpending, timeout = 0)),
       simplify = FALSE)
   }
 
@@ -79,6 +84,7 @@ repeat {
 
   # save with highest compression. Otherwise postprocessing is annoying.
   # We save to <filename>.tmp first, in case our process gets killed in-flight.
+  catf("[%s] Saving %s results to %s", runindex, length(tosave), fname)
   saveRDS(tosave, paste0(outfile, ".tmp"), compress = "xz")
   file.rename(paste0(outfile, ".tmp"), outfile)
 
@@ -87,9 +93,6 @@ repeat {
   # There is a small chance that we get killed here and as a result some run
   # results get written out twice, but we will live with that.
   rcon$DEL(ownpending)
-  if (noblock && isTRUE(rcon$LLEN(ownpending) == 0)) {
-    break
-  }
 }
 
 if (!noblock) {

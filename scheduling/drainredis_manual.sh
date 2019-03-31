@@ -9,6 +9,7 @@ if [ -z "$1" ] ; then
     echo "Usage: $0 DRAINPROCS" >&2
     exit 1
 fi
+export DRAINPROCS="$1"
 
 # get parent directory
 path="${BASH_SOURCE[0]}"
@@ -31,8 +32,11 @@ export SLURM_NPROCS="$DRAINPROCS"
 
 export SLURM_PROCID
 
+trap "exit" INT TERM
+trap "kill 0" EXIT
+
 for ((SLURM_PROCID=0;SLURM_PROCID<"$DRAINPROCS";SLURM_PROCID++)) ; do
-    "${MUC_R_HOME/scheduling/drainredis.R" NOBLOCK &
+    "${MUC_R_HOME}/scheduling/drainredis.R" NOBLOCK &
 done
 
 wait

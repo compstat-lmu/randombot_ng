@@ -28,7 +28,7 @@ SCRIPTDIR="${MUC_R_HOME}/scheduling"
 get_mem_req() {  # arguments: <learner> <task >
   learner="$1"
   task="$2"
-  Rscript -e "source(file.path(Sys.getenv('MUC_R_HOME'), 'R', 'get_data.R'); rbn.getMemoryRequirementsKb('${task}', '${learner}')"
+  Rscript -e "setwd(file.path(Sys.getenv('MUC_R_HOME'))) ; source(file.path('R', 'get_data.R')); rbn.getMemoryRequirementsKb('${task}', '${learner}')"
 }
 
 echo "[MAIN]: Getting DATADIR"
@@ -43,6 +43,7 @@ DATADIR=$(Rscript -e " \
 echo "[MAIN]: Using DATADIR $DATADIR"
 check_env DATADIR ONEOFF STRESSTEST STARTSEED DRAINPROCS
 
+if [ -f REDISINFO ] ; then rm REDISINFO || exit 102 ; fi
 echo "[MAIN]: Starting Redis"
 srun --unbuffered --export=ALL --mem="$SLURM_MEM_PER_NODE" --nodes=1 --ntasks=1 \
      "${SCRIPTDIR}/runredis.sh" 2>&1 | \
@@ -73,7 +74,7 @@ mkdir RESULTS
 DRAINNODES=$(((DRAINPROCS + (SLURM_MEM_PER_NODE / 2048) - 1) / (SLURM_MEM_PER_NODE / 2048)))
 echo "[MAIN]: Launching $DRAINPROCS drain processes on $DRAINNODES nodes"
 srun --unbuffered --export=ALL --mem "$SLURM_MEM_PER_NODE" --ntasks="$DRAINPROCS" \
-     --nodes="$DRAINNODES" "${SCRIPTDIR/drainredis.R" 2>&1 | \
+     --nodes="$DRAINNODES" "${SCRIPTDIR}/drainredis.R" 2>&1 | \
     sed -u "s'^'[DRAINREDIS]: '" | \
     grep --line-buffered '^' &
 
@@ -91,7 +92,7 @@ call_srun() {  # arguments: <learner> <task> <message to prepend output>
     srun --unbuffered --export=ALL --exclusive \
 	--mem="${memreq}" --nodes=1 --ntasks=1 \
 	"${SCRIPTDIR}/runscript.sh" \
-	"$task" "$learner" "$ONEOFF" 2>&1 | \
+	"$task" "$learner" "$STARTSEED" "$ONEOFF" "$STRESSTEST" 2>&1 | \
 	sed -u "s'^'[${task},${learner},${INVOCATION},${si}]: '" | \
 	grep --line-buffered '^'
     # About the `grep --line-buffered`: not sure if `sed -u` suffices, but:
@@ -106,7 +107,7 @@ NUM_CPUS="$(echo "$SLURM_JOB_CPUS_PER_NODE" | tr ',(x)' $'\n'' ' | awk '{ x += $
 while read -u 6 LEARNERNAME ; do
     while read -u 5 TASKNAME ; do
 	if [ "$STRESSTEST" = "TRUE" ] ; then
-	    MEMREQ=1K
+	    MEMREQ=1G
 	else
 	    MEMREQ="$(get_mem_req "$learner" "$task")"
 	fi
@@ -119,5 +120,5 @@ while read -u 6 LEARNERNAME ; do
 	) &
 	INVOCATION=$((INVOCATION + 1))
     done 5<"${DATADIR}/TASKS"
-done 6<( "$SCRIPTDIR/sample_learners.R" "$NUM_CPUS" )
+done 6< <( "$SCRIPTDIR/sample_learners.R" "$NUM_CPUS" )
 wait
