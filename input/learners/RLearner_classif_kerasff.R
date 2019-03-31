@@ -85,7 +85,7 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
   if(!is.null(init_seed)) {
     npr = reticulate::import("numpy.random")
     npr$seed(init_seed)
-    K$tf$set_random_seed(init_seed)
+    K$tf$set_random_seed(as.integer(init_seed))
   }
 
   input_shape = getTaskNFeats(.task)
