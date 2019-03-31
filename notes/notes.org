@@ -3,11 +3,13 @@
 Some of these may be environment-dependent, e.g. NODE_ID, others are global settings that change run behaviour (e.g. SCHEDULING_MODE) or even results (SAMPLING_TRAFO)
 ** Environment only
 - Scheduling
-  - JOBCOUNT :: Number of sbatch invocations to run in invoke_sbatch.sh; default 1
   - ONEOFF :: [string] "TRUE" or "FALSE" (default): whether to restart invocations after each eval (mainly for memory usage profiling).
+  - STRESSTEST :: [string] "TRUE" or "FALSE" (default): whether to do dummy invocations and send lots of bogus results to the server to check throughput
+  - STARTSEED :: first seed to evaluate. given to *invoke_sbatch.sh* as first argument.
 - Redis:
   - REDISHOST :: redis hostname
   - REDISPORT :: redis port
+  - DRAINPROCS :: number of processes to start that drain results from redis instance to memory
 - R-Script invocation
   - LEARNERNAME :: set in *runscript.sh*, read by eval_redis.R
   - TASKNAME :: set in *runscript.sh*, read by eval_redis.R
@@ -337,17 +339,16 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
 
 * TODO
 
-- [ ] 200 runs for each learner x task on average, that's a lot.
-  - [ ] learner-wise data sinks
-  - [ ] raw file writing?
+- [-] 200 runs for each learner x task on average, that's a lot.
+  - [X] learner-wise data sinks? No: Result Queue
+  - [X] raw file writing? No: just lots of drain processes
   - [ ] 512kB/s
-  - [ ] test with a bunch of jobs that generate loads of fake data
-- [ ] info to write out
-  - [ ] write out slurm step number
-  - [ ] write out how many NAs in prediction
-  - [ ] date / time of day
-  - [ ] give run number to R session as TOKEN and print it
-- [ ] learner sampling
-  - [ ] "low discrepancy": number of instances as close to expected number as possible
+  - [ ] test with a bunch of jobs that generate loads of fake data [ implemented: "STRESSTEST" ]
+- [X] info to write out
+  - [X] write out slurm step number
+  - [X] date / time of day
+  - [X] give run number to R session as TOKEN and print it
+- [X] learner sampling
+  - [X] "low discrepancy": number of instances as close to expected number as possible
 - [X] stdout / stderr confusion
 - [ ] don't write out so much at all

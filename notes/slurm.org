@@ -203,4 +203,5 @@ some insight:
  - --exclusive does not put tasks on sensible nodes: if all CPUs on node 0 are taken but there is still free memory, the task still gets scheduled on node 0 and waits.
  - the sbatch script itself gets one cpu-slot, so --exclusive with the number of CPUs given as the number available on the node is a problem
  - --relative runs a job step relative to node n
- - --distribution controls how things are allocated. its best to start from 0 and do block distribution if one wants to save memory I guess
+ - --distribution controls how things are allocated, but apparently only within one single --srun call
+ - the sbatch script itself seems to have one blocked core (which prevents --exclusive sruns to run when <NUM_OF_CORES> - 1 other tasks are already running) but no reserved memory.

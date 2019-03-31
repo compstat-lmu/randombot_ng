@@ -10,8 +10,6 @@ export TASKNAME="$1"
 export LEARNERNAME="$2"
 export ONEOFF="$3"
 
-export TOKEN="$(date +"%F_%T")_${HOSTNAME}"
-
 if [ -z "$LEARNERNAME" ]; then
     echo "Bad Command line: $*" >&2
     exit 100
@@ -32,7 +30,7 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 . "$MUC_R_HOME/scheduling/common.sh"
 
 
-check_env ONEOFF REDISHOST REDISPORT REDISPW
+check_env ONEOFF REDISHOST REDISPORT REDISPW STRESSTEST STARTSEED
 
 
 ## benchmark stdout
@@ -43,6 +41,8 @@ check_env ONEOFF REDISHOST REDISPORT REDISPW
 INNERSTEP=0
 
 while true ; do
+    export TOKEN="$(date +"%F_%T")_${HOSTNAME}"
+
     # absolutely need to pipe stderr into stdout, otherwise srun mixes the two streams
     /usr/bin/time -f "[[${INNERSTEP}]] ----[$TOKEN] E %E K %Ss U %Us P %P M %MkB O %O" \
 		  Rscript "$MUC_R_HOME/scheduling/eval_redis.R" 2>&1
