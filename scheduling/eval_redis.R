@@ -40,7 +40,7 @@ rcon <- hiredis(host = r.host, port = r.port, password = r.pass)
 LEARNERNAME <- Sys.getenv("LEARNERNAME")
 TASKNAME <- Sys.getenv("TASKNAME")
 
-queuename <- sprintf("QUEUE_lrn:%s_tsk:%s_offset:%s", LEARNERNAME, TASKNAME, seedoffset)
+queuename <- sprintf("QUEUE_lrn:%s_tsk:%s_offset:%s", LEARNERNAME, TASKNAME, seedoffset + 1L)
 
 if (stresstest) {
   LEARNERNAME <- "classif.rpart"
@@ -76,11 +76,12 @@ repeat {
     rbn.setWatchdogTimeout(600)  # ten minutes timeout to write result file
 
     result$METADATA <- list(learner = LEARNERNAME, task = TASKNAME, seed = seed, point = pt)
-    repeat {
+    if (stresstest) repeat {
+      result$METADATA$seed <- round(runif(1, 1, 2^31))
       rcon$LPUSH("RESULTS", serialize(result, connection = NULL))
-      if (!stresstest || oneoff) {
-        break
-      }
+      if (oneoff) break
+    } else {
+      rcon$LPUSH("RESULTS", serialize(result, connection = NULL))
     }
   }
   catf("----[%s] Done evaluating seed %s", token, seed)
