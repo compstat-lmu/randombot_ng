@@ -109,7 +109,7 @@ while read -u 6 LEARNERNAME ; do
 	if [ "$STRESSTEST" = "TRUE" ] ; then
 	    MEMREQ=1G
 	else
-	    MEMREQ="$(get_mem_req "$learner" "$task")"
+	    MEMREQ="$(get_mem_req "$LEARNERNAME" "$TASKNAME")"
 	fi
 	(
 	    SUBINVOCATION=0
