@@ -100,7 +100,7 @@ OpenML CC-18 + AutoML Datasets; ~115 Datasets in Total
 - rpart (rpart)
 - LiblineaR (LiblineaR) / Glmnet (glmnet)
 - Approximate Nearest Neighbours (RcppHNSW) wrapps [https://github.com/nmslib/hnswlib]
-- Keras Fully Connected NN’s up to XYZ layers.
+- Keras Fully Connected NN’s up to 4 layers / 1024 neurons.
 
 To be added:
   - Other boosting?
