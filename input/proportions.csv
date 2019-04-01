@@ -8,4 +8,4 @@ classif.ranger.pow	33
 classif.svm.radial	11
 classif.svm	4
 classif.rpart 2
-classif.glmnet 2
+classif.glmnet 1
