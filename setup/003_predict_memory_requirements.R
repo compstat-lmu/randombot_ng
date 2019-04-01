@@ -80,6 +80,28 @@ p2 = df %>%
 
 ggsave((p1 + p2), filename = "../evals_runs_per_learner.pdf")
 
+learner_imp = data.frame(
+  learner = c("classif.rpart", "classif.RcppHNSW", "classif.glmnet", "classif.svm.radial",
+    "classif.ranger.pow", "classif.xgboost.gbtree", "classif.svm",
+    "classif.xgboost.gblinear", "classif.xgboost.dart", "clasffi.kerasff"),
+  importance = sqrt(c(4, 2, 1, 40, 240, 6000, 1.5, 120, 3000, 240))
+)
+
+# Weights
+df %>%
+  group_by(learner) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  mutate(
+    frac = 1 / (n / sum(n)),
+  ) %>%
+  full_join(learner_imp) %>%
+  mutate(
+    frac = if_else(is.na(frac), 10, frac)
+  ) %>%
+  mutate(wt = sqrt(frac) * importance) %>%
+mutate(wt = ceiling(wt / sum(wt) * 1000))
+
 
 
 

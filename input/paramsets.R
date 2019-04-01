@@ -1,18 +1,20 @@
-prob.classif.glmnet = 3
-prob.classif.rpart = 4
-prob.classif.svm = 4
-prob.classif.svm.radial = 3
-prob.classif.ranger.pow = 6
-prob.classif.xgboost.gblinear = 3
-prob.classif.xgboost.gbtree = 14
-prob.classif.xgboost.dart = 3
-prob.classif.RcppHNSW = 3
-prob.classif.kerasff = 3
+prob.classif.glmnet = 8
+prob.classif.rpart = 3
+prob.classif.svm = 60
+prob.classif.svm.radial = 21
+prob.classif.ranger.pow = 35
+prob.classif.xgboost.gblinear = 32
+prob.classif.xgboost.gbtree = 177
+prob.classif.xgboost.dart = 300
+prob.classif.RcppHNSW = 4
+prob.classif.kerasff = 47
+
 
 classif.glmnet = makeParamSet(
-  # [-Inf;0] L1, [1; Inf] L2, [0;1] elasticnet
+  # alpha: [-Inf;0] L1, [1; Inf] L2, [0;1] elasticnet (15/15/70)% approx.
   makeNumericParam("alpha", lower = 0, upper = 1, default = 1, trafo = function(x) max(0, min(1, x))),
-  makeNumericVectorParam("s", len = 1L, lower = -10, upper = 10, default = 0, trafo = function(x) 2^x))
+  makeNumericVectorParam("s", len = 1L, lower = -10, upper = 10, default = 0, trafo = function(x) 2^x)
+)
 
 classif.rpart = makeParamSet(
   makeNumericParam("cp", lower = 0, upper = 1, default = 0.01),
@@ -53,7 +55,7 @@ classif.ranger.pow = makeParamSet(
 classif.ranger.pow.fixed_pars = list("num.threads" = 1L)
 
 classif.xgboost.gblinear = makeParamSet(
-  makeIntegerParam("nrounds", lower = 1, upper = 5000),
+  makeIntegerParam("nrounds", lower = 3, upper = 11, trafo = function(x) round(2^x)),
   makeNumericParam("lambda", lower = -10, upper = 10, trafo = function(x) 2^x),
   makeNumericParam("alpha", lower = -10, upper = 10, trafo = function(x) 2^x),
   makeNumericParam("subsample",lower = 0.1, upper = 1)
@@ -61,7 +63,7 @@ classif.xgboost.gblinear = makeParamSet(
 classif.xgboost.gblinear.fixed_pars = list("nthread" = 1L, booster = "gblinear")
 
 classif.xgboost.gbtree = makeParamSet(
-  makeIntegerParam("nrounds", lower = 1, upper = 5000),
+makeIntegerParam("nrounds", lower = 3, upper = 11, trafo = function(x) round(2^x)),
   makeNumericParam("eta",   lower = -10, upper = 0, trafo = function(x) 2^x),
   makeNumericParam("gamma", lower = -15, upper = 3, trafo = function(x) 2^x),
   makeNumericParam("lambda", lower = -10, upper = 10, trafo = function(x) 2^x),
@@ -76,7 +78,7 @@ classif.xgboost.gbtree = makeParamSet(
 classif.xgboost.gbtree.fixed_pars = list("nthread" = 1L, booster = "gbtree")
 
 classif.xgboost.dart = makeParamSet(
-  makeIntegerParam("nrounds", lower = 1, upper = 5000),
+  makeIntegerParam("nrounds", lower = 3, upper = 11, trafo = function(x) round(2^x)),
   makeNumericParam("eta",   lower = -10, upper = 0, trafo = function(x) 2^x),
   makeNumericParam("gamma", lower = -15, upper = 3, trafo = function(x) 2^x),
   makeNumericParam("lambda", lower = -10, upper = 10, trafo = function(x) 2^x),
@@ -109,7 +111,7 @@ classif.RcppHNSW = makeParamSet(
 )
 
 classif.kerasff = makeParamSet(
-      makeIntegerParam(id = "epochs", lower = 10L, upper = 100L),
+      makeIntegerParam(id = "epochs", lower = 2^3, upper = 2^6, trafo = function(x) round(2^x)),
       makeDiscreteParam(id = "optimizer",
         values = c("sgd", "rmsprop", "adam", "nadam")),
       makeNumericParam(id = "lr", lower = -8, upper = 0, trafo = function(x) 5^x),
@@ -127,10 +129,10 @@ classif.kerasff = makeParamSet(
       makeNumericParam(id = "input_dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
       makeNumericParam(id = "dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
       # Neurons / Layers
-      makeIntegerParam(id = "units_layer1", lower = 10L, upper = 512),
-      makeIntegerParam(id = "units_layer2", lower = 10L, upper = 512, requires = quote(layers >= 2)),
-      makeIntegerParam(id = "units_layer3", lower = 10L, upper = 512, requires = quote(layers >= 3)),
-      makeIntegerParam(id = "units_layer4", lower = 10L, upper = 512, requires = quote(layers >= 4)),
+      makeIntegerParam(id = "units_layer1", lower = 3L, upper = 10,  trafo = function(x) round(2^x)),
+      makeIntegerParam(id = "units_layer2", lower = 3L, upper = 10, trafo = function(x) round(2^x), requires = quote(layers >= 2)),
+      makeIntegerParam(id = "units_layer3", lower = 3L, upper = 10, trafo = function(x) round(2^x), requires = quote(layers >= 3)),
+      makeIntegerParam(id = "units_layer4", lower = 3L, upper = 10, trafo = function(x) round(2^x), requires = quote(layers >= 4)),
       # Activations
       makeDiscreteParam(id = "act_layer",
         values = c("elu", "relu", "selu", "tanh", "sigmoid")),
@@ -142,7 +144,8 @@ classif.kerasff = makeParamSet(
         lower = -10, upper = -1, trafo = function(x) 5^x),
       makeNumericParam(id = "l2_reg_layer",
         lower = -10, upper = -1, trafo = function(x) 5^x),
-      makeLogicalParam(id = "learning_rate_scheduler", default = FALSE)
+      makeLogicalParam(id = "learning_rate_scheduler", default = FALSE),
+      makeDiscreteParam(id = "init_seed", values = c(1L, 11L, 101L, 131L, 499L))
     )
 classif.kerasff.fixed_pars = list(early_stopping_patience = 0L, validation_split = 0, nthread = 1L, init_seed = 1444L)
 

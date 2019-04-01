@@ -30,13 +30,14 @@ rbn.registerLearner("classif.xgboost.dart", xgboost.constructor)
 
 rbn.registerLearner("classif.ranger", function() {
   lrn <- makeLearner("classif.ranger")
-  lrn$par.set$pars$sample.fraction$lower <- 0.01
+  lrn$par.set$pars$sample.fraction$lower <- 0.005
   lrn
 })
 
 rbn.registerLearner("classif.kerasff", function() {
-  cpoDummyEncode(reference.cat = TRUE, infixdot = TRUE) %>>%
-    makeLearner("classif.kerasff")
+  lrn <- makeLearner("classif.kerasff")
+  lrn$par.set$pars$epochs$upper <- 1000
+  cpoDummyEncode(reference.cat = TRUE, infixdot = TRUE) %>>% lrn
 })
 
 

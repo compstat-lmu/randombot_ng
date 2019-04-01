@@ -71,21 +71,17 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
   act_layer = "relu", l1_reg_layer = 0.01, l2_reg_layer = 0.01, validation_split = 0.2, nthread = 32L,
   init_seed = NULL) {
 
+  # Configure Keras: 2) nthread 1) seed
   require("keras")
+  if (!is.null(init_seed)) use_session_with_seed(init_seed, disable_parallel_cpu = nthread == 1L)
 
-  # Configure Keras: 1) nthread 2) seed
-  K = backend()
-  sess = K$tf$Session(
-    config = K$tf$ConfigProto(
-      intra_op_parallelism_threads = as.integer(nthread),
-      inter_op_parallelism_threads = as.integer(nthread)))
-
-  K$set_session(sess)
-
-  if(!is.null(init_seed)) {
-    npr = reticulate::import("numpy.random")
-    npr$seed(as.integer(init_seed))
-    K$tf$set_random_seed(as.integer(init_seed))
+  if (nthread > 1L) {
+    K = backend()
+    sess = K$tf$Session(
+      config = K$tf$ConfigProto(
+        intra_op_parallelism_threads = as.integer(nthread),
+        inter_op_parallelism_threads = as.integer(nthread)))
+    K$set_session(sess)
   }
 
   input_shape = getTaskNFeats(.task)
