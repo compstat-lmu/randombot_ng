@@ -37,6 +37,10 @@ rbn.registerLearner("classif.ranger", function() {
 rbn.registerLearner("classif.kerasff", function() {
   lrn <- makeLearner("classif.kerasff")
   lrn$par.set$pars$epochs$upper <- 1000
+  lrn$par.set$pars$units_layer1$upper <- 2048
+  lrn$par.set$pars$units_layer2$upper <- 2048
+  lrn$par.set$pars$units_layer3$upper <- 2048
+  lrn$par.set$pars$units_layer4$upper <- 2048
   cpoDummyEncode(reference.cat = TRUE, infixdot = TRUE) %>>% lrn
 })
 
