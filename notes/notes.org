@@ -3,11 +3,13 @@
 Some of these may be environment-dependent, e.g. NODE_ID, others are global settings that change run behaviour (e.g. SCHEDULING_MODE) or even results (SAMPLING_TRAFO)
 ** Environment only
 - Scheduling
-  - JOBCOUNT :: Number of sbatch invocations to run in invoke_sbatch.sh; default 1
   - ONEOFF :: [string] "TRUE" or "FALSE" (default): whether to restart invocations after each eval (mainly for memory usage profiling).
+  - STRESSTEST :: [string] "TRUE" or "FALSE" (default): whether to do dummy invocations and send lots of bogus results to the server to check throughput
+  - STARTSEED :: first seed to evaluate. given to *invoke_sbatch.sh* as first argument.
 - Redis:
   - REDISHOST :: redis hostname
   - REDISPORT :: redis port
+  - DRAINPROCS :: number of processes to start that drain results from redis instance to memory
 - R-Script invocation
   - LEARNERNAME :: set in *runscript.sh*, read by eval_redis.R
   - TASKNAME :: set in *runscript.sh*, read by eval_redis.R
@@ -21,6 +23,8 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
   - DATA_TABLE_OPTS :: options to be given to =read.csv= when reading DATA_TABLE. set by *constants.R*
   - SEARCHSPACE_TABLE :: filename of search space csv. set by *constants.R*
   - SEARCHSPACE_TABLE_OPTS :: options to be given to =read.csv= when reading SEARCHSPACE_TABLE. set by *constants.R*
+  - SEARCHSPACE_PROP_TABLE :: filename of learner proportions csv. set by *constants.R*
+  - SEARCHSPACE_PROP_TABLE_OPTS :: options to be given to =read.csv= when reading SEARCHSPACE_PROP_TABLE. set by *constants.R*
 - Sampling Configuration
   - SUPERRATE :: [numeric 0..1] fraction of evaluation points that have supererogatory evaluations
   - SUPERCV_PROPORTIONS :: [numeric 0..1] subsampling proportions to sample
@@ -45,6 +49,7 @@ Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_t
    - Takes arguments:
      - *JOBCOUNT*
      - ONEOFF
+     - STRESSTEST
    - Exports further arguments:
      - MUC_R_HOME
    - Does:
@@ -53,6 +58,7 @@ Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_t
    - Takes arguments:
      - *MUC_R_HOME*
      - ONEOFF
+     - STRESSTEST
    - SLURM arguments:
      - SLURM_JOB_NAME (not essential)
      - SLURM_JOB_ID (not essential)
@@ -71,23 +77,28 @@ Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_t
      - *TASKNAME* (from arg 1)
      - *LEARNERNAME* (from arg 2)
      - ONEOFF (from arg 3)
+     - STRESSTEST
    - Exports further arguments:
      - TOKEN
    - Does:
      - calls *eval_redis.R*, also traces the process's memory usage.
 4. eval_redis.R
    - Takes arguments:
-     - *TOKEN*
+     - *TOKEN* :: printed as part of info message to match them with a certain run
      - *MUC_R_HOME*
      - *LEARNERNAME*
      - *TASKNAME*
      - *REDISHOST*
      - *REDISPORT*
      - *ONEOFF*
+     - *STRESSTEST*
 * Scriptlets
 
 
 - memory usage info
+
+#+BEGIN_SRC bash
+
 
 cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
 
@@ -109,6 +120,8 @@ cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
       sed 's/^\[\([^,]*\),\([^,]*\),\([0-9]\+\),\([0-9]\+\)\]/\1 \2 \3 \4 /' | \
       grep -v ')$' ; done
 ) > memtable
+
+#+END_SRC
 
 #+BEGIN_SRC R
 
@@ -330,17 +343,16 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
 
 * TODO
 
-- [ ] 200 runs for each learner x task on average, that's a lot.
-  - [ ] learner-wise data sinks
-  - [ ] raw file writing?
+- [-] 200 runs for each learner x task on average, that's a lot.
+  - [X] learner-wise data sinks? No: Result Queue
+  - [X] raw file writing? No: just lots of drain processes
   - [ ] 512kB/s
-  - [ ] test with a bunch of jobs that generate loads of fake data
-- [ ] info to write out
-  - [ ] write out slurm step number
-  - [ ] write out how many NAs in prediction
-  - [ ] date / time of day
-  - [ ] give run number to R session as TOKEN and print it
-- [ ] learner sampling
-  - [ ] "low discrepancy": number of instances as close to expected number as possible
+  - [ ] test with a bunch of jobs that generate loads of fake data [ implemented: "STRESSTEST" ]
+- [X] info to write out
+  - [X] write out slurm step number
+  - [X] date / time of day
+  - [X] give run number to R session as TOKEN and print it
+- [X] learner sampling
+  - [X] "low discrepancy": number of instances as close to expected number as possible
 - [X] stdout / stderr confusion
 - [ ] don't write out so much at all

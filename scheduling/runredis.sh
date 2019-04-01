@@ -1,6 +1,4 @@
 #!/bin/bash
-# This is the redis entrypoint!
-# Sets up some variables, performs some tests, and calls sbatch 
 
 # get parent directory
 path="${BASH_SOURCE[0]}"
@@ -14,8 +12,50 @@ while [ -h "$path" ] ; do
 done
 export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
+export REDISHOST="${SLURMD_NODENAME}opa.sng.lrz.de"  # need to hardcode this :-/
+
+export REDISPW="$(head -c 128 /dev/urandom | sha1sum -b - | cut -c -40)"
+
 . "$MUC_R_HOME/scheduling/common.sh"
 
-check_env REDISPORT
+check_env REDISHOST REDISPORT REDISPW
 
-sbatch --export=MUC_R_HOME,REDISPORT "$@" "${MUC_R_HOME}/scheduling/runredis_batchscript.cmd"
+echo "${REDISHOST}:${REDISPORT}:${REDISPW}" > REDISINFO.TMP || exit 1
+mv REDISINFO.TMP REDISINFO || exit 1
+
+mkdir -p REDISINSTANCE/REDISDIR
+
+cd REDISINSTANCE/REDISDIR
+
+cat <<EOF | Rscript - | redis-server -
+cat(sprintf('
+protected-mode no
+save 6000 10
+
+rdbcompression yes
+tcp-backlog 511
+tcp-backlog 7000
+timeout 0
+tcp-keepalive 300
+daemonize no
+supervised no
+loglevel notice
+logfile ""
+databases 1
+stop-writes-on-bgsave-error yes
+rdbchecksum yes
+dbfilename "dump.rdb"
+
+appendonly yes
+appendfilename "appendonly.aof"
+
+appendfsync no
+
+requirepass \'%s\'
+
+port \'%s\'
+
+', Sys.getenv("REDISPW"), Sys.getenv("REDISPORT")))
+EOF
+
+

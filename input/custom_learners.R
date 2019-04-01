@@ -24,6 +24,9 @@ xgboost.constructor <- function() {
   cpoDummyEncode(reference.cat = TRUE, infixdot = TRUE) %>>% lrn
 }
 
+rbn.registerLearner("classif.xgboost.gblinear", xgboost.constructor)
+rbn.registerLearner("classif.xgboost.gbtree", xgboost.constructor)
+rbn.registerLearner("classif.xgboost.dart", xgboost.constructor)
 
 rbn.registerLearner("classif.ranger", function() {
   lrn <- makeLearner("classif.ranger")
@@ -31,9 +34,11 @@ rbn.registerLearner("classif.ranger", function() {
   lrn
 })
 
-rbn.registerLearner("classif.xgboost.gblinear", xgboost.constructor)
-rbn.registerLearner("classif.xgboost.gbtree", xgboost.constructor)
-rbn.registerLearner("classif.xgboost.dart", xgboost.constructor)
+rbn.registerLearner("classif.kerasff", function() {
+  cpoDummyEncode(reference.cat = TRUE, infixdot = TRUE) %>>%
+    makeLearner("classif.kerasff")
+})
+
 
 rbn.registerLearner("classif.svm.radial", function() {
   makeLearner("classif.svm")
@@ -42,7 +47,7 @@ rbn.registerLearner("classif.svm.radial", function() {
 rbn.registerLearner("classif.RcppHNSW", function() {
   lrn <- makeLearner("classif.RcppHNSW")
   lrn$par.set$pars$ef$lower = 8
-  lrn$par.set$pars$ef.construction$lower = 8
+  lrn$par.set$pars$ef_construction$lower = 8
   lrn$par.set$pars$M$lower = 2
   cpoDummyEncode(reference.cat = TRUE, infixdot = TRUE) %>>% lrn
 })

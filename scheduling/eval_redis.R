@@ -3,9 +3,14 @@
 # reading progress from and writing it back to PROGRESSFILE
 
 token <- Sys.getenv("TOKEN")
+seedoffset <- as.integer(Sys.getenv("STARTSEED")) - 1L
+stopifnot(is.finite(seedoffset))
+oneoff <- Sys.getenv("ONEOFF") == "TRUE"
+stresstest <- Sys.getenv("STRESSTEST") == "TRUE"
 
 suppressPackageStartupMessages({
   library("BBmisc")
+  library("redux")
 })
 catf("----[%s] eval_redis.R", token)
 
@@ -23,36 +28,45 @@ source(file.path(inputdir, "constants.R"), chdir = TRUE)
 
 rbn.setWatchdogTimeout(600)  # ten minutes timeout to connect to redux
 
-library("redux")
-
 r.host <- Sys.getenv("REDISHOST")
 r.port <- Sys.getenv("REDISPORT")
 r.pass <- Sys.getenv("REDISPW")
 r.port <- as.integer(r.port)
 
-oneoff <- Sys.getenv("ONEOFF")
-
 rcon <- NULL
 catf("----[%s] Connecting to redis %s:%s", token, r.host, r.port)
 rcon <- hiredis(host = r.host, port = r.port, password = r.pass)
 
-
 LEARNERNAME <- Sys.getenv("LEARNERNAME")
 TASKNAME <- Sys.getenv("TASKNAME")
 
-queuename <- sprintf("QUEUE_lrn:%s_tsk:%s", LEARNERNAME, TASKNAME)
+queuename <- sprintf("QUEUE_lrn:%s_tsk:%s_offset:%s", LEARNERNAME, TASKNAME, seedoffset + 1L)
+
+if (stresstest) {
+  LEARNERNAME <- "classif.rpart"
+  TASKNAME <- "LED.display.domain.7digit.40496"
+}
 
 data <- rbn.getData(TASKNAME)
 lrn <- rbn.getLearner(LEARNERNAME)
+
 paramtable <- rbn.compileParamTblConfigured()
 
 was.error <- FALSE
 repeat {
-  seed <- rcon$INCR(queuename)
-  if (!is.numeric(seed)) {
+  if (stresstest) {
+    preseed <- 1
+  } else {
+    preseed <- rcon$INCR(queuename)
+  }
+  seed <- as.integer(preseed + seedoffset)
+  if (!is.numeric(seed) || !is.finite(seed) ||
+      !is.numeric(preseed) || !is.finite(preseed) ||
+      seed < 0) {
     was.error <- TRUE
     break
   }
+
   catf("----[%s] Evaluating seed %s", token, seed)
   points <- rbn.sampleEvalPoint(lrn, data$task, seed, paramtable)
 
@@ -61,16 +75,23 @@ repeat {
     result <- rbn.evaluatePoint(lrn, pt, data)
     rbn.setWatchdogTimeout(600)  # ten minutes timeout to write result file
 
-    rcon$SET(sprintf("RESULT_lrn:%s_tsk:%s_SD:%012.0f_val:%s", LEARNERNAME, TASKNAME, seed, pt),
-      serialize(result, connection = NULL))
+    result$METADATA <- list(learner = LEARNERNAME, task = TASKNAME, seed = seed, point = pt)
+    if (stresstest) repeat {
+      result$METADATA$seed <- round(runif(1, 1, 2^31))
+      rcon$LPUSH("RESULTS", serialize(result, connection = NULL))
+      if (oneoff) break
+    } else {
+      rcon$LPUSH("RESULTS", serialize(result, connection = NULL))
+    }
   }
   catf("----[%s] Done evaluating seed %s", token, seed)
 
-  if (oneoff == "TRUE") {
+  if (oneoff) {
     break
   }
 }
 
 if (was.error) {
-  catf("----[%s] seed was bad. Current seed: %s. Integer overflow? Ending.", token, seed)
+  catf("----[%s] seed was bad. Current seed: %s (%s before offset). Integer overflow? Ending.",
+    token, seed, preseed)
 }

@@ -75,13 +75,17 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
 
   # Configure Keras: 1) nthread 2) seed
   K = backend()
-  sess = K$tf$Session(config = K$tf$ConfigProto(intra_op_parallelism_threads = nthread, inter_op_parallelism_threads = nthread))
+  sess = K$tf$Session(
+    config = K$tf$ConfigProto(
+      intra_op_parallelism_threads = as.integer(nthread),
+      inter_op_parallelism_threads = as.integer(nthread)))
+
   K$set_session(sess)
 
   if(!is.null(init_seed)) {
     npr = reticulate::import("numpy.random")
-    npr$seed(init_seed)
-    K$tf$set_random_seed(init_seed)
+    npr$seed(as.integer(init_seed))
+    K$tf$set_random_seed(as.integer(init_seed))
   }
 
   input_shape = getTaskNFeats(.task)
@@ -115,40 +119,40 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
 
   model = keras_model_sequential()
   if (batchnorm_dropout == "dropout")
-    model = model %>% layer_dropout(input_dropout_rate, input_shape = input_shape)
+    model = layer_dropout(model, input_dropout_rate, input_shape = input_shape)
 
   for (i in seq_len(layers)) {
-    model = model %>%
-      layer_dense(units = units_layers[i], input_shape = input_shape,
+    model = layer_dense(model, units = units_layers[i], input_shape = input_shape,
         kernel_regularizer = regularizer, kernel_initializer = initializer,
         bias_regularizer = regularizer, bias_initializer = initializer)
-    model = model %>% layer_activation(act_layer)
-    if (batchnorm_dropout == "batchnorm")   model = model %>% layer_batch_normalization()
-    if (batchnorm_dropout == "dropout") model = model %>% layer_dropout(dropout_rate)
+    model = layer_activation(model, act_layer)
+    if (batchnorm_dropout == "batchnorm")   model = layer_batch_normalization(model)
+    if (batchnorm_dropout == "dropout") model = layer_dropout(model, dropout_rate)
   }
-  model = model %>% layer_dense(units = output_shape, activation = 'softmax')
+  model = layer_dense(model, units = output_shape, activation = 'softmax')
 
-  model %>% compile(
+  compile(
+    model,
     optimizer = optimizer,
     loss = loss,
     metrics = c('accuracy')
   )
 
   y = to_categorical(as.numeric(data$target) - 1, output_shape)
-  history = model %>% fit(as.matrix(data$data), y,
+  history = fit(model, as.matrix(data$data), y,
     epochs = epochs, batch_size = batch_size,
     validation_split = validation_split,
     callbacks = callbacks)
 
-  return(list(model = model, history = history, target_levels = levels(data$target)))
+  list(model = model, history = history, target_levels = levels(data$target))
 }
 
 predictLearner.classif.kerasff = function(.learner, .model, .newdata, ...) {
   if (.learner$predict.type == "prob") {
-    p = .model$learner.model$model %>% predict_proba(as.matrix(.newdata))
+    p = predict_proba(.model$learner.model$model, as.matrix(.newdata))
     colnames(p) = .model$learner.model$target_levels
   } else {
-    p = .model$learner.model$model %>% predict_classes(as.matrix(.newdata))
+    p = predict_classes(.model$learner.model$model, as.matrix(.newdata))
     labels = .model$learner.model$target_levels[unique(p + 1)]
     p = factor(p, labels = labels)
   }
