@@ -1,6 +1,7 @@
 prob.classif.glmnet = 0.075
 classif.glmnet = makeParamSet(
-  makeNumericParam("alpha", lower = 0, upper = 1, default = 1),
+  # [-Inf;0] L1, [1; Inf] L2, [0;1] elasticnet
+  makeNumericParam("alpha", lower = 0, upper = 1, default = 1, trafo = function(x) max(0, min(1, x))),
   makeNumericVectorParam("s", len = 1L, lower = -10, upper = 10, default = 0, trafo = function(x) 2^x))
 
 
