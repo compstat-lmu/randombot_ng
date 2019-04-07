@@ -39,7 +39,7 @@ DATADIR=$(Rscript -e " \
   cat(rbn.getSetting('DATADIR'))
 ")
 echo "[MAIN]: Using DATADIR $DATADIR"
-check_env DATADIR ONEOFF STRESSTEST STARTSEED DRAINPROCS
+check_env DATADIR ONEOFF STRESSTEST STARTSEED DRAINPROCS REDISPORT
 
 if [ -f REDISINFO ] ; then rm REDISINFO || exit 102 ; fi
 echo "[MAIN]: Starting Redis"
