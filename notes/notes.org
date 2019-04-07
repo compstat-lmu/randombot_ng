@@ -3,13 +3,13 @@
 Some of these may be environment-dependent, e.g. NODE_ID, others are global settings that change run behaviour (e.g. SCHEDULING_MODE) or even results (SAMPLING_TRAFO)
 ** Environment only
 - Scheduling
-  - ONEOFF :: [string] "TRUE" or "FALSE" (default): whether to restart invocations after each eval (mainly for memory usage profiling).
-  - STRESSTEST :: [string] "TRUE" or "FALSE" (default): whether to do dummy invocations and send lots of bogus results to the server to check throughput
-  - STARTSEED :: first seed to evaluate. given to *invoke_sbatch.sh* as first argument.
+  - ONEOFF :: [string] "TRUE" or "FALSE" (default): whether to restart invocations after each eval (mainly for memory usage profiling). Set in *invoke_sbatch.sh* if the *--oneoff* option is given.
+  - STRESSTEST :: [string] "TRUE" or "FALSE" (default): whether to do dummy invocations and send lots of bogus results to the server to check throughput. Set in *invoke_sbatch.sh* if the *--stresstest* option is given.
+  - STARTSEED :: first seed to evaluate. given to *invoke_sbatch.sh* after optional argument *--startseed*, set to 0 otherwise. Queues for different startseeds do not overlap.
 - Redis:
   - REDISHOST :: redis hostname
-  - REDISPORT :: redis port
-  - DRAINPROCS :: number of processes to start that drain results from redis instance to memory
+  - REDISPORT :: redis port. Given to *invoke_sbatch.sh* after optional argument *--redisport*, set to 6379 otherwise.
+  - DRAINPROCS :: number of processes to start that drain results from redis instance to memory. May be given with suffix 'N' to give number of nodes instead of processes. (Drainprocesses always take whole nodes, so this should be preferred.) Given to *invoke_sbatch.sh* after optional argument *--drainprocs*, set to 1N otherwise.
 - R-Script invocation
   - LEARNERNAME :: set in *runscript.sh*, read by eval_redis.R
   - TASKNAME :: set in *runscript.sh*, read by eval_redis.R
@@ -34,55 +34,90 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
     - "norm" :: transformation as given, prepended by an inverse error function; parameter bounds as given are instead the inflection points of the normal distribution (i.e. each 1 std-dev from center)
   - RESAMPLINGTIMEOUTS :: [numeric] seconds to wait for each resampling. Violating the time constraint kills the R session if the watchdog is running.
 * Directory structure
-- data
-  input arguments are in file DATADIR/INPUTS, a *single space* separated file with columns <LEARNER> <TASK> <POINT_STRING>. LEARNER changes the fastest, then TASK, then POINT_STRING changes slowest (i.e. LEARNER is the inner loop)
-- input
-  - learners
-- R
-- scheduling
-- setup
-- testenv
+** Input directories
+ I.e. the directory structure in the supermuc_ng repository
+ - data
+   input arguments are in file DATADIR/INPUTS, a *single space* separated file with columns <LEARNER> <TASK> <POINT_STRING>. LEARNER changes the fastest, then TASK, then POINT_STRING changes slowest (i.e. LEARNER is the inner loop)
+ - input
+   - learners
+ - R
+ - scheduling
+ - setup
+ - testenv
+** Output directories
+ The directory structure created by *invoke_sbatch.sh* relative to its CWD. (It should therefore be run in a preferably empty subdir of $WORK_LIST)
+ - RESULTS
+   - <drain process nodename>
+     - OUT :: results from drainproc get written here
+ - REDISINSTANCE
+   - REDISDIR :: redis writes its checkpoint files *appendonly.aof* and *dump.rdb* here
+ - REDISINFO :: file with one line "<redishost>:<redisport>:<redispw>"
+
 * scheduling
-Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_tsk:<task>" is atomically incremented, the corresponding seed is evaluated, and the result is written to "RESULT_lrn:<learner>_tsk:<task>_SD:<seed>_val:<hyperparameter vals>". Unless ONEOFF is set to TRUE, evaluation happens in an infinite loop until the process is killed. So far there is no way of knowing whether a result is missing because of an error, timeout, memory out, or user intervention.
+Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value of key "QUEUE_lrn:<learner>_tsk:<task>_offset:<seedoffset>" is atomically incremented, the corresponding seed is evaluated, and the result is written to the "RESULTS" queue. With *STRESSTEST*, just one evaluation of "classif.rpart" on "LED.display.domain.7digit.40496" which is sent to "RESULTS". Unless *ONEOFF* is set to TRUE, evaluation happens in an infinite loop until the process is killed. So far there is no way of knowing whether a result is missing because of an error, timeout, memory out, or user intervention.
 * Control Flow
 1. invoke_sbatch.sh
    - Takes arguments:
-     - *JOBCOUNT*
-     - ONEOFF
-     - STRESSTEST
+     - ONEOFF (from --oneoff argument)
+     - STRESSTEST (from --stresstest argument)
+     - STARTSEED (from --startseed argument)
+     - REDISPORT (from --redisport argument)
+     - DRAINPROCS (from --drainprocs argument)
    - Exports further arguments:
      - MUC_R_HOME
    - Does:
-     - for loop through *JOBCOUNT*: run *sbatch sbatch.cmd*
+     - parses cmdline arguments, runs *sbatch sbatch.cmd*
 2. sbatch.cmd
    - Takes arguments:
      - *MUC_R_HOME*
      - ONEOFF
      - STRESSTEST
+     - REDISPORT
+     - *DRAINPROCS*
    - SLURM arguments:
      - SLURM_JOB_NAME (not essential)
      - SLURM_JOB_ID (not essential)
-     - *SLURM_NTASKS*
+     - *SLURM_MEM_PER_NODE*
+     - *SLURM_JOB_CPUS_PER_NODE*
    - Uses from constants.R:
      - *DATADIR*
    - Exports further arguments
-     - SBATCH_INDEX :: modified when iterating over CONTROL_JOB_COUNT
-     - INDEXSTEPSIZE :: augmented by CONTROL_JOB_COUNT
-     - TOTAL_TASK_SLOTS :: indicates total (maximum) number of tasks to queue
-     - INDIVIDUAL_TASK_SLOTS :: indicates total (maximum) number of tasks for single invoke_srun instance
+     - REDISHOST :: address of redis server that was launched
+     - REDISPW :: password of redis server that was launched
    - Does:
-     - creates at most SLURM_NTASKS worker threads that repeatedly call srun *runscript.sh*
-3. runscript.sh
+     - launches *runredis.sh* to create redis instance; waits for it to come up
+     - launches *DRAINPROCS* *drainredis.R* processes on ceiling(*DRAINPROCS* / floor(*SLURM_MEM_PER_NODE* / 2048)) nodes
+     - calculates the total number of CPUs from *SLURM_JOB_CPUS_PER_NODE* and launches at most that many threads that invoke *runscript.sh* in a loop.
+3. runredis.sh
    - Takes arguments:
-     - *TASKNAME* (from arg 1)
-     - *LEARNERNAME* (from arg 2)
-     - ONEOFF (from arg 3)
-     - STRESSTEST
+     - *REDISPORT*
+   - Does:
+     - generates a random password and writes it (with hostname and port) to REDISINFO
+     - launches redis-server with this password and the given port
+4. drainredis.R
+   - Takes arguments:
+     - *REDISHOST*
+     - *REDISPORT*
+     - *REDISPW*
+   - SLURM arguments:
+     - *SLURM_NODENAME*
+     - *SLURM_PROCID*
+     - *SLURM_NPROCS*
+   - Does:
+     - drains the "PENDING_<SLURM_PROCID + 1>" queue (possibly also the ones greater than own procid if this SLURM_PROCID+1 == SLURM_NPROCS) back to RESULTS
+     - in a loop, empties the "RESULTS" queue into "PENDING_<SLURM_PROCID + 1>" in bunches of 1000, writes these out to a file, and deletes the pending queue
+5. runscript.sh
+   - Takes arguments:
+     - TASKNAME (from arg 1)
+     - LEARNERNAME (from arg 2)
+     - STARTSEED (from arg 3)
+     - ONEOFF (from arg 4)
+     - STRESSTEST (from arg 5)
    - Exports further arguments:
      - TOKEN
    - Does:
-     - calls *eval_redis.R*, also traces the process's memory usage.
-4. eval_redis.R
+     - calls *eval_redis.R* in a loop, also traces the process's memory usage.
+6. eval_redis.R
    - Takes arguments:
      - *TOKEN* :: printed as part of info message to match them with a certain run
      - *MUC_R_HOME*
@@ -90,51 +125,160 @@ Scheduling happens with "Redis". The integer value of key "QUEUE_lrn:<learner>_t
      - *TASKNAME*
      - *REDISHOST*
      - *REDISPORT*
+     - *REDISPW*
+     - *STARTSEED*
      - *ONEOFF*
      - *STRESSTEST*
+   - Does:
+     - evaluates LEARNERNAME on TASKNAME (unless STRESSTEST, see above) and sends the result to "RESULT" redis queue. In a loop, if not ONEOFF.
 * Scriptlets
+** memory usage info
+*** collecting from slurm output
+  #+BEGIN_SRC bash
+  cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
 
+  ( echo "dataset learner invocation restart point evalno walltime kernelseconds userseconds cpupercent memorykb" ;
+    cat threads | \
+    while read t ; do \
+      grep -F "$t" ../RESULT_REDIS_3/slurm-48771.out | \
+	cut -d ' ' -f 2- | \
+          sed 's/\[\[[0-9]\+\]\] ----\[[^]]*\]  exited with status [0-9]*//g' | \
+          sed 's/----\[[-0-9:]*_[^]]*\] eval_redis.R//g' | \
+          sed 's/----\[[-0-9:]*_[^]]*\] Connecting to redis [^:]*:[0-9]*//g' | \
+	  sed 's/----\[[-0-9:]*_[^]]*\] Evaluating seed [0-9]*//g' | \	
+	  sed 's/----\[[-0-9:]*_[^]]*\] Done evaluating seed [0-9]*//g' | \
+	tr $'\n' '@' | sed 's/@\([^-![]\)/\1/g' | tr '@' $'\n' | \
+	grep -v '^!' | grep 'Evaluating point \|^\[.*kB' | tr $'\n' '@' | \
+	sed 's/@\[/ [/g' | tr '@' $'\n' | \
+	cut -d ' ' -f 4,5,8,10,12,14,16 | \
+	sed 's/[][]//g' | sed 's/kB$//' | sed 's/[%s] / /g' | sed "s/^/$t/" | \
+	sed 's/^\[\([^,]*\),\([^,]*\),\([0-9]\+\),\([0-9]\+\)\]/\1 \2 \3 \4 /' | \
+	grep -v ')$' ; done
+  ) > memtable
+  #+END_SRC
+*** time column of slurm output
+  #+BEGIN_SRC R
+  sapply(strsplit(as.character(memtable$walltime), ":"), function(tv) {
+    sum((60 ^ seq(length(tv) - 1, 0)) * as.numeric(tv))
+  })
+  #+END_SRC
+*** bringing lines of slurm output together with result file content
+  #+BEGIN_SRC R
+  collatedfs <- function(lrname, dfname) {
+    memdf <- memtable[memtable$dataset == dfname & memtable$learner == lrname, ]
+    rundf <- runinfo[runinfo$dataset == dfname & runinfo$learner == lrname, ]
 
-- memory usage info
+    stopifnot(all(duplicated(rundf$seed) == duplicated(rundf)))
 
-#+BEGIN_SRC bash
+    rundf <- rundf[!duplicated(rundf), ]
 
+    memdf <- memdf[order(memdf$evalno), ]
+    rundf <- rundf[order(rundf$seed), ]
 
-cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
+    memdfline <- 1
+    rundfline <- 1
+    reslist <- list()
 
-( echo "dataset learner invocation restart point evalno walltime kernelseconds userseconds cpupercent memorykb" ;
-  cat threads | \
-  while read t ; do \
-    grep -F "$t" ../RESULT_REDIS_3/slurm-48771.out | \
-      cut -d ' ' -f 2- | \
-        sed 's/\[\[[0-9]\+\]\] ----\[[^]]*\]  exited with status [0-9]*//g' | \
-        sed 's/----\[[-0-9:]*_[^]]*\] eval_redis.R//g' | \
-        sed 's/----\[[-0-9:]*_[^]]*\] Connecting to redis [^:]*:[0-9]*//g' | \
-	sed 's/----\[[-0-9:]*_[^]]*\] Evaluating seed [0-9]*//g' | \	
-	sed 's/----\[[-0-9:]*_[^]]*\] Done evaluating seed [0-9]*//g' | \
-      tr $'\n' '@' | sed 's/@\([^-![]\)/\1/g' | tr '@' $'\n' | \
-      grep -v '^!' | grep 'Evaluating point \|^\[.*kB' | tr $'\n' '@' | \
-      sed 's/@\[/ [/g' | tr '@' $'\n' | \
-      cut -d ' ' -f 4,5,8,10,12,14,16 | \
-      sed 's/[][]//g' | sed 's/kB$//' | sed 's/[%s] / /g' | sed "s/^/$t/" | \
-      sed 's/^\[\([^,]*\),\([^,]*\),\([0-9]\+\),\([0-9]\+\)\]/\1 \2 \3 \4 /' | \
-      grep -v ')$' ; done
-) > memtable
+    colnames.memdf <- setdiff(colnames(memdf), c("dataset", "learner", "point"))
+    colnames.rundf <- setdiff(colnames(rundf), c("dataset", "learner", "point"))
 
-#+END_SRC
+    if (nrow(rundf) == 0) {
+      rundf <- rundf[NA, ]
+      rundf$dataset <- memdf$dataset[1]
+      rundf$learner <- memdf$learner[1]
+      rundf$point <- memdf$point[1]
+      rundfline <- 2
+    }
 
+    if (nrow(memdf) == 0) {
+      memdf <- memdf[NA, ]
+      memdf$dataset <- rundf$dataset[1]
+      memdf$learner <- rundf$learner[1]
+      memdf$point <- rundf$point[1]
+      memdfline <- 2
+    }
+
+    repeat {
+      if (memdfline > nrow(memdf)) {
+	if (rundfline > nrow(rundf)) {
+          break
+	}
+	remaining <- cbind(memdf[memdfline - 1, ], rundf[seq(rundfline, nrow(rundf)), colnames.rundf])
+	remaining$point <- rundf[seq(rundfline, nrow(rundf)), "point"]
+	for (makena in colnames.memdf) {
+          remaining[seq_len(nrow(remaining)), makena] <- NA  # the seq_len is needed to preserve mode
+	}
+	reslist <- c(reslist, list(remaining))
+	break
+      }
+      if (rundfline > nrow(rundf)) {
+	remaining <- cbind(memdf[seq(memdfline, nrow(memdf)), ], rundf[rundfline - 1, colnames.rundf])
+	for (makena in colnames.rundf) {
+          remaining[seq_len(nrow(remaining)), makena] <- NA  # the seq_len is needed to preserve mode
+	}
+	reslist <- c(reslist, list(remaining))
+	break
+      }
+      memdfpoint <- memdf[memdfline, "point"]
+      memdfpoint.upcoming <- memdf[seq(memdfline + 1, min(nrow(memdf), memdfline + 50)), "point"]
+      rundfpoint <- rundf[rundfline, "point"]
+      rundfpoint.upcoming <- rundf[seq(rundfline + 1, min(nrow(rundf), rundfline + 50)), "point"]
+      combinedline <- cbind(memdf[memdfline, ],
+	rundf[rundfline, colnames.rundf])
+      if (memdfpoint == rundfpoint) {
+	reslist <- c(reslist, list(combinedline))
+	memdfline <- memdfline + 1
+	rundfline <- rundfline + 1
+	next
+      }
+      if (memdfpoint %in% rundfpoint.upcoming ||
+          (length(rundfpoint.upcoming) < 50 && !rundfpoint %in% memdfpoint.upcoming)) {
+	combinedline$point <- rundfpoint
+	for (makena in colnames.memdf) {
+          combinedline[1, makena] <- NA  # [1, ..] to preserve mode
+	}
+	reslist <- c(reslist, list(combinedline))
+	rundfline <- rundfline + 1
+	next
+      } 
+      if (rundfpoint %in% memdfpoint.upcoming) {
+	for (makena in colnames.rundf) {
+          combinedline[1, makena] <- NA  # [1, ..] to preserve mode
+	}
+	reslist <- c(reslist, list(combinedline))
+	memdfline <- memdfline + 1
+	next
+      }
+      stop(sprintf("bad configuration: %s %s %s %s", lrname, dfname, memdfline, rundfline))
+    }
+    resulttable <- do.call(rbind, reslist)
+    resulttable$errors.msg <- factor(resulttable$errors.msg, levels = levels(rundf$errors.msg))
+  
+    if (!anyDuplicated(memdf$point) && !anyDuplicated(rundf$point)) {
+      candidate <- merge(x = memdf, y = rundf, by = c("dataset", "learner", "point"), all = TRUE)
+      stopifnot(all(colnames(candidate) %in% colnames(resulttable)))
+      stopifnot(all(colnames(resulttable) %in% colnames(candidate)))
+      stopifnot(isTRUE(all(sort(resulttable$point) == sort(candidate$point))))
+      stopifnot(nrow(resulttable) == nrow(candidate))
+      stopifnot(!anyDuplicated(resulttable$point))
+      candidate <- candidate[match(resulttable$point, candidate$point), colnames(resulttable)]
+      attr(candidate, "row.names") <- attr(resulttable, "row.names")
+      stopifnot(isTRUE(all.equal(resulttable, candidate)))
+    }
+    resulttable
+  }
+
+  rxx <- parallel::mclapply(levels(memtable$dataset), function(dfname) {
+    do.call(rbind, lapply(levels(memtable$learner), function(lrname) {
+      collatedfs(lrname, dfname)
+    }))
+  }, mc.cores = 70)
+
+  allruninfo <- do.call(rbind, rxx)
+
+  #+END_SRC
+** writing state to disk ("DRAINING")
 #+BEGIN_SRC R
-
-sapply(strsplit(as.character(memtable$walltime), ":"), function(tv) {
-  sum((60 ^ seq(length(tv) - 1, 0)) * as.numeric(tv))
-})
-
-#+END_SRC
-
-- writing state to disk
-
-#+BEGIN_SRC R
-
 outdir <- "/hppfs/work/pn34jo/di39ram3/RESULT_REDIS_3_PACKAGED"
 options(warn=1)
 
@@ -161,129 +305,8 @@ repeat {
   stopifnot(all(sapply(ret, isTRUE)))
   r$DEL(savekeys)
 }
-
 #+END_SRC
-
-
-#+BEGIN_SRC R
-
-collatedfs <- function(lrname, dfname) {
-  memdf <- memtable[memtable$dataset == dfname & memtable$learner == lrname, ]
-  rundf <- runinfo[runinfo$dataset == dfname & runinfo$learner == lrname, ]
-
-  stopifnot(all(duplicated(rundf$seed) == duplicated(rundf)))
-
-  rundf <- rundf[!duplicated(rundf), ]
-
-  memdf <- memdf[order(memdf$evalno), ]
-  rundf <- rundf[order(rundf$seed), ]
-
-  memdfline <- 1
-  rundfline <- 1
-  reslist <- list()
-
-  colnames.memdf <- setdiff(colnames(memdf), c("dataset", "learner", "point"))
-  colnames.rundf <- setdiff(colnames(rundf), c("dataset", "learner", "point"))
-
-  if (nrow(rundf) == 0) {
-    rundf <- rundf[NA, ]
-    rundf$dataset <- memdf$dataset[1]
-    rundf$learner <- memdf$learner[1]
-    rundf$point <- memdf$point[1]
-    rundfline <- 2
-  }
-
-  if (nrow(memdf) == 0) {
-    memdf <- memdf[NA, ]
-    memdf$dataset <- rundf$dataset[1]
-    memdf$learner <- rundf$learner[1]
-    memdf$point <- rundf$point[1]
-    memdfline <- 2
-  }
-
-  repeat {
-    if (memdfline > nrow(memdf)) {
-      if (rundfline > nrow(rundf)) {
-        break
-      }
-      remaining <- cbind(memdf[memdfline - 1, ], rundf[seq(rundfline, nrow(rundf)), colnames.rundf])
-      remaining$point <- rundf[seq(rundfline, nrow(rundf)), "point"]
-      for (makena in colnames.memdf) {
-        remaining[seq_len(nrow(remaining)), makena] <- NA  # the seq_len is needed to preserve mode
-      }
-      reslist <- c(reslist, list(remaining))
-      break
-    }
-    if (rundfline > nrow(rundf)) {
-      remaining <- cbind(memdf[seq(memdfline, nrow(memdf)), ], rundf[rundfline - 1, colnames.rundf])
-      for (makena in colnames.rundf) {
-        remaining[seq_len(nrow(remaining)), makena] <- NA  # the seq_len is needed to preserve mode
-      }
-      reslist <- c(reslist, list(remaining))
-      break
-    }
-    memdfpoint <- memdf[memdfline, "point"]
-    memdfpoint.upcoming <- memdf[seq(memdfline + 1, min(nrow(memdf), memdfline + 50)), "point"]
-    rundfpoint <- rundf[rundfline, "point"]
-    rundfpoint.upcoming <- rundf[seq(rundfline + 1, min(nrow(rundf), rundfline + 50)), "point"]
-    combinedline <- cbind(memdf[memdfline, ],
-      rundf[rundfline, colnames.rundf])
-    if (memdfpoint == rundfpoint) {
-      reslist <- c(reslist, list(combinedline))
-      memdfline <- memdfline + 1
-      rundfline <- rundfline + 1
-      next
-    }
-    if (memdfpoint %in% rundfpoint.upcoming ||
-        (length(rundfpoint.upcoming) < 50 && !rundfpoint %in% memdfpoint.upcoming)) {
-      combinedline$point <- rundfpoint
-      for (makena in colnames.memdf) {
-        combinedline[1, makena] <- NA  # [1, ..] to preserve mode
-      }
-      reslist <- c(reslist, list(combinedline))
-      rundfline <- rundfline + 1
-      next
-    } 
-    if (rundfpoint %in% memdfpoint.upcoming) {
-      for (makena in colnames.rundf) {
-        combinedline[1, makena] <- NA  # [1, ..] to preserve mode
-      }
-      reslist <- c(reslist, list(combinedline))
-      memdfline <- memdfline + 1
-      next
-    }
-    stop(sprintf("bad configuration: %s %s %s %s", lrname, dfname, memdfline, rundfline))
-  }
-  resulttable <- do.call(rbind, reslist)
-  resulttable$errors.msg <- factor(resulttable$errors.msg, levels = levels(rundf$errors.msg))
-  
-  if (!anyDuplicated(memdf$point) && !anyDuplicated(rundf$point)) {
-    candidate <- merge(x = memdf, y = rundf, by = c("dataset", "learner", "point"), all = TRUE)
-    stopifnot(all(colnames(candidate) %in% colnames(resulttable)))
-    stopifnot(all(colnames(resulttable) %in% colnames(candidate)))
-    stopifnot(isTRUE(all(sort(resulttable$point) == sort(candidate$point))))
-    stopifnot(nrow(resulttable) == nrow(candidate))
-    stopifnot(!anyDuplicated(resulttable$point))
-    candidate <- candidate[match(resulttable$point, candidate$point), colnames(resulttable)]
-    attr(candidate, "row.names") <- attr(resulttable, "row.names")
-    stopifnot(isTRUE(all.equal(resulttable, candidate)))
-  }
-  resulttable
-}
-
-rxx <- parallel::mclapply(levels(memtable$dataset), function(dfname) {
-  do.call(rbind, lapply(levels(memtable$learner), function(lrname) {
-    collatedfs(lrname, dfname)
-  }))
-}, mc.cores = 70)
-
-allruninfo <- do.call(rbind, rxx)
-
-#+END_SRC
-
-
 ** tabulating results
-
 #+BEGIN_SRC R
 
 outdir <- "/hppfs/work/pn34jo/di39ram3/RESULT_REDIS_3_PACKAGED"
@@ -330,19 +353,10 @@ result.to.table <- function(filename) {
 alltable <- rbindlist(parallel::mclapply(outfiles, result.to.table, mc.cores = 70))
 
 #+END_SRC
-
-
 #+BEGIN_SRC R
-
 ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable$point), function(x) eval(parse(text = x))), fill = TRUE)
-
-
 #+END_SRC
-
-
-
 * TODO
-
 - [-] 200 runs for each learner x task on average, that's a lot.
   - [X] learner-wise data sinks? No: Result Queue
   - [X] raw file writing? No: just lots of drain processes

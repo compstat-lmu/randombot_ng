@@ -189,8 +189,8 @@ The following relevant environment variables are set:
  - SLURM_STEPID, SLURM_STEP_ID :: slurm step id
  - SLURM_NTASKS :: number of tasks launched
  - SLURM_PROCID :: "mpi rank" / relative process ID, counting from 0
- - SLURM_LOCALID :: node-local task id, counting from 0
- - SLURM_NODEID :: relative id of the current node: node of the job-step, counts from 0
+ - SLURM_LOCALID :: node-local task id WITHIN the current job-step, counting from 0
+ - SLURM_NODEID :: relative id of the current node WITHIN the current job-step, counts from 0.
  - SLURM_CPUS_PER_TASK :: number of CPUS requested
  - SLURM_CPUS_ON_NODE :: number of CPUs that are being used by this job-step on this node. counts all cpus used by all tasks launched on the node.
  - SLURM_NPROCS, SLURM_NTASKS :: number of tasks launched
@@ -200,7 +200,7 @@ some insight:
  - --mem is per job step and per node, but not (automatically) per task
  - if a step can't be started because of missing memory or missing CPUs (if --exclusive is given), the srun lingers in the background and retries in some interval
  - --exclusive is only respected when *launching* a task, so non-exclusives can always be launched, --exclusive always wait until CPU slots are free
- - --exclusive does not put tasks on sensible nodes: if all CPUs on node 0 are taken but there is still free memory, the task still gets scheduled on node 0 and waits.
+ - --exclusive does not put tasks on sensible nodes in some circumstances: if many CPUs on node 0 are taken, there are not enough CPUs left for the task but there is still free memory, the task still gets scheduled on node 0 and waits. 
  - the sbatch script itself gets one cpu-slot, so --exclusive with the number of CPUs given as the number available on the node is a problem
  - --relative runs a job step relative to node n
  - --distribution controls how things are allocated, but apparently only within one single --srun call

@@ -53,5 +53,5 @@ while true ; do
     echo "----[${TOKEN}] ${evalfile} exited with status $result"
     INNERSTEP=$((INNERSTEP + 1))
 done
-
+echo "----[${TOKEN}] left runscript.sh loop"
 exit $result
