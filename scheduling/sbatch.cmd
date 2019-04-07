@@ -1,8 +1,6 @@
 #!/bin/bash
-#SBATCH --mail-type=end
 #SBATCH --mem=MaxMemPerNode
 #SBATCH --cpus-per-task=1
-#SBATCH --mail-user=martin.binder@stat.uni-muenchen.de
 #SBATCH --time=48:00:00
 
 # consciously omitting the following:
@@ -65,7 +63,11 @@ done
 echo "[MAIN]: Redis is up."
 
 
-echo "[MAIN]: Launching drain processes."
+if echo "$DRAINPROCS" | grep 'N$' > /dev/null ; then
+    DRAINPROCS="$(echo "$DRAINPROCS" | sed 's/N$//')"
+    DRAINPROCS=$((DRAINPROCS * (SLURM_MEM_PER_NODE / 2048)))
+fi
+
 mkdir RESULTS
 # number of nodes to allocate is DRAINPROCS / [slots per node]
 # - [slots per node] is the available memory divided by 2GB
@@ -79,6 +81,8 @@ srun --unbuffered --export=ALL --mem "$SLURM_MEM_PER_NODE" --ntasks="$DRAINPROCS
     grep --line-buffered '^' &
 
 echo "[MAIN]: Drain processes up."
+
+
 
 
 INVOCATION=0
