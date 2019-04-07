@@ -110,11 +110,12 @@ OpenML CC-18 + AutoML Datasets; ~115 Datasets in Total
 - rpart (rpart)
 - LiblineaR (LiblineaR) / Glmnet (glmnet)
 - Approximate Nearest Neighbours (RcppHNSW) wrapps [https://github.com/nmslib/hnswlib]
-- Keras Fully Connected NNs
+- Keras Fully Connected NNs up to 4 layers / 1024 neurons.
 
 To be added:
-
-- Other boosting?
+  - Other boosting?
+  - Preprocessors
+  - Open for suggestions
 
 ### Hyperparam Spaces
 
@@ -122,8 +123,8 @@ Current spaces: [Parameter Set](https://github.com/compstat-lmu/randombot_ng/blo
 
 We currently sample numerics using the following strategy:
   1. compute m = (upper - lower) / 2
-  2. sample x from N(m, m^2) (i.e. our bounds are mu +/- 1 * sigma
-  3. if x out of bounds go back to 2., else return x
+  2. sample x from N(m, m^2) (i.e. our bounds are mu +/- 1 * sigma)
+  3. if x out of technical bounds go back to 2., else return x
 
 Integers and discrete variables are sampled with equal probabilities.
 

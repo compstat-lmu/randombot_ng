@@ -132,6 +132,7 @@ rbn.loadDataTable <- function(file, ...) {
 }
 
 #' Use a data.id and learner to obtain ~max memory requirements
+#' Defaults to 1GB.
 #' @param data.id [integer(1)]
 #' @param learner [character(1)]
 #' @example
@@ -141,8 +142,8 @@ rbn.getMemoryRequirementsKb = function(task, learner) {
   tab = read.table("input/memory_requirements.csv")
   kb = tab[tab$dataset == task & tab$learner == learner, "memory_limit"]
   # Fallback and make sure it is at least 300 MB
-  if (length(kb) == 0) kb = 512 * 1024
-  if (is.na(kb) | is.null(kb) | is.nan(kb)) kb = 512 * 1024
+  if (length(kb) == 0) kb = 1024 * 1024
+  if (is.na(kb) | is.null(kb) | is.nan(kb)) kb = 1024 * 1024
   kb = max(kb, 300 * 1024)
   cat(paste0(ceiling(kb / 1024), "M")[1])
 }
