@@ -41,7 +41,7 @@ rbn.registerLearner("classif.kerasff", function() {
   lrn$par.set$pars$units_layer2$upper <- 2048
   lrn$par.set$pars$units_layer3$upper <- 2048
   lrn$par.set$pars$units_layer4$upper <- 2048
-  cpoDummyEncode(reference.cat = TRUE, infixdot = TRUE) %>>% lrn
+  cpoScale() %>>% cpoDummyEncode(reference.cat = TRUE, infixdot = TRUE) %>>% lrn
 })
 
 

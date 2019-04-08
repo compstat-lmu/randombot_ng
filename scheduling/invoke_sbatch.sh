@@ -3,16 +3,37 @@
 # Sets up some variables, performs some tests, and calls sbatch the required
 # number of times.
 
-if [ -z "$2" ] ; then
-    echo "Usage: $0 STARTSEED DRAINPROCS REDISPORT" >&2
-    exit 1
-fi
+export STARTSEED=0
+export REDISPORT=6379
+export DRAINPROCS=1N
 
-export STARTSEED="$1"
-export DRAINPROCS="$2"
-export REDISPORT="$3"
+NOMINUS=()
 
-shift 3
+while [ "$#" -gt 0 ] ; do
+    if [ "$1" = "--oneoff" ] ; then
+	export ONEOFF=TRUE
+    elif [ "$1" = "--stresstest" ] ; then
+	export STRESSTEST=TRUE
+    elif [ "$1" = "--startseed" ] ; then
+	STARTSEED="$2"
+	shift
+    elif [ "$1" = "--redisport" ] ; then
+	REDISPORT="$2"
+	shift
+    elif [ "$1" = "--drainprocs" ] ; then
+	DRAINPROCS="$2"
+	shift
+    else
+	NOMINUS+=("$1")
+    fi
+    shift
+done
+set -- "${NOMINUS}"
+
+# if ! [ -z "$1" ] ; then
+#    echo "Usage: $0 [--oneoff] [--stresstest] [--startseed SEED] [--redisport PORT] [--drainprocs PROCS]" >&2
+#    exit 1
+# fi
 
 # get parent directory
 path="${BASH_SOURCE[0]}"

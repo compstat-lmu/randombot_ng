@@ -5,7 +5,7 @@ prob.classif.svm.radial = 21
 prob.classif.ranger.pow = 35
 prob.classif.xgboost.gblinear = 32
 prob.classif.xgboost.gbtree = 177
-prob.classif.xgboost.dart = 300
+prob.classif.xgboost.dart = 150
 prob.classif.RcppHNSW = 4
 prob.classif.kerasff = 47
 

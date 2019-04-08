@@ -56,7 +56,7 @@ check_env() {
 		fi
 		;;
 	    DRAINPROCS)
-		if ! [ "$DRAINPROCS" -gt 0 ] ; then
+		if ! [ "$(echo "$DRAINPROCS" | sed 's/N$//')" -gt 0 ] ; then
 		    echo "DRAINPROCS not valid: $DRAINPROCS" >&2
 		    exit 14
 		fi

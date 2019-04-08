@@ -11,6 +11,7 @@
   - All this is captured by just creating a set of resampling instances
 - The learner and task are chosen deterministically which could make estimated needs based memory alocation possible.
 - The SAME parameter configurations are all tried on different datasets to make dataset results comparable
+- Scheduling with [redis](https://redis.io/)
 
 ## General Principles
 
@@ -67,8 +68,17 @@ To start evaluations, call `invoke_sbatch.sh` in the `/scheduling/` directory.
 
 1. **`invoke_sbatch.sh`**: called by the user, calls `sbatch` with `sbatch.cmd`
 2. **`sbatch.cmd`**: starts `srun` job-steps with `runscript.sh`
-4. **`runscript.sh`**: runs `eval_redis.R` on the computation nodes
-5. **`eval_redis.R`**: R script that performs resampling
+3. **`runredis.sh`**: start redis-server instance that distributes tasks (seeds) to evaluate and collects results
+4. **`drainredis.R`**: gets results from redis and saves them to disk via `saveRDS`.
+5. **`runscript.sh`**: runs `eval_redis.R` on the computation nodes
+6. **`eval_redis.R`**: R script that performs resampling
+
+Some helper-scripts
+
+- **`commons.sh`**: checking environment variables for consistency
+- **`drainredis_manual`**: call `drainredis.R` manually to collect last few results stuck in redis server
+- **`eval_single.R`**: left over from before redis was used, may be useful for manual evaluation of runs
+- **`sample_learners.R`**: sample from learner table according to their `proprortions.csv`
 
 ### R Script Internals
 Mostly in `/R/` directory, with exception of `load_all.R`.
@@ -100,13 +110,12 @@ OpenML CC-18 + AutoML Datasets; ~115 Datasets in Total
 - rpart (rpart)
 - LiblineaR (LiblineaR) / Glmnet (glmnet)
 - Approximate Nearest Neighbours (RcppHNSW) wrapps [https://github.com/nmslib/hnswlib]
-- Keras Fully Connected NN’s up to 4 layers / 1024 neurons.
+- Keras Fully Connected NNs up to 4 layers / 1024 neurons.
 
 To be added:
   - Other boosting?
   - Preprocessors
   - Open for suggestions
-  
 
 ### Hyperparam Spaces
 
@@ -120,8 +129,9 @@ We currently sample numerics using the following strategy:
 Integers and discrete variables are sampled with equal probabilities.
 
 ## Evaluation Strategies
-- 10-fold stratified CV (80%) [OpenML Tasks]
-- 10 x 10-fold stratified CV (10%) [OpenML Tasks]
-- Subsampling (10%) [Subsampled OpenML Tasks]
+- 10-fold stratified CV [OpenML Tasks]
+- Additionally, in 10% of all points:
+  - 10 x 10-fold stratified CV [OpenML Tasks]
+  - Subsampling [Subsampled OpenML Tasks]
 
 
