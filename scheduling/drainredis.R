@@ -37,19 +37,23 @@ allpending <- sprintf("PENDING_%s", seq_len(maxrunindex))
 ownpending <- allpending[runindex]
 
 # We drain the PENDING_x queues that did not get finished in the last run
-catf("[%s] Draining leftover queues", runindex)
-while (!is.null(rcon$RPOPLPUSH(ownpending, incomingqueue))) { }
+catf("[%s] Draining leftover queues...", runindex)
+drained <- 0
+while (!is.null(rcon$RPOPLPUSH(ownpending, incomingqueue))) { drained <- drained + 1 }
+catf("[%s] Drained %s items.", runindex, drained)
 
 # If we are the highest index run, we also drain the queues with index
 # higher than the one currently running, in case something was run
 # previously that had more draining instances.
 if (runindex == maxrunindex) {
   foundqueues <- setdiff(unlist(rcon$KEYS("PENDING_*")), allpending)
-  catf("[%s] Draining %s queues beyond my own", runindex, length(foundqueues))
+  catf("[%s] Draining %s queues beyond my own...", runindex, length(foundqueues))
+  drained <- 0
   for (fq in foundqueues) {
-    while (!is.null(rcon$RPOPLPUSH(fq, incomingqueue))) { }
+    while (!is.null(rcon$RPOPLPUSH(fq, incomingqueue))) { drained <- drained + 1 }
     stopifnot(isTRUE(rcon$LLEN(fq) == 0))
   }
+  catf("[%s] Drained %s items.", runindex, drained)
 }
 
 # check that our queue is drained
