@@ -1,5 +1,5 @@
 learner	parameter	values	lower	upper	trafo	requires	condition
-classif.kerasff	epochs		10	100			
+classif.kerasff	epochs		8	64	round(2^x)		
 classif.kerasff	optimizer	sgd, rmsprop, adam, nadam					
 classif.kerasff	lr		-8	0	5^x		
 classif.kerasff	decay		-8	0	5^x		
@@ -11,15 +11,16 @@ classif.kerasff	layers		1	4
 classif.kerasff	batchnorm_dropout	batchnorm, dropout, none					
 classif.kerasff	input_dropout_rate		0	1		batchnorm_dropout == "dropout"	
 classif.kerasff	dropout_rate		0	1		batchnorm_dropout == "dropout"	
-classif.kerasff	units_layer1		10	512			
-classif.kerasff	units_layer2		10	512		layers >= 2	
-classif.kerasff	units_layer3		10	512		layers >= 3	
-classif.kerasff	units_layer4		10	512		layers >= 4	
+classif.kerasff	units_layer1		3	10	round(2^x)		
+classif.kerasff	units_layer2		3	10	round(2^x)	layers >= 2	
+classif.kerasff	units_layer3		3	10	round(2^x)	layers >= 3	
+classif.kerasff	units_layer4		3	10	round(2^x)	layers >= 4	
 classif.kerasff	act_layer	elu, relu, selu, tanh, sigmoid					
 classif.kerasff	init_layer	glorot_normal, glorot_uniform, he_normal, he_uniform					
 classif.kerasff	l1_reg_layer		-10	-1	5^x		
 classif.kerasff	l2_reg_layer		-10	-1	5^x		
 classif.kerasff	learning_rate_scheduler	TRUE, FALSE					
+classif.kerasff	init_seed	1, 11, 101, 131, 499					
 classif.kerasff	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
 classif.kerasff	early_stopping_patience	0					
 classif.kerasff	validation_split	0					
@@ -31,7 +32,7 @@ classif.RcppHNSW	M		18	50
 classif.RcppHNSW	ef		4	8	round(2^x)		
 classif.RcppHNSW	ef_construction		4	8	round(2^x)		
 classif.RcppHNSW	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
-classif.xgboost.dart	nrounds		1	5000			
+classif.xgboost.dart	nrounds		3	11	round(2^x)		
 classif.xgboost.dart	eta		-10	0	2^x		
 classif.xgboost.dart	gamma		-15	3	2^x		
 classif.xgboost.dart	lambda		-10	10	2^x		
@@ -46,7 +47,7 @@ classif.xgboost.dart	skip_drop		0	1
 classif.xgboost.dart	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
 classif.xgboost.dart	nthread	1					
 classif.xgboost.dart	booster	dart					
-classif.xgboost.gbtree	nrounds		1	5000			
+classif.xgboost.gbtree	nrounds		3	11	round(2^x)		
 classif.xgboost.gbtree	eta		-10	0	2^x		
 classif.xgboost.gbtree	gamma		-15	3	2^x		
 classif.xgboost.gbtree	lambda		-10	10	2^x		
@@ -59,7 +60,7 @@ classif.xgboost.gbtree	colsample_bylevel		0	1
 classif.xgboost.gbtree	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
 classif.xgboost.gbtree	nthread	1					
 classif.xgboost.gbtree	booster	gbtree					
-classif.xgboost.gblinear	nrounds		1	5000			
+classif.xgboost.gblinear	nrounds		3	11	round(2^x)		
 classif.xgboost.gblinear	lambda		-10	10	2^x		
 classif.xgboost.gblinear	alpha		-10	10	2^x		
 classif.xgboost.gblinear	subsample		0.1	1			
@@ -95,6 +96,6 @@ classif.rpart	maxdepth		1	30
 classif.rpart	minbucket		1	60			
 classif.rpart	minsplit		1	60			
 classif.rpart	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
-classif.glmnet	alpha		0	1			
+classif.glmnet	alpha		0	1	max(0, min(1, x))		
 classif.glmnet	s		-10	10	2^x		
 classif.glmnet	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
