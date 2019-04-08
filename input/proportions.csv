@@ -1,7 +1,7 @@
 learner	proportion
 classif.kerasff	27
 classif.RcppHNSW	2
-classif.xgboost.dart	200
+classif.xgboost.dart	60
 classif.xgboost.gbtree	211
 classif.xgboost.gblinear	31
 classif.ranger.pow	33
