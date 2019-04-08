@@ -28,7 +28,7 @@ while [ "$#" -gt 0 ] ; do
     fi
     shift
 done
-set -- "${NOMINUS}"
+set -- "${NOMINUS[@]}"
 
 # if ! [ -z "$1" ] ; then
 #    echo "Usage: $0 [--oneoff] [--stresstest] [--startseed SEED] [--redisport PORT] [--drainprocs PROCS]" >&2
