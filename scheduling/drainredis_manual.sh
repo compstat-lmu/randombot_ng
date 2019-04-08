@@ -5,11 +5,41 @@
 # set, but other things are set up to make the
 # drainredis.R call more convenient.
 
-if [ -z "$1" ] ; then
-    echo "Usage: $0 DRAINPROCS" >&2
+trap "exit" INT TERM
+trap "kill 0" EXIT
+
+
+export DRAINPROCS=1
+export REDISPORT=6379
+
+
+NOMINUS=()
+
+while [ "$#" -gt 0 ] ; do
+    if [ "$1" = "--redisport" ] ; then
+	REDISPORT="$2"
+	shift
+    elif [ "$1" = "--drainprocs" ] ; then
+	DRAINPROCS="$2"
+	shift
+    else
+	NOMINUS+=("$1")
+    fi
+    shift
+done
+set -- "${NOMINUS[@]}"
+
+if ! [ -z "$1" ] ; then
+    echo "Usage: $0 [--redisport PORT] [--drainprocs PROCS]" >&2
     exit 1
 fi
-export DRAINPROCS="$1"
+
+if [[ "$DRAINPROCS" = *N ]] ; then
+    # this may seem ad-hoc, but the normal check for DRAINPROCS accepts
+    # a number of nodes, e.g. 2N, instead of number of drain processes.
+    echo "DRAINPROCS must not end with N." >&2
+    exit 2
+fi
 
 # get parent directory
 path="${BASH_SOURCE[0]}"
@@ -25,15 +55,35 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
-check_env REDISHOST REDISPORT REDISPW DRAINPROCS
+export SLURMD_NODENAME="$(hostname)"
 
-export SLURMD_NODENAME=manual
+check_env REDISPORT DRAINPROCS
+
+if [ -f REDISINFO ] ; then rm REDISINFO || exit 102 ; fi
+echo "Starting Redis"
+"$MUC_R_HOME/scheduling/runredis.sh" 2>&1 | \
+    sed -u "s'^'[REDIS]: '" | \
+    grep --line-buffered '^' &
+while ! [ -f REDISINFO ] ; do sleep 1 ; done
+export REDISHOST="$(cat REDISINFO | cut -d : -f 1)"
+export REDISPORT="$(cat REDISINFO | cut -d : -f 2)"
+export REDISPW="$(cat REDISINFO | cut -d : -f 3-)"
+echo "[MAIN]: Redis running on host $REDISHOST port $REDISPORT password $REDISPW"
+check_env REDISHOST REDISPORT REDISPW
+
+echo "Trying to connect to redis..."
+while [ "$connok" != "OK" ] ; do
+    sleep 1
+    connok="$(Rscript -e 'cat(sprintf("auth %s\n", Sys.getenv("REDISPW")))' | \
+        redis-cli -h "$REDISHOST" -p "$REDISPORT" 2>/dev/null)"
+done
+echo "Redis is up."
+
+SLURMD_NODENAME=manual
 export SLURM_NPROCS="$DRAINPROCS"
 
 export SLURM_PROCID
 
-trap "exit" INT TERM
-trap "kill 0" EXIT
 
 for ((SLURM_PROCID=0;SLURM_PROCID<"$DRAINPROCS";SLURM_PROCID++)) ; do
     "${MUC_R_HOME}/scheduling/drainredis.R" NOBLOCK &

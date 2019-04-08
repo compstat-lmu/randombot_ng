@@ -103,4 +103,13 @@ if (!noblock) {
   stopf("[%s] GOT TO UNREACHABLE CODE", runindex)
 }
 
+if (runindex == 1) {
+  # we are a NOBLOCK run, i.e. manually called, and we are also the smallest index.
+  # Therefore we want to shut down the redis session when everything is done.
+  while (length(strsplit(rcon$CLIENT_LIST(), "\n")[[1]]) > 1) {
+    Sys.sleep(0.5)
+  }
+  try(rcon$SHUTDOWN("SAVE"), silent = TRUE)
+}
+
 

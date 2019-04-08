@@ -92,7 +92,7 @@ call_srun() {  # arguments: <learner> <task> <message to prepend output>
     si="$3"
     # TODO: infer memory requirement from $1 and $2
     memreq="$4"
-
+    echo "[MAIN]: Srun learner ${learner} task ${task} memory ${memreq} invocation ${INVOCATION} subinvocation ${si}"
     srun --unbuffered --export=ALL --exclusive \
 	--mem="${memreq}" --nodes=1 --ntasks=1 \
 	"${SCRIPTDIR}/runscript.sh" \
@@ -113,13 +113,13 @@ NUM_LRN="$(( (NUM_CPUS + NUMTASKS - 1) / NUMTASKS))"
 echo "[MAIN]: Looping $NUM_LRN times over $NUMTASKS tasks to create at most $((NUM_LRN * NUMTASKS)) worker job step slots."
 
 while read -u 6 LEARNERNAME ; do
-    echo "[MAIN]: Creating job step slots for $LEARNERNAME"
     while read -u 5 TASKNAME ; do
 	if [ "$STRESSTEST" = "TRUE" ] ; then
 	    MEMREQ=1G
 	else
 	    MEMREQ="$(get_mem_req "$LEARNERNAME" "$TASKNAME")"
 	fi
+	echo "[MAIN]: Create slot for learner ${LEARNERNAME} task ${TASKNAME} memory ${MEMREQ} invocation ${INVOCATION}"
 	(
 	    SUBINVOCATION=0
 	    while true ; do
