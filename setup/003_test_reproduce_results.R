@@ -16,36 +16,19 @@ reproduceFromRun(2118729)
 
 # Reproduce recent runs
 
-cosine = "cosine"
-l2 = "l2"
-ip = "ip"
-impute.hist = "impute.hist"
-impute.median = "impute.median"
-impute.mean = "impute.mean"
-radial = "radial"
-linear = "linear"
-polynomial = "polynomial"
-ignore = "ignore"
-gini = "gini"
-partition = "partition"
-extratrees = "extratrees"
-order = "order"
-dart = "dart"
-gblinear = "gblinear"
-gbtree = "gbtree"
 
-
+# ----------------------------------------------------------------------------------------
 library(dplyr)
 library(tidyr)
 library(OpenML)
+
 df = readRDS("~/Downloads/allruninfodf.rds")
+tsks = read.csv("input/tasks.csv")
 source("load_all.R", chdir = TRUE)
 sapply(list.files("input/learners", full.names = TRUE), source)
 system("testenv/export_muc_home.sh")
 source("input/constants.R")
 source("input/custom_learners.R")
-# REQ: Latest mlrCPO version
-
 
 rbn.getUnwatchedLearner = function(learner) {
   assertString(learner)
@@ -59,21 +42,54 @@ rbn.getUnwatchedLearner = function(learner) {
   lrn
 }
 
-data.id = "469"
-do_random_eval = function(data.id) {
+do_random_eval = function(task.id = NULL) {
+  if (is.null(task.id)) {
+    task.id = sample(tsks$task.id_cv10, 1)
+  }
+  assert_true(task.id %in% tsks$task.id_cv10)
+  cosine = "cosine"
+  l2 = "l2"
+  ip = "ip"
+  impute.hist = "impute.hist"
+  impute.median = "impute.median"
+  impute.mean = "impute.mean"
+  radial = "radial"
+  linear = "linear"
+  polynomial = "polynomial"
+  ignore = "ignore"
+  gini = "gini"
+  partition = "partition"
+  extratrees = "extratrees"
+  order = "order"
+  dart = "dart"
+  gblinear = "gblinear"
+  gbtree = "gbtree"
+
   rw = df %>%
-    separate(dataset, c("name", "data.id"), "\\.(?=[^\\.][:digit:]*$)") %>%
-    filter(data.id == data.id) %>%
+    filter(seed > 3000) %>%
+    separate(dataset, c("data.name", "data.id"), "\\.(?=[^\\.][:digit:]*$)") %>%
+    mutate(data.id = as.integer(as.character(data.id))) %>%
+    left_join(tsks) %>%
+    filter(task.id_cv10 == as.integer(task.id)) %>%
+    mutate(SUPEREVAL = eval(parse(text = point))$SUPEREVAL) %>%
+    filter(!SUPEREVAL) %>%
     sample_n(1)
+
+  catf("Task: %s, Learner %s", task.id, rw$learner)
   lrn = rbn.getUnwatchedLearner(as.character(rw$learner))
   pv = eval(parse(text = rw$point))
   pv$SUPEREVAL = NULL
   lrn = setHyperPars(lrn, par.vals = pv)
+
   set.seed(rw$seed)
-  t = convertOMLTaskToMlr(getOMLTask(3560))
-  res = resample(lrn, t$mlr.task, t$mlr.rin)
+  tsk = convertOMLTaskToMlr(getOMLTask(rw$task.id_cv10))
+  res = resample(lrn, tsk$mlr.task, tsk$mlr.rin)
   out = rw$perf.mmce - res$aggr
+  catf("Params: %s", paste(names(pv), unlist(pv), sep = ":", collapse = ","))
+  catf("Reproduced MMCE: %s", res$aggr)
+  catf("Original MMCE: %s", rw$perf.mmce)
+  catf("Difference in MMCE: %s", round(out, 6))
   return(out)
 }
 
-do_random_eval("469")
+do_random_eval()
