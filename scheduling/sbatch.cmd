@@ -108,7 +108,12 @@ NUMTASKS="$(grep -v '^ *$' "${DATADIR}/TASKS" | wc -l)"
 
 NUM_CPUS="$(echo "$SLURM_JOB_CPUS_PER_NODE" | tr ',(x)' $'\n'' ' | awk '{ x += $1 * ($2?$2:1) } END { print x }')"
 
+NUM_LRN="$(( (NUM_CPUS + NUMTASKS - 1) / NUMTASKS))"
+
+echo "[MAIN]: Looping $NUM_LRN times over $NUMTASKS tasks to create at most $((NUM_LRN * NUMTASKS)) worker job step slots."
+
 while read -u 6 LEARNERNAME ; do
+    echo "[MAIN]: Creating job step slots for $LEARNERNAME"
     while read -u 5 TASKNAME ; do
 	if [ "$STRESSTEST" = "TRUE" ] ; then
 	    MEMREQ=1G
@@ -124,5 +129,5 @@ while read -u 6 LEARNERNAME ; do
 	) &
 	INVOCATION=$((INVOCATION + 1))
     done 5<"${DATADIR}/TASKS"
-done 6< <( "$SCRIPTDIR/sample_learners.R" "$NUM_CPUS" )
+done 6< <( "$SCRIPTDIR/sample_learners.R" "$NUM_LRN" )
 wait
