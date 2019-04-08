@@ -42,11 +42,11 @@ rbn.getUnwatchedLearner = function(learner) {
   lrn
 }
 
-do_random_eval = function(task.id = NULL) {
-  if (is.null(task.id)) {
-    task.id = sample(tsks$task.id_cv10, 1)
-  }
-  assert_true(task.id %in% tsks$task.id_cv10)
+do_random_eval = function(task.id = NULL, learner = NULL) {
+  if (!is.null(task.id)) assert_true(task.id %in% tsks$task.id_cv10)
+  if (!is.null(learner)) assert_true(learner %in% df$learner)
+
+  # Hacky way to make the strings available for eval(parse())
   cosine = "cosine"
   l2 = "l2"
   ip = "ip"
@@ -66,30 +66,43 @@ do_random_eval = function(task.id = NULL) {
   gbtree = "gbtree"
 
   rw = df %>%
-    filter(seed > 3000) %>%
+    filter(seed > 2000) %>%
+    filter(totaltime < 60) %>%
     separate(dataset, c("data.name", "data.id"), "\\.(?=[^\\.][:digit:]*$)") %>%
     mutate(data.id = as.integer(as.character(data.id))) %>%
-    left_join(tsks) %>%
-    filter(task.id_cv10 == as.integer(task.id)) %>%
+    full_join(tsks) %>%
     mutate(SUPEREVAL = eval(parse(text = point))$SUPEREVAL) %>%
     filter(!SUPEREVAL) %>%
-    sample_n(1)
+  if (!is.null(task.id)) {
+    rw = rw %>% filter(task.id_cv10 == task.id)
+  }
+  if (!is.null(learner)) {
+    rw = rw %>% filter(learner == learner)
+  } else {
+    rw = rw %>%
+      group_by(learner) %>%
+      sample_n(1) %>%
+      ungroup()
+  }
+  rw = rw %>% sample_n(1)
 
-  catf("Task: %s, Learner %s", task.id, rw$learner)
+
   lrn = rbn.getUnwatchedLearner(as.character(rw$learner))
   pv = eval(parse(text = rw$point))
   pv$SUPEREVAL = NULL
   lrn = setHyperPars(lrn, par.vals = pv)
 
   set.seed(rw$seed)
-  tsk = convertOMLTaskToMlr(getOMLTask(rw$task.id_cv10))
+  tsk = convertOMLTaskToMlr(getOMLTask(rw$task.id_cv10, verbosity = 1))
   res = resample(lrn, tsk$mlr.task, tsk$mlr.rin)
   out = rw$perf.mmce - res$aggr
+  catf("Task: %s, Learner %s", rw$task.id_cv10, rw$learner)
   catf("Params: %s", paste(names(pv), unlist(pv), sep = ":", collapse = ","))
+  catf("Seed: %s, Invocation: %s", rw$seed, rw$invocation)
   catf("Reproduced MMCE: %s", res$aggr)
   catf("Original MMCE: %s", rw$perf.mmce)
   catf("Difference in MMCE: %s", round(out, 6))
   return(out)
 }
 
-do_random_eval()
+do_random_eval(learner = "classif.xgboost.gbtree")
