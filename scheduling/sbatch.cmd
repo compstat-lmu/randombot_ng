@@ -123,8 +123,8 @@ while read -u 6 LEARNERNAME ; do
 	(
 	    SUBINVOCATION=0
 	    while true ; do
-		call_srun "${LEARNERNAME}" "${TASKNAME}" "${SUBINVOCATION}" "${MEMREQ}"
-		SUBINVOCATION=$((SUBINVOCATION + 1))
+                call_srun "${LEARNERNAME}" "${TASKNAME}" "${SUBINVOCATION}" "${MEMREQ}"
+                SUBINVOCATION=$((SUBINVOCATION + 1))
 	    done
 	) &
 	INVOCATION=$((INVOCATION + 1))
