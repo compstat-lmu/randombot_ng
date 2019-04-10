@@ -63,16 +63,16 @@ catf("[%s] Ready for action. Waiting for %s and caching in %s",
   runindex, incomingqueue, ownpending)
 
 repeat {
-  # get 1000 results, but also store them in PENDING_x
+  # get 100 results, but also store them in PENDING_x
   if (noblock) {
-    tosave <- replicate(1000, rcon$RPOPLPUSH(incomingqueue, ownpending),
+    tosave <- replicate(100, rcon$RPOPLPUSH(incomingqueue, ownpending),
       simplify = FALSE)
     tosave <- lapply(Filter(Negate(is.null), tosave), unserialize)
     if (!length(tosave)) {
       break
     }
   } else {
-    tosave <- replicate(1000,
+    tosave <- replicate(100,
       unserialize(rcon$BRPOPLPUSH(incomingqueue, ownpending, timeout = 0)),
       simplify = FALSE)
   }
@@ -101,6 +101,15 @@ repeat {
 
 if (!noblock) {
   stopf("[%s] GOT TO UNREACHABLE CODE", runindex)
+}
+
+if (runindex == 1) {
+  # we are a NOBLOCK run, i.e. manually called, and we are also the smallest index.
+  # Therefore we want to shut down the redis session when everything is done.
+  while (length(strsplit(rcon$CLIENT_LIST(), "\n")[[1]]) > 1) {
+    Sys.sleep(0.5)
+  }
+  try(rcon$SHUTDOWN("SAVE"), silent = TRUE)
 }
 
 
