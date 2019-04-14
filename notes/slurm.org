@@ -197,7 +197,8 @@ The following relevant environment variables are set:
 
 some insight:
  - --nodes is not respected if it can't be because of already used ressources (but srun will fail if too few ressources are allocated for the  job)
- - --mem is per job step and per node, but not (automatically) per task
+ - --mem is per job step and per node, but not (automatically) per task; use --mem-per-cpu for things like that
+ - --mem / --mem-per-cpu reservation is exact, tested to MB granularity
  - if a step can't be started because of missing memory or missing CPUs (if --exclusive is given), the srun lingers in the background and retries in some interval
  - --exclusive is only respected when *launching* a task, so non-exclusives can always be launched, --exclusive always wait until CPU slots are free
  - --exclusive does not put tasks on sensible nodes in some circumstances: if many CPUs on node 0 are taken, there are not enough CPUs left for the task but there is still free memory, the task still gets scheduled on node 0 and waits. 

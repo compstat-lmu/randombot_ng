@@ -44,6 +44,7 @@ check_env DATADIR ONEOFF STRESSTEST STARTSEED DRAINPROCS REDISPORT
 if [ -f REDISINFO ] ; then rm REDISINFO || exit 102 ; fi
 echo "[MAIN]: Starting Redis"
 srun --unbuffered --export=ALL --mem="$SLURM_MEM_PER_NODE" --nodes=1 --ntasks=1 \
+     --nodelist="$SLURM_NODENAME" \
      "${SCRIPTDIR}/runredis.sh" 2>&1 | \
     sed -u "s'^'[REDIS]: '" | \
     grep --line-buffered '^' &
@@ -74,60 +75,41 @@ mkdir RESULTS
 # - we want to round UP, but bash arithmetic rounds down, so we do
 #   (DRAINPROCS + [slots per node] - 1)  / [slots per node]
 DRAINNODES=$(((DRAINPROCS + (SLURM_MEM_PER_NODE / 2048) - 1) / (SLURM_MEM_PER_NODE / 2048)))
+DNLIST="$(echo "$SLURM_NODENAME" | \
+	     cat - <(scontrol show hostnames "$SLURM_JOB_NODELIST") | \
+	     sort | uniq -u | head -n "$DRAINNODES" | tr $'\n' ',')"
 echo "[MAIN]: Launching $DRAINPROCS drain processes on $DRAINNODES nodes"
 srun --unbuffered --export=ALL --mem "$SLURM_MEM_PER_NODE" --ntasks="$DRAINPROCS" \
+     --nodelist="$DNLIST" \
      --nodes="$DRAINNODES" "${SCRIPTDIR}/drainredis.R" 2>&1 | \
     sed -u "s'^'[DRAINREDIS]: '" | \
     grep --line-buffered '^' &
 
 echo "[MAIN]: Drain processes up."
 
+echo "[MAIN]: Calculating job step node assignment. This may take a minute or two."
+if [ -e STEPNODES ] ; then rm -r STEPNODES || exit 103 ; fi
+cat <(echo "$SLURM_NODENAME") \
+    <(echo "$DNLIST" | tr ',' $'\n') \
+    <(scontrol show hostnames "$SLURM_JOB_NODELIST") | sort | uniq -u | \
+    "${SCRIPTDIR}/assignJobSteps.R"
+echo "[MAIN]: Done calculating."
 
+echo "[MAIN]: Looping over STEPNODES/STEPS to create worker job steps"
 
+while read data learner memcosts ntasks ; do
 
-INVOCATION=0
-call_srun() {  # arguments: <learner> <task> <message to prepend output>
-    learner="$1"
-    task="$2"
-    si="$3"
-    # TODO: infer memory requirement from $1 and $2
-    memreq="$4"
-    echo "[MAIN]: Srun learner ${learner} task ${task} memory ${memreq} invocation ${INVOCATION} subinvocation ${si}"
+# OOM job step kills rely on MemLimitEnforce=yes and JobAcctGatherParams=OverMemoryKill.
+# If they are not set, then job-steps don't get OOM-killed, instead the cgroups limit
+# process memory.
+# We therefore need to make sure these parameters are not set. They are not on
+# Supermuc NG, so this should be fine.
+    echo "[MAIN]: Creating $ntasks tasks working on $data with ${learner}, memcost: ${memcosts}M"
     srun --unbuffered --export=ALL --exclusive \
-	--mem="${memreq}" --nodes=1 --ntasks=1 \
-	"${SCRIPTDIR}/runscript.sh" \
-	"$task" "$learner" "$STARTSEED" "$ONEOFF" "$STRESSTEST" 2>&1 | \
-	sed -u "s'^'[${task},${learner},${INVOCATION},${si}]: '" | \
-	grep --line-buffered '^'
-    # About the `grep --line-buffered`: not sure if `sed -u` suffices, but:
-    # We want each write to stdout be atomic, so different output lines
-    # are not interleaved.
-}
+	 --mem-per-cpu="${memcosts}M" --ntasks="$ntasks" \
+	 --nodelist="STEPNODES/${data}_${learner}.nodes" \
+	 /bin/sh -c "${SCRIPTDIR}/runscript.sh \"${data}\" \"${learner}\" \"${STARTSEED}\" \"${ONEOFF}\" \"${STRESSTEST}\" 2>&1 | sed -u \"s'^'[${task},${learner},\${SLURM_LOCALID}]: '\"" \
+	grep --line-buffered '^' &
+done <STEPNODES/STEPS
 
-NUMTASKS="$(grep -v '^ *$' "${DATADIR}/TASKS" | wc -l)"
-
-NUM_CPUS="$(echo "$SLURM_JOB_CPUS_PER_NODE" | tr ',(x)' $'\n'' ' | awk '{ x += $1 * ($2?$2:1) } END { print x }')"
-
-NUM_LRN="$(( (NUM_CPUS + NUMTASKS - 1) / NUMTASKS))"
-
-echo "[MAIN]: Looping $NUM_LRN times over $NUMTASKS tasks to create at most $((NUM_LRN * NUMTASKS)) worker job step slots."
-
-while read -u 6 LEARNERNAME ; do
-    while read -u 5 TASKNAME ; do
-	if [ "$STRESSTEST" = "TRUE" ] ; then
-	    MEMREQ=1G
-	else
-	    MEMREQ="$(get_mem_req "$LEARNERNAME" "$TASKNAME")"
-	fi
-	echo "[MAIN]: Create slot for learner ${LEARNERNAME} task ${TASKNAME} memory ${MEMREQ} invocation ${INVOCATION}"
-	(
-	    SUBINVOCATION=0
-	    while true ; do
-                call_srun "${LEARNERNAME}" "${TASKNAME}" "${SUBINVOCATION}" "${MEMREQ}"
-                SUBINVOCATION=$((SUBINVOCATION + 1))
-	    done
-	) &
-	INVOCATION=$((INVOCATION + 1))
-    done 5<"${DATADIR}/TASKS"
-done 6< <( "$SCRIPTDIR/sample_learners.R" "$NUM_LRN" )
 wait

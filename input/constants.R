@@ -10,6 +10,14 @@ rbn.registerSetting("SUPERRATE", 0.0)
 
 rbn.registerSetting("SAMPLING_TRAFO", "norm")
 
+### Machine Info
+# additional performance from over-subscribing SMT cores
+rbn.registerSetting("HTBENEFIT", 0.3)
+# cores per node
+rbn.registerSetting("PHYSCORES", 48)
+# memory per node, in MB
+rbn.registerSetting("MEMPERNODE", 80 * 1024)
+
 # WARNING: ALL OF the following changes the data which is cached
 # in the DATADIR folder. Be sure to call rbn.retrieveData() when this changes.
 rbn.registerSetting("DATADIR",

@@ -58,4 +58,10 @@ port \'%s\'
 ', Sys.getenv("REDISPW"), Sys.getenv("REDISPORT")))
 EOF
 
-
+if ! [ -z "$SLURM_JOB_ID" ] ; then
+    # if redis fails and runredis.sh was run in a SLURM job
+    # (i.e. not launched via drainredis_manual.sh) we abort
+    # the job.
+    echo "Redis closed, killing job."
+    scancel "$SLURM_JOB_ID"
+fi
