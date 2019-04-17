@@ -46,6 +46,8 @@ stop-writes-on-bgsave-error yes
 rdbchecksum yes
 dbfilename "dump.rdb"
 
+maxclients 1000000
+
 appendonly yes
 appendfilename "appendonly.aof"
 
