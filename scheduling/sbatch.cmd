@@ -15,6 +15,9 @@
 
 echo "[MAIN]: Salve, Job ${SLURM_JOB_NAME}:${SLURM_JOB_ID}. Laboraturi Te Salutant."
 
+echo "[MAIN]: Starting top thread"
+top -bu "$(whoami)" > TOPOUT.txt &
+
 if ! [ -d "$MUC_R_HOME" ] ; then
     echo "MUC_R_HOME Not a directory: $MUC_R_HOME"
     exit 101
