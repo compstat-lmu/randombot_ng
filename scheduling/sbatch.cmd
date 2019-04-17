@@ -15,8 +15,6 @@
 
 echo "[MAIN]: Salve, Job ${SLURM_JOB_NAME}:${SLURM_JOB_ID}. Laboraturi Te Salutant."
 
-echo "[MAIN]: Starting top thread"
-top -bu "$(whoami)" > TOPOUT.txt &
 
 if ! [ -d "$MUC_R_HOME" ] ; then
     echo "MUC_R_HOME Not a directory: $MUC_R_HOME"
@@ -66,6 +64,8 @@ while [ "$connok" != "OK" ] ; do
 done
 echo "[MAIN]: Redis is up."
 
+echo "[MAIN]: Starting top thread"
+top -bp $(pidof redis-server) > TOPOUT.txt &
 
 if echo "$DRAINPROCS" | grep 'N$' > /dev/null ; then
     DRAINPROCS="$(echo "$DRAINPROCS" | sed 's/N$//')"
