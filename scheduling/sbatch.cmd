@@ -57,10 +57,10 @@ echo "[MAIN]: Redis running on host $REDISHOST port $REDISPORT password $REDISPW
 check_env REDISHOST REDISPORT REDISPW
 
 echo "[MAIN]: Trying to connect to redis..."
-while [ "$connok" != "OK" ] ; do
+while [ "$connok" != "PONG" ] ; do
     sleep 1
-    connok="$(Rscript -e 'cat(sprintf("auth %s\n", Sys.getenv("REDISPW")))' | \
-        redis-cli -h "$REDISHOST" -p "$REDISPORT" 2>/dev/null)"
+    connok="$(Rscript -e 'cat(sprintf("auth %s\nping\n", Sys.getenv("REDISPW")))' | \
+        redis-cli -h "$REDISHOST" -p "$REDISPORT" 2>/dev/null | grep PONG)"
 done
 echo "[MAIN]: Redis is up."
 
@@ -108,15 +108,18 @@ while read data learner memcosts ntasks ; do
 # We therefore need to make sure these parameters are not set. They are not on
 # Supermuc NG, so this should be fine.
     echo "[MAIN]: Creating $ntasks tasks working on $data with ${learner}, memcost: ${memcosts}M"
-    ( srun --unbuffered --export=ALL --exclusive \
-	 --mem-per-cpu="${memcosts}M" --ntasks="$ntasks" \
-	 --nodelist="STEPNODES/${data}_${learner}.nodes" \
-	 --nodes="1-${SLURM_JOB_NUM_NODES}" \
-	 --immediate \
-    	 /bin/sh -c "${SCRIPTDIR}/runscript.sh \"${data}\" \"${learner}\" \"${STARTSEED}\" \"${ONEOFF}\" \"${STRESSTEST}\" 2>&1 | sed -u \"s'^'[\${SLURM_PROCID}]: '\"" 2>&1 | \
-	  sed -u "s'^'[${data},${learner}]'"
-      echo "[${data},${learner}]: SRUN returned with status $?"
-    )&
+    ( while true ; do 
+	  srun --unbuffered --export=ALL --exclusive \
+	       --mem-per-cpu="${memcosts}M" --ntasks="$ntasks" \
+	       --nodelist="STEPNODES/${data}_${learner}.nodes" \
+	       --nodes="1-${SLURM_JOB_NUM_NODES}" \
+	       --immediate \
+    	       /bin/sh -c "${SCRIPTDIR}/runscript.sh \"${data}\" \"${learner}\" \"${STARTSEED}\" \"${ONEOFF}\" \"${STRESSTEST}\" 2>&1 | sed -u \"s'^'[\${SLURM_PROCID}]: '\"" 2>&1 | \
+	      sed -u "s'^'[${data},${learner}]'"
+	  echo "[${data},${learner}]: SRUN returned with status $?"
+	  sleep 60
+	  echo "[${data},${learner}]: retrying"
+      done ) &
 done <STEPNODES/STEPS
 
 wait
