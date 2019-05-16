@@ -112,11 +112,6 @@ OpenML CC-18 + AutoML Datasets; ~115 Datasets in Total
 - Approximate Nearest Neighbours (RcppHNSW) wrapps [https://github.com/nmslib/hnswlib]
 - Keras Fully Connected NNs up to 4 layers / 1024 neurons.
 
-To be added:
-  - Other boosting?
-  - Preprocessors
-  - Open for suggestions
-
 ### Hyperparam Spaces
 
 Current spaces: [Parameter Set](https://github.com/compstat-lmu/randombot_ng/blob/master/input/paramsets.R)
@@ -135,3 +130,4 @@ Integers and discrete variables are sampled with equal probabilities.
   - Subsampling [Subsampled OpenML Tasks]
 
 
+# We are very open to suggestions by everyone! Feel free to message us or create an issue.
