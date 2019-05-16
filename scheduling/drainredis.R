@@ -64,6 +64,7 @@ catf("[%s] Ready for action. Waiting for %s and caching in %s",
 
 repeat {
   # get 100 results, but also store them in PENDING_x
+  time0 <- as.numeric(Sys.time())
   if (noblock) {
     tosave <- replicate(100, rcon$RPOPLPUSH(incomingqueue, ownpending),
       simplify = FALSE)
@@ -76,6 +77,7 @@ repeat {
       unserialize(rcon$BRPOPLPUSH(incomingqueue, ownpending, timeout = 0)),
       simplify = FALSE)
   }
+  time1 <- as.numeric(Sys.time())
 
   fname <- digest::digest(tosave)
   prefix1 <- substr(fname, 1, 2)
@@ -91,12 +93,18 @@ repeat {
   catf("[%s] Saving %s results to %s", runindex, length(tosave), fname)
   saveRDS(tosave, paste0(outfile, ".tmp"), compress = "xz")
   file.rename(paste0(outfile, ".tmp"), outfile)
+  time2 <- as.numeric(Sys.time())
 
   # if we got here then everything is savely on disk and we delete the result
   # from the PENDING_x queue.
   # There is a small chance that we get killed here and as a result some run
   # results get written out twice, but we will live with that.
   rcon$DEL(ownpending)
+  time3 <- as.numeric(Sys.time())
+
+  catf("[%s] ToD: %s, retrieve-time [s]: %s, save-time [s]: %s, del-time [s]: %s",
+    runindex, Sys.time(), time1 - time0, time2 - time1, time3 - time2)
+
 }
 
 if (!noblock) {

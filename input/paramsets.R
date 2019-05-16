@@ -147,7 +147,7 @@ classif.kerasff = makeParamSet(
       makeLogicalParam(id = "learning_rate_scheduler", default = FALSE),
       makeDiscreteParam(id = "init_seed", values = c(1L, 11L, 101L, 131L, 499L))
     )
-classif.kerasff.fixed_pars = list(early_stopping_patience = 0L, validation_split = 0, nthread = 1L, init_seed = 1444L)
+classif.kerasff.fixed_pars = list(early_stopping_patience = 0L, validation_split = 0, nthread = 1L)
 
 preproc.pipeline <- pSS(
   num.impute.selected.cpo: discrete [impute.mean, impute.median, impute.hist]  # numeric feature imputation to use

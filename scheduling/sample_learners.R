@@ -25,7 +25,6 @@ proptable <- aggregate(table$proportion, by = table["learner"], FUN = mean)
 
 proptable$x <- proptable$x / sum(proptable$x)
 
-
 proptable$whole <- floor(proptable$x * numlearners)
 
 proptable$given <- 1

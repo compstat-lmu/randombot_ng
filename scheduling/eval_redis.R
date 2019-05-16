@@ -54,6 +54,7 @@ paramtable <- rbn.compileParamTblConfigured()
 
 was.error <- FALSE
 repeat {
+  time0 <- as.numeric(Sys.time())
   if (stresstest) {
     preseed <- 1
   } else {
@@ -66,15 +67,22 @@ repeat {
     was.error <- TRUE
     break
   }
+  time1 <- as.numeric(Sys.time())
 
   catf("----[%s] Evaluating seed %s", token, seed)
   points <- rbn.sampleEvalPoint(lrn, data$task, seed, paramtable)
+  time2 <- as.numeric(Sys.time())
 
+  catf("----[%s] Timing (setup): seed retrieve [s]: %s, sample point [s]: %s",
+    token, time1 - time0, time2 - time1)
+
+  iter <- 0
   for (pt in points) {
-    catf("----[%s] Evaluating point %s", token, pt)
+    catf("----[%s] %s Evaluating point %s", token, Sys.time(), pt)
+    time3 <- as.numeric(Sys.time())
     result <- rbn.evaluatePoint(lrn, pt, data)
     rbn.setWatchdogTimeout(600)  # ten minutes timeout to write result file
-
+    time4 <- as.numeric(Sys.time())
     result$METADATA <- list(learner = LEARNERNAME, task = TASKNAME, seed = seed, point = pt)
     if (stresstest) repeat {
       result$METADATA$seed <- round(runif(1, 1, 2^31))
@@ -83,8 +91,12 @@ repeat {
     } else {
       rcon$LPUSH("RESULTS", serialize(result, connection = NULL))
     }
+    time5 <- as.numeric(Sys.time())
+    catf("----[%s] Timing (eval %s): Evaluation [s]: %s, Sending result [s]: %s",
+      token, iter, time4 - time3, time5 - time4)
+    iter <- iter + 1
   }
-  catf("----[%s] Done evaluating seed %s", token, seed)
+  catf("----[%s] %s Done evaluating seed %s", token, Sys.time(), seed)
 
   if (oneoff) {
     break

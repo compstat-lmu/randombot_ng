@@ -233,7 +233,7 @@ do_random_eval = function(task.id = NULL, learner = NULL) {
 
   if (valid_pv) {
     lrn = setHyperPars(lrn, par.vals = pv)
-    set.seed(rw$seed)
+    set.seed(2)
     tsk = convertOMLTaskToMlr(getOMLTask(rw$task.id_cv10, verbosity = 1))
     res = resample(lrn, tsk$mlr.task, tsk$mlr.rin)
     out = rw$perf.mmce - res$aggr

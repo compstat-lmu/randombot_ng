@@ -17,7 +17,7 @@ if [ -z "$LEARNERNAME" ]; then
     exit 100
 fi
 
-echo "$0 started memory $SLURM_MEM_PER_NODE cmdline $*"
+echo "$0 started memory $SLURM_MEM_PER_CPU cmdline $*"
 
 # get parent directory
 path="${BASH_SOURCE[0]}"
