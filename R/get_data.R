@@ -132,7 +132,7 @@ rbn.loadDataTable <- function(file, ...) {
 }
 
 #' Use a data.id and learner to obtain ~max memory requirements
-#' Defaults to 1GB.
+#' Defaults to 2GB.
 #' @param data.id [integer(1)]
 #' @param learner [character(1)]
 #' @return [numeric(1)] number of MB required, rounded upwards.
@@ -146,11 +146,31 @@ rbn.getMemoryRequirementsKb = function(task, learner) {
         "memory_requirements.csv"))
   kb = tab[tab$dataset == task & tab$learner == learner, "memory_limit"]
   # Fallback and make sure it is at least 300 MB
-  if (length(kb) == 0) kb = 1024 * 1024
+  if (length(kb) == 0) kb = 2048 * 1024
   if (is.na(kb) | is.null(kb) | is.nan(kb)) kb = 1024 * 1024
   kb = max(kb, 300 * 1024)
   ceiling(kb / 1024) + 50
 }
+
+
+#' Get Task Probabilities
+#' Defaults to 1%
+#' @param data.id [integer(1)]
+#' @return [numeric(1)] probability to draw the dataset.
+#' @example
+#' rbn.getTaskProbabilities("riccardo.41161")
+rbn.getTaskProbabilities = function(task) {
+  # CSV created from /setup/003_predict_memory_requirements.R
+  tab = read.table(
+      file.path(Sys.getenv("MUC_R_HOME"),
+        "input",
+        "dataset_probs.csv"))
+  prob = tab[tab$dataset == task, "prob"]
+  if (length(prob) == 0) prob = 0.01
+  if (is.na(prob) | is.null(prob) | is.nan(prob)) prob = 0.01
+  return(max(prob, 0.001))
+}
+
 
 rbn.DistributeSrunsToNodes.GREEDY <- function(nodes) {
   # this function assigns "tasks" to "nodes", where a "task" is one of the
