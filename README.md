@@ -6,7 +6,7 @@
 
 - Modular design with global settings that make it possible to switch different features on / off.
 - Possible "Supererogatory" evaluations: More evaluation on the *same* point, with variations:
-  - Different resampling splits ("RepCV").
+  - Different resampling splits (`RepCV`).
   - Smaller training sets for "learning curve".
   - All this is captured by just creating a set of resampling instances
 - The learner and task are chosen deterministically which could make estimated needs based memory alocation possible.
