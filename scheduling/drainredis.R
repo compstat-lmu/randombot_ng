@@ -65,6 +65,7 @@ catf("[%s] Ready for action. Waiting for %s and caching in %s",
 repeat {
   # get 100 results, but also store them in PENDING_x
   rcon$BRPOP("BUCK", 0)
+  catf("[%s] Got the buck.", runindex)
   time0 <- as.numeric(Sys.time())
   if (noblock) {
     tosave <- replicate(1000,
@@ -77,6 +78,7 @@ repeat {
       simplify = FALSE)
   }
   rcon$LPUSH("BUCK", "BUCK")
+  catf("[%s] Passed the buck.", runindex)
   if (noblock && !length(tosave)) {
     break
   }

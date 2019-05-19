@@ -365,8 +365,8 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
   - [ ] 260'000 are enough to OOM-kill redis 
   - [ ] 20 kb compressed / result 
   - [ ] test with a bunch of jobs that generate loads of fake data [ implemented: "STRESSTEST" ]
-  - [ ] plan now: use multiple redis instances, do manual sharding, only drain with one drain thread at a time with common queue
-    - [ ] using BUCK single element that workers do locking wait for, otherwise keeping their private queues.
+  - [X] plan now: use multiple redis instances, do manual sharding, only drain with one drain thread at a time with common queue
+    - [X] using BUCK single element that workers do locking wait for, otherwise keeping their private queues.
   - [ ] write sbatch output to its own directory
 - [X] info to write out
   - [X] write out slurm step number
