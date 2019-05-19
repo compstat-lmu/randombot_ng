@@ -12,8 +12,8 @@ suppressPackageStartupMessages({
 RNGversion("3.3")
 
 configureMlr(
-  on.learner.error = "warn",
-  on.learner.warning = "warn",
+  on.learner.error = "quiet",
+  on.learner.warning = "quiet",
   show.learner.output = FALSE,
   show.info = FALSE,
   on.error.dump = FALSE)
