@@ -69,12 +69,12 @@ repeat {
   }
   time1 <- as.numeric(Sys.time())
 
-  catf("----[%s] Evaluating seed %s", token, seed)
+  catf("----[%s] %s Evaluating seed %s", token, Sys.time(), seed)
   points <- rbn.sampleEvalPoint(lrn, data$task, seed, paramtable)
   time2 <- as.numeric(Sys.time())
 
-  catf("----[%s] Timing (setup): seed retrieve [s]: %s, sample point [s]: %s",
-    token, time1 - time0, time2 - time1)
+  catf("----[%s] %s Timing (setup): seed retrieve [s]: %s, sample point [s]: %s",
+    token, Sys.time(), time1 - time0, time2 - time1)
 
   iter <- 0
   for (pt in points) {
@@ -92,8 +92,8 @@ repeat {
       rcon$LPUSH("RESULTS", serialize(result, connection = NULL))
     }
     time5 <- as.numeric(Sys.time())
-    catf("----[%s] Timing (eval %s): Evaluation [s]: %s, Sending result [s]: %s",
-      token, iter, time4 - time3, time5 - time4)
+    catf("----[%s] %s Timing (eval %s): Evaluation [s]: %s, Sending result [s]: %s",
+      token, Sys.time(), iter, time4 - time3, time5 - time4)
     iter <- iter + 1
   }
   catf("----[%s] %s Done evaluating seed %s", token, Sys.time(), seed)
