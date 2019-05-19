@@ -73,12 +73,12 @@ repeat {
       break
     }
   } else {
-    tosave <- replicate(100,
-      unserialize(rcon$BRPOPLPUSH(incomingqueue, ownpending, timeout = 0)),
+    tosave <- replicate(1000,
+      rcon$BRPOPLPUSH(incomingqueue, ownpending, timeout = 0),
       simplify = FALSE)
   }
   time1 <- as.numeric(Sys.time())
-
+  tosave <- lapply(tosave, unserialize)
   fname <- digest::digest(tosave)
   prefix1 <- substr(fname, 1, 2)
   prefix2 <- substr(fname, 3, 4)
