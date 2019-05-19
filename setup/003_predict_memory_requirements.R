@@ -31,6 +31,29 @@ mm = df %>%
 write.table(mm, "input/memory_requirements.csv")
 
 
+# Some initial script to obtain memory requirements for algorithms / datasets.
+# We should extend this in the future.
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(mlr)
+
+memtab %>%
+  group_by(dataset) %>%
+  mutate(walltime = as.numeric(walltime)) %>%
+  summarize(mn = mean(walltime), sd = sd(walltime), max = max(walltime)) %>%
+  mutate(sd = if_else(is.na(sd), mean(sd, na.rm = TRUE), sd)) %>%
+  mutate(weight = (mn/1000)^0.8) %>%
+  mutate(prob = round(weight / sum(weight), 4)) %>%
+  arrange(prob) %>%
+  select(dataset, prob) %>%
+  write.table("input/dataset_probs.csv")
+
+
+
+# ----------------------------------------------------------------------------------------
+# Some visual exploration of the data
+
 df %>%
   group_by(learner, dataset) %>%
   filter(!is.na(memorykb)) %>%

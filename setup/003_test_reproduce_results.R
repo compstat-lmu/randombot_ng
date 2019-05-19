@@ -2,14 +2,23 @@
 
 library(OpenML)
 library(BBmisc)
-runs = listOMLRuns(tag="mlrRandomBot", limit = 5000)
-runs = runs[runs$flow.id == 5906,]
+runs = listOMLRuns(tag="mlrRandomBot", limit = 5000, offset = 20000, flow.id = 6767)
 
 reproduceFromRun = function(run.id) {
   r = getOMLRun(run.id)
   flow = getOMLFlow(r$flow.id)
   task = getOMLTask(r$task.id)
+  if (flow$name == "mlr.classif.xgboost") {
+    #Convert factors to numeric
+    target = task$input$data.set$target.features
+    cols = which(colnames(task$input$data.set$data) != target)
+    task$input$data.set$data = data.frame(
+      sapply(dummies::dummy.data.frame(task$input$data.set$data[,cols], sep = "_._"), as.numeric),
+      task$input$data.set$data[,target,drop = FALSE])
+    colnames(task$input$data.set$data) = make.names(colnames(task$input$data.set$data))
+  }
   pars = getOMLRunParList(r)
+
   out = runTaskFlow(
     task = task,
     par.list = pars,
@@ -18,6 +27,119 @@ reproduceFromRun = function(run.id) {
   old_acc = r$output.data$evaluations[r$output.data$evaluations$name == "predictive_accuracy", "value"][1]
   new_acc = out$bmr$results[[1]][[1]]$aggr["acc.test.join"]
   catf("Task: %s, Learner %s", r$task.id, r$flow.id)
+  # catf("Params: %s", paste(data.frame(pars)$name, data.frame(pars)$value, sep = ":", collapse = ","))
+  catf("Reproduced MMCE: %s", new_acc)
+  catf("Original MMCE: %s", old_acc)
+  catf("Difference in MMCE: %s", round(old_acc - new_acc, 6))
+  delta = old_acc - new_acc
+  names(delta) = run.id
+  return(delta)
+}
+
+
+library(OpenML)
+library(dplyr)
+run.id = 3802515
+r = getOMLRun(run.id)
+r$output.data$evaluations %>% filter(name == "predictive_accuracy") %>% select("value", "fold")
+r$predictions %>% group_by(fold) %>% summarize(acc = mlr::measureACC(truth, prediction))
+
+
+library(doParallel)
+registerDoParallel(10)
+
+out = c()
+run.ids = sample(runs$run.id, 1)
+out = c(out, (foreach(run.id = run.ids) %do% reproduceFromRun(run.id)))
+res = abs(unlist(Filter(out, f = Negate(is.na))))
+hist(res, breaks = 30)
+
+# Reproduce recent runs from RandomBot
+# ----------------------------------------------------------------------------------------
+#' @title evalConfigurations
+#' This evaluates all configurations of a single learner and a matching task.
+#' Configurations in par should be valid for task.
+#' @param lrn Learner
+#' @param task OMLTask
+#' @param par data.frame of configurations to evaluate
+#' @param min.resources minimal used resources
+#' @param max.resources maximum allowed resources for a single evaluation
+#' @param upload should the run be uploaded
+#'
+#' @export
+evalConfigurations = function(lrn, task, par, min.resources, max.resources, upload, path) {
+
+  if(!dir.exists(path)){
+    reg = makeExperimentRegistry(file.dir = path,
+      packages = c("mlr", "OpenML", "BBmisc"),
+      namespaces = "rscimark")
+      #conf.file = ".batchtools.conf.R")
+  } else {
+    reg = loadRegistry(file.dir = path)
+  }
+
+  addProblem(name = task$name, data = task$task)
+
+  addAlgorithm(lrn$short.name, fun = function(job, data, instance, mlr.lrn = lrn,
+    should.upload = upload, add.tags = attr(par, "additional.tags"), ...) {
+
+    # Run mlr
+    mlr.par.set = list(...)
+    mlr.par.set = mlr.par.set[!vlapply(mlr.par.set, is.na)]
+    mlr.lrn = setHyperPars(mlr.lrn, par.vals = mlr.par.set)
+    sci.bench = rscimark::rscimark() #FIXME: only execute this once. source in makeExperiment doesn't work...
+    res = runTaskMlr(data, mlr.lrn, scimark.vector = sci.bench)
+    print(res)
+    if (should.upload) {
+      tags = c("mlrRandomBot", add.tags)
+      uploadOMLRun(res, confirm.upload = FALSE, tags = tags, verbosity = 1)
+    }
+
+    return(TRUE)
+  })
+
+  design = list(par)
+  names(design) = lrn$short.name
+  addExperiments(algo.designs = design, reg = reg)
+
+  if (!is.null(max.resources)){
+    reg$cluster.functions = makeClusterFunctionsSlurm("slurm_lmulrz.tmpl", clusters = "serial")
+    # exponentialBackOff(jobs = 1:nrow(par), registry = reg, start.resources = min.resources, max.resources = max.resources)
+    submitJobs(resources = max.resources)
+    waitForJobs()
+  } else {
+    reg$cluster.functions = makeClusterFunctionsSocket(2)
+    submitJobs()
+  }
+  waitForJobs(reg = reg)
+  unlink(path, recursive = TRUE)
+}
+
+reproduceFromRun2 = function(run.id, seed = 1L) {
+  r = getOMLRun(run.id)
+  flow = getOMLFlow(r$flow.id)
+  task = getOMLTask(r$task.id)
+  pars = getOMLRunParList(r)
+
+  lrn = convertOMLFlowToMlr(flow)
+  lrn = mlr::setHyperPars(lrn, par.vals = getDefaults(getParamSet(lrn)))
+  par.vals = OpenML:::convertOMLRunParListToList(pars, ps = getParamSet(lrn))
+  lrn.pars = par.vals[names(par.vals) %nin% c("seed", "kind", "normal.kind")]
+
+  # From RunTaskFlow
+  lrn = do.call("setHyperPars", append(list(learner = lrn), list(par.vals = lrn.pars)))
+  # From RandomBot
+  mlr.lrn = setHyperPars(lrn, par.vals = lrn.pars)
+
+  mlr.task = convertOMLTaskToMlr(task)
+  set.seed(seed)
+  bmr = benchmark(lrn, mlr.task$mlr.task, mlr.task$mlr.rin, measures = acc)
+  # set.seed(seed)
+  # bmr = benchmark(lrn, mlr.task$mlr.task, mlr.task$mlr.rin, measures = acc)
+
+  old_acc = r$output.data$evaluations[r$output.data$evaluations$name == "predictive_accuracy" & is.na(r$output.data$evaluations$fold), "value"]
+  new_acc = getBMRAggrPerformances(bmr)[[1]][[1]]
+  catf("Task: %s, Learner %s", r$task.id, r$flow.id)
   catf("Params: %s", paste(data.frame(pars)$name, data.frame(pars)$value, sep = ":", collapse = ","))
   catf("Reproduced MMCE: %s", new_acc)
   catf("Original MMCE: %s", old_acc)
@@ -25,13 +147,7 @@ reproduceFromRun = function(run.id) {
   return(old_acc - new_acc)
 }
 
-library(doParallel)
-registerDoParallel(10)
 
-# out = c()
-out = c(out, foreach(run.id = sample(runs$run.id, 30)) %do% reproduceFromRun(run.id))
-res = abs(unlist(Filter(out, f = Negate(is.na))))
-hist(res, breaks = 30)
 
 # Reproduce recent runs from RandomBotNG
 # ----------------------------------------------------------------------------------------

@@ -111,10 +111,10 @@ classif.RcppHNSW = makeParamSet(
 )
 
 classif.kerasff = makeParamSet(
-      makeIntegerParam(id = "epochs", lower = 2^3, upper = 2^6, trafo = function(x) round(2^x)),
+      makeNumericParam(id = "epochs", lower = 3, upper = 7, trafo = function(x) round(2^x)),
       makeDiscreteParam(id = "optimizer",
-        values = c("sgd", "rmsprop", "adam", "nadam")),
-      makeNumericParam(id = "lr", lower = -8, upper = 0, trafo = function(x) 5^x),
+        values = c("sgd", "rmsprop", "adam")),
+      makeNumericParam(id = "lr", lower = -5, upper = 0, trafo = function(x) 5^x),
       makeNumericParam(id = "decay", lower = -8, upper = 0, trafo = function(x) 5^x),
       makeNumericParam(id = "momentum", lower = -8, upper = 0,trafo = function(x) 5^x,
         requires = quote(optimizer == "sgd")),
@@ -129,13 +129,12 @@ classif.kerasff = makeParamSet(
       makeNumericParam(id = "input_dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
       makeNumericParam(id = "dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
       # Neurons / Layers
-      makeIntegerParam(id = "units_layer1", lower = 3L, upper = 10,  trafo = function(x) round(2^x)),
-      makeIntegerParam(id = "units_layer2", lower = 3L, upper = 10, trafo = function(x) round(2^x), requires = quote(layers >= 2)),
-      makeIntegerParam(id = "units_layer3", lower = 3L, upper = 10, trafo = function(x) round(2^x), requires = quote(layers >= 3)),
-      makeIntegerParam(id = "units_layer4", lower = 3L, upper = 10, trafo = function(x) round(2^x), requires = quote(layers >= 4)),
+      makeIntegerParam(id = "units_layer1", lower = 3L, upper = 9,  trafo = function(x) round(2^x)),
+      makeIntegerParam(id = "units_layer2", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 2)),
+      makeIntegerParam(id = "units_layer3", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 3)),
+      makeIntegerParam(id = "units_layer4", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 4)),
       # Activations
-      makeDiscreteParam(id = "act_layer",
-        values = c("elu", "relu", "selu", "tanh", "sigmoid")),
+      makeDiscreteParam(id = "act_layer", values = c("relu", "selu", "tanh")),
       # Initializers
       makeDiscreteParam(id = "init_layer",
         values = c("glorot_normal", "glorot_uniform", "he_normal", "he_uniform")),
