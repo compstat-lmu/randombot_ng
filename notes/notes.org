@@ -361,7 +361,13 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
   - [X] learner-wise data sinks? No: Result Queue
   - [X] raw file writing? No: just lots of drain processes
   - [ ] 512kB/s
+  - [ ] about 100'000 results per second on full cluster (damn!)
+  - [ ] 260'000 are enough to OOM-kill redis 
+  - [ ] 20 kb compressed / result 
   - [ ] test with a bunch of jobs that generate loads of fake data [ implemented: "STRESSTEST" ]
+  - [ ] plan now: use multiple redis instances, do manual sharding, only drain with one drain thread at a time with common queue
+    - [ ] using BUCK single element that workers do locking wait for, otherwise keeping their private queues.
+  - [ ] write sbatch output to its own directory
 - [X] info to write out
   - [X] write out slurm step number
   - [X] date / time of day
@@ -370,3 +376,5 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
   - [X] "low discrepancy": number of instances as close to expected number as possible
 - [X] stdout / stderr confusion
 - [ ] don't write out so much at all
+  - [ ] make keras less verbose
+- [ ] https://github.com/sosy-lab/benchexec
