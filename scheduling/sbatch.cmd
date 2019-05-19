@@ -57,11 +57,7 @@ echo "[MAIN]: Redis running on host $REDISHOST port $REDISPORT password $REDISPW
 check_env REDISHOST REDISPORT REDISPW
 
 echo "[MAIN]: Trying to connect to redis..."
-while [ "$connok" != "PONG" ] ; do
-    sleep 1
-    connok="$(Rscript -e 'cat(sprintf("auth %s\nping\n", Sys.getenv("REDISPW")))' | \
-        redis-cli -h "$REDISHOST" -p "$REDISPORT" 2>/dev/null | grep PONG)"
-done
+setup_redis  # common.sh
 echo "[MAIN]: Redis is up."
 
 echo "[MAIN]: Starting top thread"

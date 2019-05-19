@@ -64,18 +64,21 @@ catf("[%s] Ready for action. Waiting for %s and caching in %s",
 
 repeat {
   # get 100 results, but also store them in PENDING_x
+  rcon$BRPOP("BUCK", 0)
   time0 <- as.numeric(Sys.time())
   if (noblock) {
-    tosave <- replicate(100, rcon$RPOPLPUSH(incomingqueue, ownpending),
+    tosave <- replicate(1000,
+      rcon$RPOPLPUSH(incomingqueue, ownpending, timeout = 0),
       simplify = FALSE)
-    tosave <- lapply(Filter(Negate(is.null), tosave), unserialize)
-    if (!length(tosave)) {
-      break
-    }
+    tosave <- Filter(Negate(is.null), tosave)
   } else {
     tosave <- replicate(1000,
       rcon$BRPOPLPUSH(incomingqueue, ownpending, timeout = 0),
       simplify = FALSE)
+  }
+  rcon$LPUSH("BUCK", "BUCK")
+  if (noblock && !length(tosave)) {
+    break
   }
   time1 <- as.numeric(Sys.time())
   tosave <- lapply(tosave, unserialize)

@@ -72,12 +72,10 @@ echo "[MAIN]: Redis running on host $REDISHOST port $REDISPORT password $REDISPW
 check_env REDISHOST REDISPORT REDISPW
 
 echo "Trying to connect to redis..."
-while [ "$connok" != "PONG" ] ; do
-    sleep 1
-    connok="$(Rscript -e 'cat(sprintf("auth %s\nping\n", Sys.getenv("REDISPW")))' | \
-        redis-cli -h "$REDISHOST" -p "$REDISPORT" 2>/dev/null | grep PONG)"
-done
+setup_redis  # common.sh
 echo "Redis is up."
+
+
 
 SLURMD_NODENAME=manual
 export SLURM_NPROCS="$DRAINPROCS"
