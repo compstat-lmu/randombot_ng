@@ -14,18 +14,18 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 export REDISHOST="${SLURMD_NODENAME}opa.sng.lrz.de"  # need to hardcode this :-/
 
-export REDISPW="$(head -c 128 /dev/urandom | sha1sum -b - | cut -c -40)"
-
 . "$MUC_R_HOME/scheduling/common.sh"
 
-check_env REDISHOST REDISPORT REDISPW
+check_env REDISHOST REDISPORT REDISPW SHARDS CURSHARD
 
-echo "${REDISHOST}:${REDISPORT}:${REDISPW}" > REDISINFO.TMP || exit 1
-mv REDISINFO.TMP REDISINFO || exit 1
+echo "${REDISHOST}:${REDISPORT}:${REDISPW}" > "REDISINFO_${CURSHARD}.TMP" || exit 1
+mv "REDISINFO_${CURSHARD}.TMP" "REDISINFO_${CURSHARD}" || exit 1
 
-mkdir -p REDISINSTANCE/REDISDIR
+mkdir -p "REDIS/REDISINSTANCE_${CURSHARD}/REDISDIR"
 
-cd REDISINSTANCE/REDISDIR
+cd "REDIS/REDISINSTANCE_${CURSHARD}/REDISDIR"
+
+( sleep 60 ; top -bp $(pidof redis-server) >> TOPOUT.txt ) &
 
 cat <<EOF | Rscript - | redis-server -
 cat(sprintf('
@@ -59,6 +59,8 @@ port \'%s\'
 
 ', Sys.getenv("REDISPW"), Sys.getenv("REDISPORT")))
 EOF
+
+kill $(jobs -p)
 
 if ! [ -z "$SLURM_JOB_ID" ] ; then
     # if redis fails and runredis.sh was run in a SLURM job

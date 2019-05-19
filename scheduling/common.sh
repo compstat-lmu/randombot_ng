@@ -55,10 +55,24 @@ check_env() {
 		    exit 15
 		fi
 		;;
-	    DRAINPROCS)
-		if ! [ "$(echo "$DRAINPROCS" | sed 's/N$//')" -gt 0 ] ; then
-		    echo "DRAINPROCS not valid: $DRAINPROCS" >&2
+	    SHARDS)
+		if ! [ "$SHARDS" -gt 0 ] ; then
+		    echo "SHARDS not valid: $SHARDS" >&2
 		    exit 14
+		fi
+		;;
+	    CURSHARD)
+		if ! [ "$CURSHARD" -ge 0 -a "$CURSHARD" -lt "$SHARDS" ] ; then
+		    echo "CURSHARD not valid: $CURSHARD\nSHARDS: $SHARDS" >&2
+		    exit 15
+		fi
+		;;
+	    REDISHOSTLIST)
+		if [ -z "$REDISHOSTLIST" ] || \
+		       [ "$(echo "$REDISHOSTLIST" | wc -l)" -ne "$SHARDS" ] ; then
+		    echo "Invalid REDISHOSTLIST:" >&2
+		    echo "$REDISHOSTLIST" >&2
+		    exit 16
 		fi
 		;;
 	    *)

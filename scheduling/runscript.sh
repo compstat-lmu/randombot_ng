@@ -33,7 +33,7 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
-check_env ONEOFF REDISHOST REDISPORT REDISPW STRESSTEST STARTSEED
+check_env ONEOFF REDISHOSTLIST REDISPORT REDISPW STRESSTEST STARTSEED
 
 ## benchmark stdout
 # for ((i = 0 ; i < 10 ; i++)) ; do date +"%s.%N" ; done

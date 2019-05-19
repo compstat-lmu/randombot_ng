@@ -9,7 +9,7 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
 - Redis:
   - REDISHOST :: redis hostname
   - REDISPORT :: redis port. Given to *invoke_sbatch.sh* after optional argument *--redisport*, set to 6379 otherwise.
-  - DRAINPROCS :: number of processes to start that drain results from redis instance to memory. May be given with suffix 'N' to give number of nodes instead of processes. (Drainprocesses always take whole nodes, so this should be preferred.) Given to *invoke_sbatch.sh* after optional argument *--drainprocs*, set to 1N otherwise.
+  - SHARDS :: number of redis processes to start. Given to *invoke_sbatch.sh* after optional argument *--shards*, set to 1 otherwise.
 - R-Script invocation
   - LEARNERNAME :: set in *runscript.sh*, read by eval_redis.R
   - TASKNAME :: set in *runscript.sh*, read by eval_redis.R
@@ -62,7 +62,7 @@ Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value o
      - STRESSTEST (from --stresstest argument)
      - STARTSEED (from --startseed argument)
      - REDISPORT (from --redisport argument)
-     - DRAINPROCS (from --drainprocs argument)
+     - SHARDS (from --shards argument)
    - Exports further arguments:
      - MUC_R_HOME
    - Does:
@@ -73,7 +73,7 @@ Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value o
      - ONEOFF
      - STRESSTEST
      - REDISPORT
-     - *DRAINPROCS*
+     - *SHARDS*
    - SLURM arguments:
      - SLURM_JOB_NAME (not essential)
      - SLURM_JOB_ID (not essential)
@@ -85,8 +85,8 @@ Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value o
      - REDISHOST :: address of redis server that was launched
      - REDISPW :: password of redis server that was launched
    - Does:
-     - launches *runredis.sh* to create redis instance; waits for it to come up
-     - launches *DRAINPROCS* *drainredis.R* processes on ceiling(*DRAINPROCS* / floor(*SLURM_MEM_PER_NODE* / 2048)) nodes
+     - launches *runredis.sh* *SHARDS* times to create redis instances; waits for them to come up
+     - launches *drainredis.R* processes
      - calculates the total number of CPUs from *SLURM_JOB_CPUS_PER_NODE* and launches at most that many threads that invoke *runscript.sh* in a loop.
 3. runredis.sh
    - Takes arguments:

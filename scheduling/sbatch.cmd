@@ -40,57 +40,90 @@ DATADIR=$(Rscript -e " \
   cat(rbn.getSetting('DATADIR'))
 ")
 echo "[MAIN]: Using DATADIR $DATADIR"
-check_env DATADIR ONEOFF STRESSTEST STARTSEED DRAINPROCS REDISPORT
+check_env DATADIR ONEOFF STRESSTEST STARTSEED SHARDS REDISPORT
 
-if [ -f REDISINFO ] ; then rm REDISINFO || exit 102 ; fi
-echo "[MAIN]: Starting Redis"
-srun --unbuffered --export=ALL --mem="$SLURM_MEM_PER_NODE" --nodes=1 --ntasks=1 \
-     --nodelist="$SLURMD_NODENAME" \
-     "${SCRIPTDIR}/runredis.sh" 2>&1 | \
-    sed -u "s'^'[REDIS]: '" | \
-    grep --line-buffered '^' &
-while ! [ -f REDISINFO ] ; do sleep 1 ; done
-export REDISHOST="$(cat REDISINFO | cut -d : -f 1)"
-export REDISPORT="$(cat REDISINFO | cut -d : -f 2)"
-export REDISPW="$(cat REDISINFO | cut -d : -f 3-)"
-echo "[MAIN]: Redis running on host $REDISHOST port $REDISPORT password $REDISPW"
-check_env REDISHOST REDISPORT REDISPW
+# get the nodes on which redis-shards will be running as an array
+readarray REDISNODES < <(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n "$SHARDS")
 
-echo "[MAIN]: Trying to connect to redis..."
-setup_redis  # common.sh
-echo "[MAIN]: Redis is up."
-
-echo "[MAIN]: Starting top thread"
-top -bp $(pidof redis-server) > TOPOUT.txt &
-
-if echo "$DRAINPROCS" | grep 'N$' > /dev/null ; then
-    DRAINPROCS="$(echo "$DRAINPROCS" | sed 's/N$//')"
-    DRAINPROCS=$((DRAINPROCS * (SLURM_MEM_PER_NODE / 2048)))
+# some constants for redis & drain process quantity and memory usage
+DRAIN_PER_SHARD=10
+MEM_PER_DRAINER=2048
+if [ "$((SLURM_MEM_PER_NODE - DRAIN_PER_SHARD * MEM_PER_DRAINER))" -lt "$((1024 * 40))" ] ; then
+    echo "Not enough memory for redis & drainers: change constants in sbatch.cmd." >&2
+    exit 21
 fi
 
-mkdir RESULTS
-# number of nodes to allocate is DRAINPROCS / [slots per node]
-# - [slots per node] is the available memory divided by 2GB
-# - we want to round UP, but bash arithmetic rounds down, so we do
-#   (DRAINPROCS + [slots per node] - 1)  / [slots per node]
-DRAINNODES=$(((DRAINPROCS + (SLURM_MEM_PER_NODE / 2048) - 1) / (SLURM_MEM_PER_NODE / 2048)))
-DNLIST="$(echo "$SLURMD_NODENAME" | \
-	     cat - <(scontrol show hostnames "$SLURM_JOB_NODELIST") | \
-	     sort | uniq -u | head -n "$DRAINNODES" | tr $'\n' ',')"
-echo "[MAIN]: Launching $DRAINPROCS drain processes on $DRAINNODES nodes"
-srun --unbuffered --export=ALL --mem "$SLURM_MEM_PER_NODE" --ntasks="$DRAINPROCS" \
-     --nodelist="$DNLIST" \
-     --nodes="$DRAINNODES" "${SCRIPTDIR}/drainredis.R" 2>&1 | \
-    sed -u "s'^'[DRAINREDIS]: '" | \
-    grep --line-buffered '^' &
+export REDISPW="$(head -c 128 /dev/urandom | sha1sum -b - | cut -c -40)"
 
-echo "[MAIN]: Drain processes up."
+mkdir RESULTS
+
+PREVSHARDS="$(find REDIS -maxdepth 1 -type d -name 'REDISINSTANCE_*' 2>/dev/null | wc -l)"
+if ! [ "${PREVSHARDS}" -eq 0 -o "${PREVSHARDS}" -eq "${SHARDS}" ] ; then
+    echo "Found previous number of shards $PREVSHARDS unequal to requested number of shards $SHARDS. Exiting." >&2
+    exit 31
+fi
+
+for ((CURSHARD=0;CURSHARD<SHARDS;CURSHARD++)) ; do
+    (
+	export CURSHARD
+	CURNODE="${REDISNODES[$CURSHARD]}"
+	if [ -f "REDISINFO_${CURSHARD}" ] ; then rm "REDISINFO_${CURSHARD}" || exit 102 ; fi
+	echo "[MAIN,${CURSHARD}]: Starting Redis on $CURNODE"
+	srun --unbuffered --export=ALL \
+	     --mem="$((SLURM_MEM_PER_NODE - DRAIN_PER_SHARD * MEM_PER_DRAINER))" \
+	     --nodes=1 --ntasks=1 --nodelist="$CURNODE" \
+	     "${SCRIPTDIR}/runredis.sh" 2>&1 | \
+	    sed -u "s'^'[REDIS,${CURSHARD}]: '" | \
+	    grep --line-buffered '^' &
+	while ! [ -f "REDISINFO_${CURSHARD}" ] ; do sleep 1 ; done
+	export REDISHOST="$(cat "REDISINFO_${CURSHARD}" | cut -d : -f 1)"
+	export REDISPORT="$(cat "REDISINFO_${CURSHARD}" | cut -d : -f 2)"
+	export REDISPW="$(cat "REDISINFO_${CURSHARD}" | cut -d : -f 3-)"
+	echo "[MAIN,${CURSHARD}]: Redis running on host $REDISHOST port $REDISPORT password $REDISPW"
+	check_env REDISHOST REDISPORT REDISPW
+	
+	echo "[MAIN,${CURSHARD}]: Trying to connect to redis..."
+	setup_redis  # common.sh
+	echo "[MAIN,${CURSHARD}]: Redis is up."
+	
+	echo "[MAIN,${CURSHARD}]: Launching ${DRAIN_PER_SHARD} drain processes on $CURNODE"
+	srun --unbuffered --export=ALL --mem-per-cpu="${MEM_PER_DRAINER}" \
+	     --ntasks="$DRAIN_PER_SHARD" --cpus-per-task=1 \
+	     --nodelist="$CURNODE" --nodes=1 \
+	     "${SCRIPTDIR}/drainredis.R" 2>&1 | \
+	    sed -u "s'^'[DRAINREDIS,${CURSHARD}]: '" | \
+	    grep --line-buffered '^' &
+	
+	echo "[MAIN,${CURSHARD}]: Drain processes up."
+    ) &
+done
+
+wait
+
+# check that REDISPORT and REDISPW are as expected
+for ((CURSHARD=0;CURSHARD<SHARDS;CURSHARD++)) ; do
+    if [ "$(cat "REDISINFO_${CURSHARD}" | cut -d : -f 2)" != "$REDISPORT" ] ; then
+	echo "REDISPORT for shard ${CURSHARD} differs from $REDISPORT" >&2
+	exit 30
+    fi
+    if [ "$(cat "REDISINFO_${CURSHARD}" | cut -d : -f 3-)" != "$REDISPW" ] ; then
+	echo "REDISPW for shard ${CURSHARD} differs from $REDISPW" >&2
+	exit 31
+    fi
+done
+
+# export list of REDISHOST
+export REDISHOSTLIST="$(
+    for ((CURSHARD=0;CURSHARD<SHARDS;CURSHARD++)) ; do 
+	cat "REDISINFO_${CURSHARD}" | cut -d : -f 1
+    done
+)"
+
+check_env REDISHOSTLIST
 
 echo "[MAIN]: Calculating job step node assignment. This may take a minute or two."
 if [ -e STEPNODES ] ; then rm -r STEPNODES || exit 103 ; fi
-cat <(echo "$SLURMD_NODENAME") \
-    <(echo "$DNLIST" | tr ',' $'\n') \
-    <(scontrol show hostnames "$SLURM_JOB_NODELIST") | sort | uniq -u | \
+scontrol show hostnames "$SLURM_JOB_NODELIST" | tail -n "+$((SHARDS + 1))" | \
     "${SCRIPTDIR}/assignJobSteps.R"
 echo "[MAIN]: Done calculating."
 

@@ -57,34 +57,39 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 export SLURMD_NODENAME="$(hostname)"
 
-check_env REDISPORT DRAINPROCS
+export REDISPW="$(head -c 128 /dev/urandom | sha1sum -b - | cut -c -40)"
 
-if [ -f REDISINFO ] ; then rm REDISINFO || exit 102 ; fi
-echo "Starting Redis"
-"$MUC_R_HOME/scheduling/runredis.sh" 2>&1 | \
-    sed -u "s'^'[REDIS]: '" | \
-    grep --line-buffered '^' &
-while ! [ -f REDISINFO ] ; do sleep 1 ; done
-export REDISHOST="$(cat REDISINFO | cut -d : -f 1)"
-export REDISPORT="$(cat REDISINFO | cut -d : -f 2)"
-export REDISPW="$(cat REDISINFO | cut -d : -f 3-)"
-echo "[MAIN]: Redis running on host $REDISHOST port $REDISPORT password $REDISPW"
-check_env REDISHOST REDISPORT REDISPW
+check_env REDISPORT REDISPW DRAINPROCS
 
-echo "Trying to connect to redis..."
-setup_redis  # common.sh
-echo "Redis is up."
-
-
-
-SLURMD_NODENAME=manual
-export SLURM_NPROCS="$DRAINPROCS"
-
-export SLURM_PROCID
-
-
-for ((SLURM_PROCID=0;SLURM_PROCID<"$DRAINPROCS";SLURM_PROCID++)) ; do
-    "${MUC_R_HOME}/scheduling/drainredis.R" NOBLOCK &
+for SHARDDIR in REDIS/REDISINSTANCE_* ; do
+    export CURSHARD="$(echo "$SHARDDIR" | sed 's|REDIS/REDISINSTANCE_||')"
+    export SHARDS="$((CURSHARD+1))"
+    check_env CURSHARD SHARDS
+    echo "Starting Redis for shard $CURSHARD in directory $SHARDDIR"
+    if [ -f "REDISINFO_${CURSHARD}" ] ; then rm "REDISINFO_${CURSHARD}" || exit 102 ; fi
+    "$MUC_R_HOME/scheduling/runredis.sh" 2>&1 | \
+	sed -u "s'^'[REDIS]: '" | \
+	grep --line-buffered '^' &
+    while ! [ -f "REDISINFO_${CURSHARD}" ] ; do sleep 1 ; done
+    export REDISHOST="$(cat "REDISINFO_${CURSHARD}" | cut -d : -f 1)"
+    export REDISPORT="$(cat "REDISINFO_${CURSHARD}" | cut -d : -f 2)"
+    export REDISPW="$(cat "REDISINFO_${CURSHARD}" | cut -d : -f 3-)"
+    echo "[MAIN]: Redis running on host $REDISHOST port $REDISPORT password $REDISPW"
+    check_env REDISHOST REDISPORT REDISPW
+    
+    echo "Trying to connect to redis..."
+    setup_redis  # common.sh
+    echo "Redis is up."
+    
+    SLURMD_NODENAME=manual
+    export SLURM_NPROCS="$DRAINPROCS"
+    
+    export SLURM_PROCID
+    
+    
+    for ((SLURM_PROCID=0;SLURM_PROCID<"$DRAINPROCS";SLURM_PROCID++)) ; do
+	"${MUC_R_HOME}/scheduling/drainredis.R" NOBLOCK &
+    done
+    
+    wait
 done
-
-wait
