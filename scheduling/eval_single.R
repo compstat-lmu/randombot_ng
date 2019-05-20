@@ -26,18 +26,18 @@ ARGUMENT <- Sys.getenv("ARGUMENT")
 
 data <- rbn.getData(TASKNAME)
 lrn <- rbn.getLearner(LEARNERNAME)
-
+seed <- 0
 if (substr(ARGUMENT, 1, 4) != "list") {
   catf("----[%s] Argument %s used as seed", token, ARGUMENT)
-  ARGUMENT <- as.integer(ARGUMENT)
+  seed <- as.integer(ARGUMENT)
   paramtable <- rbn.compileParamTblConfigured()
-  ARGUMENT <- rbn.sampleEvalPoint(lrn, data$task, ARGUMENT, paramtable)
+  ARGUMENT <- rbn.sampleEvalPoint(lrn, data$task, seed, paramtable)
   catf("----[%s] Generated %s eval points", token, length(ARGUMENT))
 }
 
 for (ARG in ARGUMENT) {
   catf("----[%s] Evaluating %s", token, ARG)
-  result <- rbn.evaluatePoint(lrn, ARG, data)
+  result <- rbn.evaluatePoint(lrn, ARG, data, seed)
   rbn.writeResult(result, TASKNAME, LEARNERNAME, ARG)
 }
 catf("----[%s] END OF eval_single.R", token)

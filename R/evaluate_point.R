@@ -8,7 +8,7 @@
 # @param data [list(Task, ResamplingInstance)] Task '$task', resampling instances '$resampling'
 #   and '$super.resampling'
 # @return [ResampleResult]
-rbn.evaluatePoint <- function(learner.object, point.string, data) {
+rbn.evaluatePoint <- function(learner.object, point.string, data, seed) {
   point.value <- rbn.parseEvalPoint(point.string, learner.object)
 
   supereval <- point.value$SUPEREVAL
@@ -19,10 +19,11 @@ rbn.evaluatePoint <- function(learner.object, point.string, data) {
 
   if (supereval) {
     resampling <- data$super.resampling
-    set.seed(1)
+    set.seed(seed)
   } else {
     resampling <- data$resampling
-    set.seed(2)
+    set.seed(seed)
+    set.seed(floor(runif(1, 0, 2^31)))
   }
 
   catf("!!--- BEGIN Evaluating Point: '%s' ---!!", point.string)

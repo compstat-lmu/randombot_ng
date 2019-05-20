@@ -87,7 +87,7 @@ repeat {
   for (pt in points) {
     catf("----[%s] %s Evaluating point %s", token, Sys.time(), pt)
     time3 <- as.numeric(Sys.time())
-    result <- rbn.evaluatePoint(lrn, pt, data)
+    result <- rbn.evaluatePoint(lrn, pt, data, seed)
     rbn.setWatchdogTimeout(600)  # ten minutes timeout to write result file
     time4 <- as.numeric(Sys.time())
     result$METADATA <- list(learner = LEARNERNAME, task = TASKNAME, seed = seed, point = pt)
