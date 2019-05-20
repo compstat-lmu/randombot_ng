@@ -54,10 +54,6 @@ cvparts <- rbn.splitResamplingResult(evalressuper)
 
 plot(sapply(cvparts, function(cvx) performance(cvx$pred, list(mmce))))
 
-
-
-
-
 # --------- PURELY TESTING: parameters
 
 lrn <- rbn.getLearner("classif.xgboost")

@@ -35,6 +35,9 @@ rbn.registerSetting("DATA_TABLE_OPTS", 'list()')
 rbn.registerSetting("DATA_PROP_TABLE", file.path(getwd(), "dataset_probs.csv"))
 rbn.registerSetting("DATA_PROP_TABLE_OPTS", 'list(sep = " ")')
 
+rbn.registerSetting("MEMORY_TABLE", file.path(getwd(), "memory_requirements.csv"))
+rbn.registerSetting("MEMORY_TABLE_OPTS", 'list(sep = " ")')
+
 rbn.registerSetting("SUPERCV_REPS", 30)
 rbn.registerSetting("SUPERCV_PROPORTIONS",
   c(0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9))

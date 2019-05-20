@@ -154,6 +154,7 @@ rbn.loadDataTable <- function(datafile, dataoptions = list(), propfile, propopti
 #' @return [numeric(1)] number of MB required, rounded upwards.
 #' @example
 #' rbn.getMemoryRequirementsKb("riccardo.41161", "classif.svm")
+#' DEPRECATED, use rbn.loadMemoryTableConfigured()
 rbn.getMemoryRequirementsKb = function(task, learner) {
   # CSV created from /setup/003_predict_memory_requirements.R
   tab = read.table(
@@ -175,7 +176,7 @@ rbn.getMemoryRequirementsKb = function(task, learner) {
 #' @return [numeric(1)] probability to draw the dataset.
 #' @example
 #' rbn.getTaskProbabilities("riccardo.41161")
-#' DEPRECATED
+#' DEPRECATED, task probs are loaded in rbn.loadDataTableConfigured()
 rbn.getTaskProbabilities = function(task) {
   # CSV created from /setup/003_predict_memory_requirements.R
   tab = read.table(
