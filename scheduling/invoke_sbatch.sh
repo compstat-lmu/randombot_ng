@@ -58,13 +58,16 @@ check_env ONEOFF STARTSEED STRESSTEST SHARDS REDISPORT
 
 if [ -e SHARDS ] ; then
     OLDSHARDS="$(cat SHARDS)"
-    if ! [ "${OLDSHARDS}" -ne "${SHARDS}" ] ; then
-	echo "Found previous number of shards $PREVSHARDS unequal to requested number of shards $SHARDS. Exiting." >&2
+    if ! [ "${OLDSHARDS}" -eq "${SHARDS}" ] ; then
+	echo "Found previous number of shards $OLDSHARDS unequal to requested number of shards $SHARDS. Exiting." >&2
 	exit 31
     fi
 fi
 echo "$SHARDS" > SHARDS
 
+mkdir -p OUTPUT/SLURMOUT
+
 sbatch --export=MUC_R_HOME,ONEOFF,STARTSEED,STRESSTEST,SHARDS,REDISPORT \
+       --output='OUTPUT/SLURMOUT/slurm-%j.out' \
        "$@" "${MUC_R_HOME}/scheduling/sbatch.cmd"
 
