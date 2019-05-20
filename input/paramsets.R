@@ -44,14 +44,14 @@ classif.svm.radial.fixed_pars = list("fitted" = FALSE)
 
 # => See RLearner.classif.ranger.pow.R
 classif.ranger.pow = makeParamSet(
-  makeIntegerParam("num.trees", lower = 1, upper = 2000), # Discuss bounds to 1,500
+  makeIntegerParam("num.trees", lower = 1, upper = 2000),
   makeLogicalParam("replace"),
   makeNumericParam("sample.fraction", lower = 0.1, upper = 1),
   makeIntegerParam("mtry.power", lower = 0, upper = 1),
   makeDiscreteParam("respect.unordered.factors", values = c("ignore", "order", "partition")),
   makeIntegerParam("min.node.size", lower = 1, upper = 100),
   makeDiscreteParam("splitrule", values = c("gini", "extratrees")),
-  makeIntegerParam("num.random.splits", lower = 1, upper = 100, default = 1L, requires = quote(splitrule == "extratrees"))) # No idea
+  makeIntegerParam("num.random.splits", lower = 1, upper = 100, default = 1L, requires = quote(splitrule == "extratrees")))
 classif.ranger.pow.fixed_pars = list("num.threads" = 1L)
 
 classif.xgboost.gblinear = makeParamSet(
@@ -63,7 +63,7 @@ classif.xgboost.gblinear = makeParamSet(
 classif.xgboost.gblinear.fixed_pars = list("nthread" = 1L, booster = "gblinear")
 
 classif.xgboost.gbtree = makeParamSet(
-makeIntegerParam("nrounds", lower = 3, upper = 11, trafo = function(x) round(2^x)),
+  makeIntegerParam("nrounds", lower = 3, upper = 11, trafo = function(x) round(2^x)),
   makeNumericParam("eta",   lower = -10, upper = 0, trafo = function(x) 2^x),
   makeNumericParam("gamma", lower = -15, upper = 3, trafo = function(x) 2^x),
   makeNumericParam("lambda", lower = -10, upper = 10, trafo = function(x) 2^x),
@@ -71,8 +71,8 @@ makeIntegerParam("nrounds", lower = 3, upper = 11, trafo = function(x) round(2^x
   makeNumericParam("subsample",lower = 0.1, upper = 1),
   makeIntegerParam("max_depth", lower = 1, upper = 15),
   makeNumericParam("min_child_weight",  lower = 0, upper = 7, trafo = function(x) 2^x),
-  makeNumericParam("colsample_bytree",  lower = 0, upper = 1),
-  makeNumericParam("colsample_bylevel", lower = 0, upper = 1)
+  makeNumericParam("colsample_bytree",  lower = 0.01, upper = 1),
+  makeNumericParam("colsample_bylevel", lower = 0.01, upper = 1)
   # makeDiscreteParam("tree_method", values = c("exact", "auto", "approx", "hist")), # CURRENTLY NOT IMPLEMENTED IN MLR
   )
 classif.xgboost.gbtree.fixed_pars = list("nthread" = 1L, booster = "gbtree")
@@ -86,8 +86,8 @@ classif.xgboost.dart = makeParamSet(
   makeNumericParam("subsample",lower = 0.1, upper = 1),
   makeIntegerParam("max_depth", lower = 1, upper = 15),
   makeNumericParam("min_child_weight",  lower = 0, upper = 7, trafo = function(x) 2^x),
-  makeNumericParam("colsample_bytree",  lower = 0, upper = 1),
-  makeNumericParam("colsample_bylevel", lower = 0, upper = 1),
+  makeNumericParam("colsample_bytree",  lower = 0.01, upper = 1),
+  makeNumericParam("colsample_bylevel", lower = 0.01, upper = 1),
   makeNumericParam("rate_drop", lower = 0, upper = 1),
   makeNumericParam("skip_drop", lower =  0, upper = 1))
 classif.xgboost.dart.fixed_pars = list("nthread" = 1L, booster = "dart")
