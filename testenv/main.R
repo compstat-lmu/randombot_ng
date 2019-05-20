@@ -21,8 +21,11 @@ source(file.path(inputdir, "constants.R"), chdir = TRUE)
 rbn.setupDataDir()
 
 table <- rbn.compileParamTblConfigured()
-
 rbn.checkParamTbl(table)
+
+rbn.loadDataTableConfigured()
+
+rbn.loadMemoryTableConfigured()
 
 # --------- PURELY TESTING: data
 

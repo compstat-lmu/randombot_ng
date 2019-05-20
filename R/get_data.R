@@ -132,14 +132,13 @@ rbn.loadDataTable <- function(datafile, dataoptions = list(), propfile, propopti
 
   # TODO: convert task.id columns to integer
 
-
   table$name <- paste(make.names(table$name), table$data.id, sep = ".")
   assertCharacter(table$name, unique = TRUE)
   assertInteger(table$data.id, unique = TRUE)
 
   assertSetEqual(table$name, proptable$dataset)
 
-  assertNumeric(table$prob, any.missing = FALSE)
+  assertNumeric(proptable$prob, any.missing = FALSE)
 
   table$proportion <- proptable$prob[match(table$name, proptable$dataset)]
   table$proportion <- table$proportion / sum(table$proportion)
@@ -211,16 +210,22 @@ rbn.DistributeSrunsToNodes.GREEDY <- function(nodes) {
   names(lrnproportions) <- learners
 
   # get dataset names
-  data <- rbn.loadDataTableConfigured()$name
+  datatbl <- rbn.loadDataTableConfigured()
+  dataproportions <- datatbl$proportion
+  names(dataproportions) <- datatbl$name
 
   # tasks are {datasets} (x) {learners}
-  fulltasks <- expand.grid(data = data, learner = learners, stringsAsFactors = FALSE)
-  fulltasks$memcosts <- apply(fulltasks, 1, function(x) {
-    rbn.getMemoryRequirementsKb(x[1], x[2])
-  })
+  fulltasks <- merge(
+      expand.grid(dataset = datatbl$name, learner = learners,
+        stringsAsFactors = FALSE),
+      rbn.loadMemoryTableConfigured(),
+      all.x = TRUE)[c("dataset", "learner", "memory_limit")]
+  names(fulltasks) <- c("data", "learner", "memcosts")
+  fulltasks$memcosts <- pmax(ceiling(fulltasks$memcosts / 1024) + 50, 350)
+  fulltasks$memcosts[is.na(fulltasks$memcosts)] <- 2048
 
   # proportions: the proportions of dataset-learner pairs
-  fulltasks$proportions <- lrnproportions[fulltasks$learner]
+  fulltasks$proportions <- lrnproportions[fulltasks$learner] * dataproportions[fulltasks$dataset]
 
   assignment <- rbn.assignTasks(fulltasks$proportions, fulltasks$memcosts,
     length(nodes), mempernode, physcores, HTbenefit)$assignment
@@ -318,7 +323,7 @@ rbn.assignTasks <- function(props, memusage, nodes, mempernode, physcores, HTben
 }
 
 # distribute tasks / learners on nodes: Get memory required
-# for each using rbn.getMemoryRequirementsKb and solve the
+# for each using rbn.loadMemoryTableConfigured and solve the
 # bin-packing problem.
 #
 # This is a nice fantasy but appears to be out of range with
@@ -354,8 +359,11 @@ rbn.DistributeSrunsToNodes.MILP <- function(nodes, mempernode, physcores) {
   names(lrnproportions) <- learners
   data <- rbn.loadDataTableConfigured()$name
 
-  fulltasks <- expand.grid(data = data, learner = learners, stringsAsFactors = FALSE)
-  memcosts <- apply(fulltasks, 1, function(x) rbn.getMemoryRequirementsKb(x[1], x[2]))
+  fulltasks <- expand.grid(dataset = data, learner = learners, stringsAsFactors = FALSE)
+  memcosts <- merge(fulltasks, rbn.loadMemoryTableConfigured(), all.x = TRUE)$memory_limit
+  memcosts <- pmax(ceiling(memcosts / 1024) + 50, 350)
+  memcosts[is.na(memcosts)] <- 2048
+
   proportions <- lrnproportions[fulltasks$learner]
   proportions <- proportions / sum(proportions)
 
