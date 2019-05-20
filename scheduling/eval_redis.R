@@ -28,17 +28,24 @@ source(file.path(inputdir, "constants.R"), chdir = TRUE)
 
 rbn.setWatchdogTimeout(600)  # ten minutes timeout to connect to redux
 
-r.host <- Sys.getenv("REDISHOST")
+r.hostlist <- strsplit(Sys.getenv("REDISHOSTLIST"), "\n", fixed = TRUE)[[1]]
 r.port <- Sys.getenv("REDISPORT")
 r.pass <- Sys.getenv("REDISPW")
 r.port <- as.integer(r.port)
+
+LEARNERNAME <- Sys.getenv("LEARNERNAME")
+TASKNAME <- Sys.getenv("TASKNAME")
+
+RUNHASH <- strtoi(paste0("0x", substr(digest::digest(c(LEARNERNAME, TASKNAME)), 1, 7)))
+hostindex <- (RUNHASH %% length(r.hostlist)) + 1
+r.host <- r.hostlist[[hostindex]]
+catf("----[%s] hash 0x%x --> host index %s out of %s",
+  token, RUNHASH, hostindex, length(r.hostlist))
 
 rcon <- NULL
 catf("----[%s] Connecting to redis %s:%s", token, r.host, r.port)
 rcon <- hiredis(host = r.host, port = r.port, password = r.pass)
 
-LEARNERNAME <- Sys.getenv("LEARNERNAME")
-TASKNAME <- Sys.getenv("TASKNAME")
 
 queuename <- sprintf("QUEUE_lrn:%s_tsk:%s_offset:%s", LEARNERNAME, TASKNAME, seedoffset + 1L)
 
