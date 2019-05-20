@@ -367,7 +367,7 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
   - [ ] test with a bunch of jobs that generate loads of fake data [ implemented: "STRESSTEST" ]
   - [X] plan now: use multiple redis instances, do manual sharding, only drain with one drain thread at a time with common queue
     - [X] using BUCK single element that workers do locking wait for, otherwise keeping their private queues.
-  - [ ] write sbatch output to its own directory
+  - [X] write sbatch output to its own directory
 - [X] info to write out
   - [X] write out slurm step number
   - [X] date / time of day
@@ -378,3 +378,4 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
 - [ ] don't write out so much at all
   - [ ] make keras less verbose
 - [ ] https://github.com/sosy-lab/benchexec
+- [ ] mixed distribution sampling
