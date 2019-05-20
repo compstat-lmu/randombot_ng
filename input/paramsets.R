@@ -112,18 +112,11 @@ classif.RcppHNSW = makeParamSet(
 
 classif.kerasff = makeParamSet(
       makeNumericParam(id = "epochs", lower = 3, upper = 7, trafo = function(x) round(2^x)),
-      makeDiscreteParam(id = "optimizer",
-        values = c("sgd", "rmsprop", "adam")),
+      makeDiscreteParam(id = "optimizer", values = c("sgd", "rmsprop", "adam")),
       makeNumericParam(id = "lr", lower = -5, upper = 0, trafo = function(x) 5^x),
       makeNumericParam(id = "decay", lower = -8, upper = 0, trafo = function(x) 5^x),
       makeNumericParam(id = "momentum", lower = -8, upper = 0,trafo = function(x) 5^x,
         requires = quote(optimizer == "sgd")),
-      makeNumericParam(id = "rho", lower = -8, upper = 0,trafo = function(x) 5^x,
-        requires = quote(optimizer == "rmsprop")),
-      makeNumericParam(id = "beta_1", lower = -8, upper = 0, trafo = function(x) 1 - 5^x,
-        requires = quote(optimizer %in% c("adam", "nadam"))),
-      makeNumericParam(id = "beta_2", lower = -8, upper = 0, trafo = function(x) 1 - 5^x,
-        requires = quote(optimizer %in% c("adam", "nadam"))),
       makeIntegerParam(id = "layers", lower = 1L, upper = 4L),
       makeDiscreteParam(id = "batchnorm_dropout", values = c("batchnorm", "dropout", "none")),
       makeNumericParam(id = "input_dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
@@ -134,10 +127,9 @@ classif.kerasff = makeParamSet(
       makeIntegerParam(id = "units_layer3", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 3)),
       makeIntegerParam(id = "units_layer4", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 4)),
       # Activations
-      makeDiscreteParam(id = "act_layer", values = c("relu", "selu", "tanh")),
+      makeDiscreteParam(id = "act_layer", values = c("relu", "tanh")),
       # Initializers
-      makeDiscreteParam(id = "init_layer",
-        values = c("glorot_normal", "glorot_uniform", "he_normal", "he_uniform")),
+      makeDiscreteParam(id = "init_layer", values = c("glorot_normal", "glorot_uniform", "he_normal", "he_uniform")),
       # Regularizers
       makeNumericParam(id = "l1_reg_layer",
         lower = -10, upper = -1, trafo = function(x) 5^x),
