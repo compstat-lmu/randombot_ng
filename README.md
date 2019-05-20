@@ -108,7 +108,7 @@ OpenML CC-18 + AutoML Datasets; ~115 Datasets in Total
 - svm (e1071) [LibSVM]
 - random forest (ranger)
 - rpart (rpart)
-- LiblineaR (LiblineaR) / Glmnet (glmnet)
+- Glmnet (glmnet)
 - Approximate Nearest Neighbours (RcppHNSW) wrapps [https://github.com/nmslib/hnswlib]
 - Keras Fully Connected NNs up to 4 layers / 1024 neurons.
 
