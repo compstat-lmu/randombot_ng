@@ -29,7 +29,7 @@ classif.svm = makeParamSet(
   makeNumericParam("cost", lower = -12, upper = 12, trafo = function(x) 2^x),
   makeNumericParam("gamma", lower = -12, upper = 12, trafo = function(x) 2^x, requires = quote(kernel == "radial")), # Discuss bounds -10, 3
   makeIntegerParam("degree", lower = 2, upper = 5, requires = quote(kernel == "polynomial")),
-  makeNumericParam("tolerance", lower = 0.001, upper = 1),
+  makeNumericParam("tolerance", lower = -12, upper = -3, trafo = function(x) 2^x),
   makeLogicalParam("shrinking")
 )
 classif.svm.fixed_pars = list("fitted" = FALSE)
@@ -37,7 +37,7 @@ classif.svm.fixed_pars = list("fitted" = FALSE)
 classif.svm.radial = makeParamSet( # Only radial basis function kernel
   makeNumericParam("cost", lower = -12, upper = 12, trafo = function(x) 2^x),
   makeNumericParam("gamma", lower = -12, upper = 12, trafo = function(x) 2^x),
-  makeNumericParam("tolerance", lower = -5, upper = -1, trafo = function(x) 2^x),
+  makeNumericParam("tolerance", lower = -12, upper = -3, trafo = function(x) 2^x),
   makeLogicalParam("shrinking")
 )
 classif.svm.radial.fixed_pars = list("fitted" = FALSE)
