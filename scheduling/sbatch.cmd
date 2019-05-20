@@ -24,17 +24,6 @@ fi
 . "$MUC_R_HOME/scheduling/common.sh"
 SCRIPTDIR="${MUC_R_HOME}/scheduling"
 
-get_mem_req() {  # arguments: <learner> <task >
-  learner="$1"
-  task="$2"
-  Rscript -e "setwd(file.path(Sys.getenv('MUC_R_HOME'))) ; source(file.path('R', 'get_data.R')); rbn.getMemoryRequirementsKb('${task}', '${learner}')"
-}
-
-get_task_prob() {  # arguments: <task >
-  task="$1"
-  Rscript -e "setwd(file.path(Sys.getenv('MUC_R_HOME'))) ; source(file.path('R', 'get_data.R')); rbn.getTaskProbabilities('${task}')"
-}
-
 echo "[MAIN]: Getting DATADIR"
 DATADIR=$(Rscript -e " \
   scriptdir <- Sys.getenv('MUC_R_HOME'); \
