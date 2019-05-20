@@ -44,7 +44,11 @@ rbn.checkParamTbl <- function(table) {
   checkParamLearner <- function(lrn, param.lrn, param.given) {
     assertCharacter(getParamIds(param.lrn), len = 1, any.missing = FALSE, pattern = "^[^][,\"\' \t\n=]*$")
     ptype <- gsub("vector$", "", param.lrn$type)
-    if (isNumeric(param.lrn)) {
+    if (isNumeric(param.lrn) && length(param.given$values) > 1) {
+      # numeric / integer params with discrete sampled values
+      somevals <- as.numeric(param.given$values)
+      assertNumeric(somevals, any.missing = FALSE)
+    } else if (isNumeric(param.lrn)) {
       if (length(param.given$values)) {  # for numeric params, the $values can hold a constant
         val <- as.numeric(param.given$values)
         assertNumeric(val, len = 1, any.missing = FALSE)  # ... but must then only hold one value

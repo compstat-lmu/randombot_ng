@@ -1,7 +1,7 @@
 learner	parameter	values	lower	upper	trafo	requires	condition
-classif.kerasff	epochs		8	64	round(2^x)		
-classif.kerasff	optimizer	sgd, rmsprop, adam, nadam					
-classif.kerasff	lr		-8	0	5^x		
+classif.kerasff	epochs		3	7	round(2^x)		
+classif.kerasff	optimizer	sgd, rmsprop, adam					
+classif.kerasff	lr		-5	0	5^x		
 classif.kerasff	decay		-8	0	5^x		
 classif.kerasff	momentum		-8	0	5^x	optimizer == "sgd"	
 classif.kerasff	rho		-8	0	5^x	optimizer == "rmsprop"	
@@ -11,11 +11,11 @@ classif.kerasff	layers		1	4
 classif.kerasff	batchnorm_dropout	batchnorm, dropout, none					
 classif.kerasff	input_dropout_rate		0	1		batchnorm_dropout == "dropout"	
 classif.kerasff	dropout_rate		0	1		batchnorm_dropout == "dropout"	
-classif.kerasff	units_layer1		3	10	round(2^x)		
-classif.kerasff	units_layer2		3	10	round(2^x)	layers >= 2	
-classif.kerasff	units_layer3		3	10	round(2^x)	layers >= 3	
-classif.kerasff	units_layer4		3	10	round(2^x)	layers >= 4	
-classif.kerasff	act_layer	elu, relu, selu, tanh, sigmoid					
+classif.kerasff	units_layer1		3	9	round(2^x)		
+classif.kerasff	units_layer2		3	9	round(2^x)	layers >= 2	
+classif.kerasff	units_layer3		3	9	round(2^x)	layers >= 3	
+classif.kerasff	units_layer4		3	9	round(2^x)	layers >= 4	
+classif.kerasff	act_layer	relu, selu, tanh					
 classif.kerasff	init_layer	glorot_normal, glorot_uniform, he_normal, he_uniform					
 classif.kerasff	l1_reg_layer		-10	-1	5^x		
 classif.kerasff	l2_reg_layer		-10	-1	5^x		
