@@ -99,21 +99,30 @@ rbn.getData <- function(dataname) {
 }
 
 # Load the dataset info table
-# @param file [data.frame] task information table file path
-# @param ... additional arguments to read.csv
-rbn.loadDataTable <- function(file, ...) {
+# @param datafile [data.frame] task information table file path
+# @param dataoptions additional arguments to read.csv
+# @param propfile [data.frame] task information table file path
+# @param propoptions additional arguments to read.csv
+rbn.loadDataTable <- function(datafile, dataoptions = list(), propfile, propoptions = list()) {
   required.names <- c("name", "task\\.id.*", "data\\.id")
 
-  assertString(file)
-  intable <- read.csv(file, stringsAsFactors = FALSE, ...)
+  assertString(datafile)
+  intable <- do.call(read.csv,
+    c(list(datafile, stringsAsFactors = FALSE), dataoptions))
   assertDataFrame(intable)
+
+  assertString(propfile)
+  proptable <- do.call(read.csv,
+    c(list(propfile, stringsAsFactors = FALSE), propoptions))
+  assertDataFrame(proptable)
 
   # check that all required names are present
   assertTRUE(all(sapply(required.names, function(rn) any(grepl(paste0("^", rn, "$"), colnames(intable))))))
   assertIntegerish(intable$data.id)
   table <- data.frame(
       name = as.character(intable$name),
-      data.id = as.integer(intable$data.id))
+      data.id = as.integer(intable$data.id),
+      stringsAsFactors = FALSE)
 
   table <- cbind(table, as.data.frame(sapply(grep(paste0("^task\\.id"), colnames(intable), value = TRUE),
     function(colname) {
@@ -127,6 +136,13 @@ rbn.loadDataTable <- function(file, ...) {
   table$name <- paste(make.names(table$name), table$data.id, sep = ".")
   assertCharacter(table$name, unique = TRUE)
   assertInteger(table$data.id, unique = TRUE)
+
+  assertSetEqual(table$name, proptable$dataset)
+
+  assertNumeric(table$prob, any.missing = FALSE)
+
+  table$proportion <- proptable$prob[match(table$name, proptable$dataset)]
+  table$proportion <- table$proportion / sum(table$proportion)
 
   table
 }
@@ -159,6 +175,7 @@ rbn.getMemoryRequirementsKb = function(task, learner) {
 #' @return [numeric(1)] probability to draw the dataset.
 #' @example
 #' rbn.getTaskProbabilities("riccardo.41161")
+#' DEPRECATED
 rbn.getTaskProbabilities = function(task) {
   # CSV created from /setup/003_predict_memory_requirements.R
   tab = read.table(

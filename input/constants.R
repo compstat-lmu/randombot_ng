@@ -29,9 +29,11 @@ rbn.registerSetting("SEARCHSPACE_TABLE_OPTS", 'list(sep = "\\t", quote = "")')
 rbn.registerSetting("SEARCHSPACE_PROP_TABLE", file.path(getwd(), "proportions.csv"))
 rbn.registerSetting("SEARCHSPACE_PROP_TABLE_OPTS", 'list(sep = "\\t", quote = "")')
 
-
 rbn.registerSetting("DATA_TABLE", file.path(getwd(), "tasks.csv"))
 rbn.registerSetting("DATA_TABLE_OPTS", 'list()')
+
+rbn.registerSetting("DATA_PROP_TABLE", file.path(getwd(), "dataset_probs.csv"))
+rbn.registerSetting("DATA_PROP_TABLE_OPTS", 'list(sep = " ")')
 
 rbn.registerSetting("SUPERCV_REPS", 30)
 rbn.registerSetting("SUPERCV_PROPORTIONS",

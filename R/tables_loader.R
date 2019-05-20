@@ -16,6 +16,8 @@ rbn.compileParamTblConfigured <- function() {
 rbn.loadDataTableConfigured <- function() {
   path <- rbn.getSetting("DATA_TABLE")
   options <- eval(parse(text = rbn.getSetting("DATA_TABLE_OPTS")))
+  path.p <- rbn.getSetting("DATA_PROP_TABLE")
+  options.p <- eval(parse(text = rbn.getSetting("DATAP_PROP_TABLE_OPTS")))
   assertList(options)
-  do.call(rbn.loadDataTable, c(list(path), options))
+  rbn.loadDataTable(path, options, path.p, options.p)
 }
