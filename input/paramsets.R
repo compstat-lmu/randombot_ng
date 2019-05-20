@@ -122,10 +122,10 @@ classif.kerasff = makeParamSet(
       makeNumericParam(id = "input_dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
       makeNumericParam(id = "dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
       # Neurons / Layers
-      makeIntegerParam(id = "units_layer1", lower = 3L, upper = 9,  trafo = function(x) round(2^x)),
-      makeIntegerParam(id = "units_layer2", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 2)),
-      makeIntegerParam(id = "units_layer3", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 3)),
-      makeIntegerParam(id = "units_layer4", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 4)),
+      makeNumericParam(id = "units_layer1", lower = 3L, upper = 9,  trafo = function(x) round(2^x)),
+      makeNumericParam(id = "units_layer2", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 2)),
+      makeNumericParam(id = "units_layer3", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 3)),
+      makeNumericParam(id = "units_layer4", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 4)),
       # Activations
       makeDiscreteParam(id = "act_layer", values = c("relu", "tanh")),
       # Initializers
