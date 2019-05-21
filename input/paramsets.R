@@ -119,8 +119,8 @@ classif.kerasff = makeParamSet(
         requires = quote(optimizer == "sgd")),
       makeIntegerParam(id = "layers", lower = 1L, upper = 4L),
       makeDiscreteParam(id = "batchnorm_dropout", values = c("batchnorm", "dropout", "none")),
-      makeNumericParam(id = "input_dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
-      makeNumericParam(id = "dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
+      makeNumericParam(id = "input_dropout_rate", lower = -5, upper = 0, requires = quote(batchnorm_dropout == "dropout"), trafo =  function(x) 3^(x/2)),
+      makeNumericParam(id = "dropout_rate", lower = -5, upper = 0, requires = quote(batchnorm_dropout == "dropout"), trafo =  function(x) 3^(x/2)),
       # Neurons / Layers
       makeNumericParam(id = "units_layer1", lower = 3L, upper = 9, trafo = function(x) round(2^x)),
       makeNumericParam(id = "units_layer2", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 2)),

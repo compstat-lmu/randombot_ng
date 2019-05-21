@@ -125,7 +125,7 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
 
   model = keras_model_sequential()
   if (batchnorm_dropout == "dropout")
-    model = layer_dropout(model, input_dropout_rate, input_shape = input_shape)
+    model = layer_dropout(model, rate = input_dropout_rate, input_shape = input_shape)
 
   for (i in seq_len(layers)) {
     model = layer_dense(model, units = units_layers[i], input_shape = input_shape,
@@ -133,7 +133,7 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
         bias_regularizer = regularizer,   bias_initializer = initializer)
     model = layer_activation(model, act_layer)
     if (batchnorm_dropout == "batchnorm") model = layer_batch_normalization(model)
-    if (batchnorm_dropout == "dropout")   model = layer_dropout(model, dropout_rate)
+    if (batchnorm_dropout == "dropout")   model = layer_dropout(model, rate = dropout_rate)
   }
   model = layer_dense(model, units = output_shape, activation = 'softmax')
 

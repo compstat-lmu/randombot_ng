@@ -22,7 +22,7 @@ makeRLearner.classif.RcppHNSW = function() {
 #' @export
 trainLearner.classif.RcppHNSW = function(.learner, .task, .subset, .weights = NULL, ...) {
   data = getTaskData(.task, .subset, target.extra = TRUE)
-  pv = list(...)
+  pv = learnerArgsToControl("list", ...)
   ann = RcppHNSW::hnsw_build(as.matrix(data$data), distance = pv$distance, ef = pv$ef_construction, M = pv$M)
   list(ann = ann, target = data$target, par_vals = pv)
 }
