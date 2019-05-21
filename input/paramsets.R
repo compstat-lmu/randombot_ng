@@ -122,7 +122,7 @@ classif.kerasff = makeParamSet(
       makeNumericParam(id = "input_dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
       makeNumericParam(id = "dropout_rate", lower = 0, upper = 1, requires = quote(batchnorm_dropout == "dropout")),
       # Neurons / Layers
-      makeNumericParam(id = "units_layer1", lower = 3L, upper = 9,  trafo = function(x) round(2^x)),
+      makeNumericParam(id = "units_layer1", lower = 3L, upper = 9, trafo = function(x) round(2^x)),
       makeNumericParam(id = "units_layer2", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 2)),
       makeNumericParam(id = "units_layer3", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 3)),
       makeNumericParam(id = "units_layer4", lower = 3L, upper = 9, trafo = function(x) round(2^x), requires = quote(layers >= 4)),
@@ -132,9 +132,9 @@ classif.kerasff = makeParamSet(
       makeDiscreteParam(id = "init_layer", values = c("glorot_normal", "glorot_uniform", "he_normal", "he_uniform")),
       # Regularizers
       makeNumericParam(id = "l1_reg_layer",
-        lower = -10, upper = -1, trafo = function(x) 5^x),
+        lower = -10, upper = -2, trafo = function(x) 5^x),
       makeNumericParam(id = "l2_reg_layer",
-        lower = -10, upper = -1, trafo = function(x) 5^x),
+        lower = -10, upper = -2, trafo = function(x) 5^x),
       makeLogicalParam(id = "learning_rate_scheduler", default = FALSE),
       makeDiscreteParam(id = "init_seed", values = c(1L, 11L, 101L, 131L, 499L))
     )
