@@ -225,7 +225,7 @@ rbn.DistributeSrunsToNodes.GREEDY <- function(nodes) {
   fulltasks$memcosts[is.na(fulltasks$memcosts)] <- 2048
 
   # proportions: the proportions of dataset-learner pairs
-  fulltasks$proportions <- lrnproportions[fulltasks$learner] * dataproportions[fulltasks$dataset]
+  fulltasks$proportions <- lrnproportions[fulltasks$learner] * dataproportions[fulltasks$data]
 
   assignment <- rbn.assignTasks(fulltasks$proportions, fulltasks$memcosts,
     length(nodes), mempernode, physcores, HTbenefit)$assignment
