@@ -99,7 +99,7 @@ Mostly in `/R/` directory, with exception of `load_all.R`.
 ## Benchmark Setup:
 
 ### Datasets
-OpenML CC-18 + AutoML Datasets; ~115 Datasets in Total
+OpenML CC-18 + AutoML Datasets; ~120 Datasets in Total
 
 [Tasks](https://docs.google.com/spreadsheets/d/1IlcB98LZsG9y6veYivH05mN4yC8Qf2y2kB2HZHPsaMI/edit?usp=sharing)
 
