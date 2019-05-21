@@ -133,7 +133,8 @@ while read data learner memcosts ntasks ; do
 # We therefore need to make sure these parameters are not set. They are not on
 # Supermuc NG, so this should be fine.
     echo "[MAIN]: Creating $ntasks tasks working on $data with ${learner}, memcost: ${memcosts}M"
-    ( while true ; do 
+    ( export SLURM_MEM_PER_CPU="${memcosts}M"  # so runscript.sh knows this
+      while true ; do
 	  srun --unbuffered --export=ALL --exclusive \
 	       --mem-per-cpu="${memcosts}M" --ntasks="$ntasks" \
 	       --nodelist="STEPNODES/${data}_${learner}.nodes" \

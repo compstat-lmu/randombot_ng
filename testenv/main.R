@@ -102,7 +102,7 @@ cat(rbn.sampleEvalPoint(lrn, iris.task, 531, table), "\n")
 
 rbn.parseEvalPoint(vx, lrn)
 
-lrn <- rbn.getLearner("classif.kerasff")
+lrn <- rbn.getLearner("classif.svm")
 table <- rbn.compileParamTblConfigured()
 tb <- rbn.loadDataTableConfigured()
 dat <-rbn.getData(tb$name[3])
@@ -115,6 +115,8 @@ xx$SUPEREVAL <- NULL
 resample(setHyperPars(lrn, par.vals = xx), dat$task, dat$resampling)
 
 rbn.setWatchdogTimeout(3600000)
+
+makeLearner("classif.svm")
 
 sampleParam <- function(learner, len, param.name, trafo) {
   rbn.registerSetting("SAMPLING_TRAFO", trafo)
