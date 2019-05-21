@@ -383,3 +383,10 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
 - [ ] https://github.com/sosy-lab/benchexec
 - [X] mixed distribution sampling
 - [X] memory reporting is broken
+- [ ] update data
+- [ ] update searchspace
+- [ ] new memory / time measurement
+- [ ] sci benchmark
+- [ ] determine write rate
+- [ ] test runs
+- [ ] go
