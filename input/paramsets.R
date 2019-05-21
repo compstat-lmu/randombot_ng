@@ -106,8 +106,8 @@ classif.RcppHNSW = makeParamSet(
   makeIntegerParam(id = "k", lower = 1L, upper = 50),
   makeDiscreteParam(id = "distance", values = c("l2", "cosine", "ip"), default = "l2"),
   makeIntegerParam(id = "M", lower = 18, upper = 50),
-  makeNumericParam(id = "ef", lower = 4, upper = 8, trafo = function(x) round(2^x)),
-  makeNumericParam(id = "ef_construction", lower = 4, upper = 8, trafo = function(x) round(2^x))
+  makeNumericParam(id = "ef", lower = 3, upper = 8, trafo = function(x) round(2^x)),
+  makeNumericParam(id = "ef_construction", lower = 4, upper = 9, trafo = function(x) round(2^x))
 )
 
 classif.kerasff = makeParamSet(
