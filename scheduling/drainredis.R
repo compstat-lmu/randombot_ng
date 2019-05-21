@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # This script drains results from the RESULTQUEUE queue in redis into
-# batches of 1000 into files named RESULTS/<nodename>/OUT/<xx>/<xx>/<xxxx...>
+# batches of 500 into files named RESULTS/<nodename>/OUT/<xx>/<xx>/<xxxx...>
 # where <xx> are digits in the digest::digest().
 
 # get info about the running instance from environment
@@ -68,12 +68,12 @@ repeat {
   catf("[%s] Got the buck.", runindex)
   time0 <- as.numeric(Sys.time())
   if (noblock) {
-    tosave <- replicate(1000,
+    tosave <- replicate(500,
       rcon$RPOPLPUSH(incomingqueue, ownpending),
       simplify = FALSE)
     tosave <- Filter(Negate(is.null), tosave)
   } else {
-    tosave <- replicate(1000,
+    tosave <- replicate(500,
       rcon$BRPOPLPUSH(incomingqueue, ownpending, timeout = 0),
       simplify = FALSE)
   }

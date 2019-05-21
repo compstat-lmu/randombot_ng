@@ -40,9 +40,11 @@ check_env DATADIR ONEOFF STRESSTEST STARTSEED SHARDS REDISPORT
 readarray -t REDISNODES < <(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n "$SHARDS")
 
 # some constants for redis & drain process quantity and memory usage
-DRAIN_PER_SHARD=10
 MEM_PER_DRAINER=2048
-if [ "$((SLURM_MEM_PER_NODE - DRAIN_PER_SHARD * MEM_PER_DRAINER))" -lt "$((1024 * 40))" ] ; then
+DRAIN_PER_SHARD="$((SLURM_MEM_PER_NODE / MEM_PER_DRAINER / 2))"  # use half of memory for drainers, the other half for redis;
+
+if [ "$((SLURM_MEM_PER_NODE - DRAIN_PER_SHARD * MEM_PER_DRAINER))" -lt "$((1024 * 4))" ] ; then
+    # we arbitrarily demand 4GB minimum for redis
     echo "Not enough memory for redis & drainers: change constants in sbatch.cmd." >&2
     exit 21
 fi
