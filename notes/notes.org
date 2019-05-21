@@ -78,12 +78,12 @@ Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value o
      - SLURM_JOB_NAME (not essential)
      - SLURM_JOB_ID (not essential)
      - *SLURM_MEM_PER_NODE*
-     - *SLURM_JOB_CPUS_PER_NODE*
+     - *SLURM_JOB_NODELIST*
    - Uses from constants.R:
      - *DATADIR*
    - Exports further arguments
-     - REDISHOST :: address of redis server that was launched
-     - REDISPW :: password of redis server that was launched
+     - REDISHOSTLIST :: address of redis server that was launched
+     - REDISPW :: password of redis servers that are launched
    - Does:
      - launches *runredis.sh* *SHARDS* times to create redis instances; waits for them to come up
      - launches *drainredis.R* processes
@@ -91,12 +91,13 @@ Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value o
 3. runredis.sh
    - Takes arguments:
      - *REDISPORT*
+     - *REDISPW*
    - Does:
      - generates a random password and writes it (with hostname and port) to REDISINFO
      - launches redis-server with this password and the given port
 4. drainredis.R
    - Takes arguments:
-     - *REDISHOST*
+     - *REDISHOSTLIST*
      - *REDISPORT*
      - *REDISPW*
    - SLURM arguments:
@@ -123,7 +124,7 @@ Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value o
      - *MUC_R_HOME*
      - *LEARNERNAME*
      - *TASKNAME*
-     - *REDISHOST*
+     - *REDISHOSTLIST*
      - *REDISPORT*
      - *REDISPW*
      - *STARTSEED*
