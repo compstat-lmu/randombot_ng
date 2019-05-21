@@ -114,25 +114,35 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
     "nadam" = optimizer_nadam(lr, beta_1, beta_2, schedule_decay = decay)
   )
 
+
   callbacks = c()
   if (early_stopping_patience > 0)
     callbacks = c(callbacks, callback_early_stopping(monitor = 'val_loss', patience = early_stopping_patience))
   if (learning_rate_scheduler)
-    callbacks = c(callback_learning_rate_scheduler(function(epoch, lr) {lr * 1/(1 * epoch)}))
+    # https://arxiv.org/pdf/1608.03983.pdf
+    # We reset the learning rate after evey n, e.g. n = 32 interations. 
+    callbacks = c(callbacks, keras::callback_learning_rate_scheduler(
+      function(epoch, lr) {
+        restart_every_n = 24L
+        restarts = floor(epoch / restart_every_n)
+        epoch_since_restart = epoch - (restart_every_n * restarts)
+        lr * (1 + cos((epoch_since_restart / restart_every_n) * pi))
+      }
+    ))
 
   units_layers = c(units_layer1, units_layer2, units_layer3, units_layer4)
 
   model = keras_model_sequential()
   if (batchnorm_dropout == "dropout")
-    model = layer_dropout(model, input_dropout_rate, input_shape = input_shape)
+    model = layer_dropout(model, rate = input_dropout_rate, input_shape = input_shape)
 
   for (i in seq_len(layers)) {
     model = layer_dense(model, units = units_layers[i], input_shape = input_shape,
         kernel_regularizer = regularizer, kernel_initializer = initializer,
-        bias_regularizer = regularizer, bias_initializer = initializer)
+        bias_regularizer = regularizer,   bias_initializer = initializer)
     model = layer_activation(model, act_layer)
-    if (batchnorm_dropout == "batchnorm")   model = layer_batch_normalization(model)
-    if (batchnorm_dropout == "dropout") model = layer_dropout(model, dropout_rate)
+    if (batchnorm_dropout == "batchnorm") model = layer_batch_normalization(model)
+    if (batchnorm_dropout == "dropout")   model = layer_dropout(model, rate = dropout_rate)
   }
   model = layer_dense(model, units = output_shape, activation = 'softmax')
 
