@@ -377,8 +377,8 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
 - [X] learner sampling
   - [X] "low discrepancy": number of instances as close to expected number as possible
 - [X] stdout / stderr confusion
-- [ ] don't write out so much at all
-  - [ ] make keras less verbose
+- [-] don't write out so much at all
+  - [X] make keras less verbose
   - [ ] make svm less verbose
 - [ ] https://github.com/sosy-lab/benchexec
 - [X] mixed distribution sampling

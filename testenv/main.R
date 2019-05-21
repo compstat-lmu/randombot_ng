@@ -25,7 +25,7 @@ rbn.checkParamTbl(table)
 
 rbn.loadDataTableConfigured()
 
-rbn.loadMemoryTableConfigured()
+memtbl <- rbn.loadMemoryTableConfigured()
 
 # --------- PURELY TESTING: data
 
@@ -59,16 +59,28 @@ plot(sapply(cvparts, function(cvx) performance(cvx$pred, list(mmce))))
 
 # --------- PURELY TESTING: parameters
 
-lrn <- rbn.getLearner("classif.xgboost")
+lrn <- rbn.getLearner("classif.kerasff")
+
+
 
 rbn.registerSetting("SAMPLING_TRAFO", "default")
-
+rbn.registerSetting("SAMPLING_TRAFO", "norm")
 rbn.registerSetting("SAMPLING_TRAFO", "none")
 
-rbn.registerSetting("SAMPLING_TRAFO", "norm")
+rbn.registerSetting("SAMPLING_TRAFO", "partnorm(1/6)")
 
-cat(rbn.sampleEvalPoint(lrn, iris.task, 9, table), "\n")
+
+
+alphas <- sapply(1:1000, function(i) eval(parse(text=rbn.sampleEvalPoint(lrn, iris.task, i, table)))$alpha)
+ss <- parallel::mclapply(1:100000, function(i) eval(parse(text=rbn.sampleEvalPoint(lrn, iris.task, i, table)))$s, mc.cores = 30)
+
+plot(sort(alphas))
+plot(sort(log(unlist(ss))))
+hist(log(unlist(ss)), breaks = 50)
+
 cat(rbn.sampleEvalPoint(lrn, iris.task, 10, table), "\n")
+
+
 cat(rbn.sampleEvalPoint(lrn, iris.task, 11, table), "\n")
 cat(rbn.sampleEvalPoint(lrn, iris.task, 12, table), "\n")
 cat(rbn.sampleEvalPoint(lrn, iris.task, 13, table), "\n")
@@ -88,10 +100,21 @@ cat(collapse(vcapply(1:1000, function(i) rbn.sampleEvalPoint(lrn, iris.task, i, 
 cat(rbn.sampleEvalPoint(lrn, iris.task, 2, table), "\n")
 cat(rbn.sampleEvalPoint(lrn, iris.task, 531, table), "\n")
 
-vx <- rbn.sampleEvalPoint(lrn, iris.task, 9, table)
 rbn.parseEvalPoint(vx, lrn)
-xx <- rbn.parseEvalPoint(vx, lrn, multiple = FALSE)
 
+lrn <- rbn.getLearner("classif.kerasff")
+table <- rbn.compileParamTblConfigured()
+tb <- rbn.loadDataTableConfigured()
+dat <-rbn.getData(tb$name[3])
+vx <- rbn.sampleEvalPoint(lrn, dat$task, 9, table)
+xx <- rbn.parseEvalPoint(vx, lrn, multiple = FALSE)
+xx$SUPEREVAL <- NULL
+
+
+
+resample(setHyperPars(lrn, par.vals = xx), dat$task, dat$resampling)
+
+rbn.setWatchdogTimeout(3600000)
 
 sampleParam <- function(learner, len, param.name, trafo) {
   rbn.registerSetting("SAMPLING_TRAFO", trafo)
@@ -222,3 +245,77 @@ datasizes <- t(sapply(datatable$name, function(dname) {
 # write.csv(datasizes, file = "notes/datasizes.csv")
 
 read.csv("notes/datasizes.csv")
+
+
+# --------------------------------
+
+tasks <- read.csv("input/tasks.csv", stringsAsFactors = FALSE)
+taskfactors <- read.csv("input/dataset_probs.csv", stringsAsFactors = FALSE, sep = " ")
+
+
+colnames(tasks)
+colnames(taskfactors)
+
+tasks$dataset <- make.names(paste(tasks$name, tasks$data.id))
+
+tasks <- merge(tasks, taskfactors)
+
+mod <- lm(I(log(prob)) ~
+            number.of.features +
+            I(number.of.features^2) +
+            number.of.instances +
+            I(number.of.instances^2) +
+            number.of.instances * number.of.features
+ ,
+  data = tasks)
+
+mod.sim <- lm(I(log(prob)) ~
+            number.of.instances +
+            number.of.classes +
+            numfeats,
+  data = tasks)
+
+mod.sim.2 <- lm(I(log(prob)) ~
+              number.of.instances +
+              number.of.clas
+ ,
+  data = tasks)
+
+summary(mod)
+summary(mod.sim.2)
+
+plot(log(tasks$prob), predict(mod))
+plot(log(tasks$prob), predict(mod.sim.2))
+
+plot(tasks$number.of.instances, log(tasks$prob))
+
+library("plotly")
+
+plot_ly(x = tasks$number.of.instances,
+  y = tasks$number.of.classes,
+  z = log(tasks$prob))
+
+names(tasks)
+
+realcount <- sapply(tasks$dataset,
+  function(ds) {
+    getTaskNFeats(rbn.getData(ds)$task %>>% cpoDummyEncode(infixdot = TRUE))
+  })
+
+tasks$numfeats <- realcount
+
+ds <- read.table("input/tasks.info.csv", sep = ",")
+
+task <- makeRegrTask(id = "x", data = ds[c("number.of.classes", "number.of.features",
+  "number.of.instances", "numfeats", "prob")], target = "prob")
+
+
+resample(cpoLogTrafoRegr() %>>% makeLearner("regr.lm"), task,
+  makeResampleDesc("RepCV", reps = 10, folds = 10),
+  show.info = FALSE)
+
+resample(cpoLogTrafoRegr() %>>% makeLearner("regr.randomForest"), task,
+  makeResampleDesc("RepCV", reps = 10, folds = 10),
+  show.info = FALSE)
+
+sd(ds$prob) / 0.0000112

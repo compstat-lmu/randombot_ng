@@ -72,8 +72,16 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
   init_seed = NULL) {
 
   # Configure Keras: 2) nthread 1) seed
+  Sys.setenv(TF_CPP_MIN_LOG_LEVEL="3")  # prevent unwanted output
   require("keras")
-  if (!is.null(init_seed)) use_session_with_seed(init_seed, disable_parallel_cpu = nthread == 1L)
+  tensorflow::tf$logging$set_verbosity(tensorflow::tf$logging$ERROR)
+
+  if (!is.null(init_seed)) {
+    # this gives some unwanted output
+    reticulate::py_capture_output({
+      use_session_with_seed(init_seed, disable_parallel_cpu = nthread == 1L)
+    })
+  }
 
   if (nthread > 1L) {
     K = backend()
@@ -97,6 +105,7 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
     "he_normal" = initializer_he_normal(),
     "he_uniform" = initializer_he_uniform()
   )
+  # this gives some unwanted output
   optimizer = switch(optimizer,
     "sgd" = optimizer_sgd(lr, momentum, decay = decay),
     "rmsprop" = optimizer_rmsprop(lr, rho, decay = decay),
@@ -135,10 +144,11 @@ trainLearner.classif.kerasff  = function(.learner, .task, .subset, .weights = NU
   )
 
   y = to_categorical(as.numeric(data$target) - 1, output_shape)
+
   history = fit(model, as.matrix(data$data), y,
     epochs = epochs, batch_size = batch_size,
     validation_split = validation_split,
-    callbacks = callbacks)
+    callbacks = callbacks, verbose = 0)  # verbose = 0 prevents a lot of unnecessary output
 
   list(model = model, history = history, target_levels = levels(data$target))
 }
