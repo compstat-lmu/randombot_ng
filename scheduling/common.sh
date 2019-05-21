@@ -75,6 +75,12 @@ check_env() {
 		    exit 16
 		fi
 		;;
+	    DRAINPROCS)
+		if ! [ "$DRAINPROCS" -gt 0 ] ; then
+		    echo "Invalid DRAINPROCS: $DRAINPROCS" >&2
+		    exit 17
+		fi
+		;;
 	    *)
 		echo "bad check_env argument $WHAT" >&2
 		exit 253

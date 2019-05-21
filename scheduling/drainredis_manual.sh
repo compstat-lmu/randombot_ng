@@ -34,13 +34,6 @@ if ! [ -z "$1" ] ; then
     exit 1
 fi
 
-if [[ "$DRAINPROCS" = *N ]] ; then
-    # this may seem ad-hoc, but the normal check for DRAINPROCS accepts
-    # a number of nodes, e.g. 2N, instead of number of drain processes.
-    echo "DRAINPROCS must not end with N." >&2
-    exit 2
-fi
-
 # get parent directory
 path="${BASH_SOURCE[0]}"
 while [ -h "$path" ] ; do
@@ -55,13 +48,12 @@ export MUC_R_HOME="$(cd -P "$(dirname "$path")/.." >/dev/null 2>&1 && pwd)"
 
 . "$MUC_R_HOME/scheduling/common.sh"
 
-export SLURMD_NODENAME="$(hostname)"
-
 export REDISPW="$(head -c 128 /dev/urandom | sha1sum -b - | cut -c -40)"
 
 check_env REDISPORT REDISPW DRAINPROCS
 
 for SHARDDIR in REDIS/REDISINSTANCE_* ; do
+    export SLURMD_NODENAME="$(hostname)"
     export CURSHARD="$(echo "$SHARDDIR" | sed 's|REDIS/REDISINSTANCE_||')"
     export SHARDS="$((CURSHARD+1))"
     check_env CURSHARD SHARDS
