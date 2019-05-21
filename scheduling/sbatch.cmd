@@ -37,7 +37,7 @@ echo "[MAIN]: Using DATADIR $DATADIR"
 check_env DATADIR ONEOFF STRESSTEST STARTSEED SHARDS REDISPORT
 
 # get the nodes on which redis-shards will be running as an array
-readarray REDISNODES < <(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n "$SHARDS")
+readarray -t REDISNODES < <(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n "$SHARDS")
 
 # some constants for redis & drain process quantity and memory usage
 DRAIN_PER_SHARD=10
