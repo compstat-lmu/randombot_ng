@@ -69,7 +69,7 @@ repeat {
   time0 <- as.numeric(Sys.time())
   if (noblock) {
     tosave <- replicate(1000,
-      rcon$RPOPLPUSH(incomingqueue, ownpending, timeout = 0),
+      rcon$RPOPLPUSH(incomingqueue, ownpending),
       simplify = FALSE)
     tosave <- Filter(Negate(is.null), tosave)
   } else {

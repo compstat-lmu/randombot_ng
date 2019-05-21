@@ -8,7 +8,7 @@ rbn.registerSetting("RESAMPLINGTIMEOUTS",
 
 rbn.registerSetting("SUPERRATE", 0.0)
 
-rbn.registerSetting("SAMPLING_TRAFO", "norm")
+rbn.registerSetting("SAMPLING_TRAFO", "partnorm(1/6)")
 
 ### Machine Info
 # additional performance from over-subscribing SMT cores

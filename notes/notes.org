@@ -28,10 +28,11 @@ Some of these may be environment-dependent, e.g. NODE_ID, others are global sett
 - Sampling Configuration
   - SUPERRATE :: [numeric 0..1] fraction of evaluation points that have supererogatory evaluations
   - SUPERCV_PROPORTIONS :: [numeric 0..1] subsampling proportions to sample
-  - SAMPLING_TRAFO :: "none", "default", "default+norm"
+  - SAMPLING_TRAFO :: "none", "default", "norm", "partnorm(<norm proportion)"
     - "none" :: transformations given in paramspace csv are not performed (although the given parameter limits are transformed)
     - "default" :: transformations as given in paramspace csv
     - "norm" :: transformation as given, prepended by an inverse error function; parameter bounds as given are instead the inflection points of the normal distribution (i.e. each 1 std-dev from center)
+    - "partnorm(XXX)" :: transformation randomly either according to "default" or to "norm", with proportion "norm" given in parentheses. =partnorm(0)= is equivalent to =default=, =partnorm(1)= is equivalent to =norm=.
   - RESAMPLINGTIMEOUTS :: [numeric] seconds to wait for each resampling. Violating the time constraint kills the R session if the watchdog is running.
 * Directory structure
 ** Input directories
@@ -78,12 +79,12 @@ Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value o
      - SLURM_JOB_NAME (not essential)
      - SLURM_JOB_ID (not essential)
      - *SLURM_MEM_PER_NODE*
-     - *SLURM_JOB_CPUS_PER_NODE*
+     - *SLURM_JOB_NODELIST*
    - Uses from constants.R:
      - *DATADIR*
    - Exports further arguments
-     - REDISHOST :: address of redis server that was launched
-     - REDISPW :: password of redis server that was launched
+     - REDISHOSTLIST :: address of redis server that was launched
+     - REDISPW :: password of redis servers that are launched
    - Does:
      - launches *runredis.sh* *SHARDS* times to create redis instances; waits for them to come up
      - launches *drainredis.R* processes
@@ -91,12 +92,13 @@ Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value o
 3. runredis.sh
    - Takes arguments:
      - *REDISPORT*
+     - *REDISPW*
    - Does:
      - generates a random password and writes it (with hostname and port) to REDISINFO
      - launches redis-server with this password and the given port
 4. drainredis.R
    - Takes arguments:
-     - *REDISHOST*
+     - *REDISHOSTLIST*
      - *REDISPORT*
      - *REDISPW*
    - SLURM arguments:
@@ -123,7 +125,7 @@ Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value o
      - *MUC_R_HOME*
      - *LEARNERNAME*
      - *TASKNAME*
-     - *REDISHOST*
+     - *REDISHOSTLIST*
      - *REDISPORT*
      - *REDISPW*
      - *STARTSEED*
@@ -378,4 +380,4 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
 - [ ] don't write out so much at all
   - [ ] make keras less verbose
 - [ ] https://github.com/sosy-lab/benchexec
-- [ ] mixed distribution sampling
+- [X] mixed distribution sampling

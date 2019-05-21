@@ -22,18 +22,8 @@ rbn.sampleEvalPoint <- function(learner.object, data, seed, paramtbl) {
   assertNumeric(superrate, len = 1, lower = 0, upper = 1, any.missing = FALSE)
 
   strafo <- rbn.getSetting("SAMPLING_TRAFO")
-  trafofun <- switch(strafo,
-    none = function(values, trafo, lower, upper, is.int) {
-      if (is.null(trafo)) trafo <- identity
-      lower <- trafo(lower)
-      upper <- trafo(upper) + as.numeric(is.int)
-      values <- values * (upper - lower) + lower
-      if (is.int) {
-        values <- as.integer(floor(values))
-      }
-      values
-    },
-    default = function(values, trafo, lower, upper, is.int) {
+  assertString(strafo)
+  defaulttrafo <- function(values, morevalues, trafo, lower, upper, is.int) {
       values <- values * (upper - lower + as.numeric(is.int && is.null(trafo))) + lower
       if (!is.null(trafo)) {
         values <- vnapply(values, trafo)
@@ -44,24 +34,48 @@ rbn.sampleEvalPoint <- function(learner.object, data, seed, paramtbl) {
         values <- as.integer(floor(values))
       }
       values
-    },
-    norm = function(values, trafo, lower, upper, is.int) {
-      values <- qnorm(values, mean = (upper + lower) / 2, sd = (upper - lower) / 2)
-      if (!is.null(trafo)) {
-        if (is.int) {
-          values <- vnapply(values, function(x) {
-            tryCatch(assertIntegerish(trafo(x), coerce = TRUE),
-              error = function(e) NA)
-          })
-        } else {
-          values <- vnapply(values, function(x) {
-            tryCatch(trafo(x), error = function(e) NA)
-          })
-        }
-      } else if (is.int) {
+  }
+  normtrafo <- function(values, morevalues, trafo, lower, upper, is.int) {
+    values <- qnorm(values, mean = (upper + lower) / 2, sd = (upper - lower) / 2)
+    if (!is.null(trafo)) {
+      if (is.int) {
+        values <- vnapply(values, function(x) {
+          tryCatch(assertIntegerish(trafo(x), coerce = TRUE),
+            error = function(e) NA)
+        })
+      } else {
+        values <- vnapply(values, function(x) {
+          tryCatch(trafo(x), error = function(e) NA)
+        })
+      }
+    } else if (is.int) {
+      values <- as.integer(floor(values))
+    }
+    values
+  }
+  if (grepl("^partnorm\\([^)]*\\)$", strafo)) {
+    proportion <- eval(parse(text = strafo), envir = list(partnorm=base::c))
+    assertNumber(proportion, lower = 0, upper = 1)
+    strafo <- "partnorm"
+  }
+  trafofun <- switch(strafo,
+    none = function(values, morevalues, trafo, lower, upper, is.int) {
+      if (is.null(trafo)) trafo <- identity
+      lower <- trafo(lower)
+      upper <- trafo(upper) + as.numeric(is.int)
+      values <- values * (upper - lower) + lower
+      if (is.int) {
         values <- as.integer(floor(values))
       }
       values
+    },
+    default = defaulttrafo,
+    norm = normtrafo,
+    partnorm = function(values, morevalues, trafo, lower, upper, is.int) {
+      ifelse(morevalues >= proportion,
+        defaulttrafo(values, morevalues, trafo, lower, upper, is.int),
+        normtrafo(values, morevalues, trafo, lower, upper, is.int)
+      )
     },
     stop("bad SAMPLING_TRAFO setting"))
 
@@ -81,17 +95,19 @@ rbn.sampleEvalPoint <- function(learner.object, data, seed, paramtbl) {
 
 
     randval <- runif(len)
+    randmoreval <- runif(len)
 
     if (isNumeric(param.lrn) && !is.na(param.given$lower)) {
       assert(!is.na(param.given$upper))
       assert(length(param.given$values) == 0)
       cnt <- 0
       repeat {
-        val <- trafofun(randval, param.given$trafo, param.given$lower, param.given$upper, isInteger(param.lrn))
+        val <- trafofun(randval, randmoreval, param.given$trafo, param.given$lower, param.given$upper, isInteger(param.lrn))
         if (!any(is.na(val)) && isFeasible(param.lrn, val)) {
           break
         }
         randval <- runif(len)
+        randmoreval <- runif(len)
         cnt <- cnt + 1
         if (cnt > 1e5) {
           stopf("Giving up on parameter %s", param.name)
