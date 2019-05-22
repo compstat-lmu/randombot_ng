@@ -388,6 +388,6 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
 - [ ] update searchspace
 - [ ] new memory / time measurement
 - [ ] sci benchmark
-- [ ] determine write rate
+- [X] determine write rate
 - [ ] test runs
 - [ ] go
