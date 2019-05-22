@@ -42,6 +42,9 @@ readarray -t REDISNODES < <(scontrol show hostnames "$SLURM_JOB_NODELIST" | head
 # some constants for redis & drain process quantity and memory usage
 MEM_PER_DRAINER=2048
 DRAIN_PER_SHARD="$((SLURM_MEM_PER_NODE / MEM_PER_DRAINER / 2))"  # use half of memory for drainers, the other half for redis;
+if [ "${DRAIN_PER_SHARD}" -gt "$((SLURM_CPUS_ON_NODE - 2))" ] ; then
+    DRAIN_PER_SHARD="$((SLURM_CPUS_ON_NODE - 2))"
+fi
 
 if [ "$((SLURM_MEM_PER_NODE - DRAIN_PER_SHARD * MEM_PER_DRAINER))" -lt "$((1024 * 4))" ] ; then
     # we arbitrarily demand 4GB minimum for redis

@@ -96,7 +96,7 @@ setup_redis() {
 	  redis-cli -h "$REDISHOST" -p "$REDISPORT" 2>/dev/null | grep PONG)"		
     done
     
-    buckok="$(Rscript -e 'cat(sprintf("auth %s\ndel BUCK\nlpush BUCK BUCK\nlindex BUCK 0\n", Sys.getenv("REDISPW")))' | \
+    buckok="$(Rscript -e 'cat(sprintf("auth %s\ndel BUCK\nlpush BUCK BUCK\nlpush BUCK BUCK\nlpush BUCK BUCK\nlpush BUCK BUCK\nlindex BUCK 0\n", Sys.getenv("REDISPW")))' | \
       redis-cli -h "$REDISHOST" -p "$REDISPORT" 2>/dev/null | grep -o BUCK)"   
     if [ "$buckok" != "BUCK" ] ; then
 	echo "Error setting up redis" >&2
