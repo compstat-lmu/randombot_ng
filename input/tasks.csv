@@ -113,3 +113,8 @@ task.id_cv10,task.id_10cv10,data.id,name,number.of.classes,number.of.features,nu
 146824,168885,40979,mfeat-pixel,10,241,2000
 167121,168874,40923,Devnagari-Script,46,1025,92000
 167124,168875,40927,CIFAR_10,10,3073,60000
+14971,189923,41434,Click_prediction_small,2,12,39948
+189924,189925,41216,video-game-sales,12,8,16598
+189927,189926,41440,okcupid-stem,3,19,50789
+189928,189929,41212,hpc-job-scheduling,4,8,4331
+168868,189930,41138,APS Failure and Operational Data / IDA2016Challenge,2,171,76000
