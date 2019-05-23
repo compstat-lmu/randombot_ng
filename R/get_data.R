@@ -136,12 +136,18 @@ rbn.loadDataTable <- function(datafile, dataoptions = list(), propfile, propopti
   assertCharacter(table$name, unique = TRUE)
   assertInteger(table$data.id, unique = TRUE)
 
-  assertSetEqual(table$name, proptable$dataset)
+  assertSubset(proptable$dataset, table$name)
 
   assertNumeric(proptable$prob, any.missing = FALSE)
 
   table$proportion <- proptable$prob[match(table$name, proptable$dataset)]
+  if (any(!is.na(table$proportion))) {
+    table$proportion[is.na(table$proportion)] <- mean(table$proportion, na.rm = TRUE)
+  } else {
+    table$proportion <- 1
+  }
   table$proportion <- table$proportion / sum(table$proportion)
+
 
   table
 }

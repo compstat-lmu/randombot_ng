@@ -138,7 +138,7 @@ hist(log(eta.default))
 hist(log(eta.norm))
 hist(eta.none)
 
-table <- rbn.loadDataTable(file.path(inputdir, "tasks.csv"))
+table <- rbn.loadDataTableConfigured()
 
 str(read.csv(file.path(inputdir, "tasks.csv"), stringsAsFactors = FALSE)$task.id_10cv10)
 
