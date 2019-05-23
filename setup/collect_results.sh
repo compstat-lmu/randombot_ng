@@ -44,5 +44,8 @@ mkdir -p TABLE
 cd TABLE
 for f in ../OUTPUT/SLURMOUT/slurm-*.out ; do
   collect_file "$f" "${f##*/*-}" > "runtable_${f##*/*-}"
+  head -n 1 "runtable_${f##*/*-}" > ALLRUNS.SSV
 done
+
+tail -qn +2 runtable_*.out >> ALLRUNS.SSV
 

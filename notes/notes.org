@@ -356,7 +356,7 @@ result.to.table <- function(filename) {
   }))
 }
 
-alltable <- rbindlist(parallel::mclapply(outfiles, result.to.table, mc.cores = 70))
+alltable <- unique(rbindlist(parallel::mclapply(outfiles, result.to.table, mc.cores = 70)))
 
 saveRDS(alltable, "TABLE/evalresult.rds")
 
