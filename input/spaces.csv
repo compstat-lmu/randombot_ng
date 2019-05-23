@@ -4,21 +4,18 @@ classif.kerasff	optimizer	sgd, rmsprop, adam
 classif.kerasff	lr		-5	0	5^x		
 classif.kerasff	decay		-8	0	5^x		
 classif.kerasff	momentum		-8	0	5^x	optimizer == "sgd"	
-classif.kerasff	rho		-8	0	5^x	optimizer == "rmsprop"	
-classif.kerasff	beta_1		-8	0	1 - 5^x	optimizer %in% c("adam", "nadam")	
-classif.kerasff	beta_2		-8	0	1 - 5^x	optimizer %in% c("adam", "nadam")	
 classif.kerasff	layers		1	4			
 classif.kerasff	batchnorm_dropout	batchnorm, dropout, none					
-classif.kerasff	input_dropout_rate		0	1		batchnorm_dropout == "dropout"	
-classif.kerasff	dropout_rate		0	1		batchnorm_dropout == "dropout"	
+classif.kerasff	input_dropout_rate		-5	0	3^(x/2)	batchnorm_dropout == "dropout"	
+classif.kerasff	dropout_rate		-5	0	3^(x/2)	batchnorm_dropout == "dropout"	
 classif.kerasff	units_layer1		3	9	round(2^x)		
 classif.kerasff	units_layer2		3	9	round(2^x)	layers >= 2	
 classif.kerasff	units_layer3		3	9	round(2^x)	layers >= 3	
 classif.kerasff	units_layer4		3	9	round(2^x)	layers >= 4	
-classif.kerasff	act_layer	relu, selu, tanh					
+classif.kerasff	act_layer	relu, tanh					
 classif.kerasff	init_layer	glorot_normal, glorot_uniform, he_normal, he_uniform					
-classif.kerasff	l1_reg_layer		-10	-1	5^x		
-classif.kerasff	l2_reg_layer		-10	-1	5^x		
+classif.kerasff	l1_reg_layer		-10	-2	5^x		
+classif.kerasff	l2_reg_layer		-10	-2	5^x		
 classif.kerasff	learning_rate_scheduler	TRUE, FALSE					
 classif.kerasff	init_seed	1, 11, 101, 131, 499					
 classif.kerasff	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
@@ -28,8 +25,8 @@ classif.kerasff	nthread	1
 classif.RcppHNSW	k		1	50			
 classif.RcppHNSW	distance	l2, cosine, ip					
 classif.RcppHNSW	M		18	50			
-classif.RcppHNSW	ef		4	8	round(2^x)		
-classif.RcppHNSW	ef_construction		4	8	round(2^x)		
+classif.RcppHNSW	ef		3	8	round(2^x)		
+classif.RcppHNSW	ef_construction		4	9	round(2^x)		
 classif.RcppHNSW	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
 classif.xgboost.dart	nrounds		3	11	round(2^x)		
 classif.xgboost.dart	eta		-10	0	2^x		
@@ -39,8 +36,8 @@ classif.xgboost.dart	alpha		-10	10	2^x
 classif.xgboost.dart	subsample		0.1	1			
 classif.xgboost.dart	max_depth		1	15			
 classif.xgboost.dart	min_child_weight		0	7	2^x		
-classif.xgboost.dart	colsample_bytree		0	1			
-classif.xgboost.dart	colsample_bylevel		0	1			
+classif.xgboost.dart	colsample_bytree		0.01	1			
+classif.xgboost.dart	colsample_bylevel		0.01	1			
 classif.xgboost.dart	rate_drop		0	1			
 classif.xgboost.dart	skip_drop		0	1			
 classif.xgboost.dart	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
@@ -54,8 +51,8 @@ classif.xgboost.gbtree	alpha		-10	10	2^x
 classif.xgboost.gbtree	subsample		0.1	1			
 classif.xgboost.gbtree	max_depth		1	15			
 classif.xgboost.gbtree	min_child_weight		0	7	2^x		
-classif.xgboost.gbtree	colsample_bytree		0	1			
-classif.xgboost.gbtree	colsample_bylevel		0	1			
+classif.xgboost.gbtree	colsample_bytree		0.01	1			
+classif.xgboost.gbtree	colsample_bylevel		0.01	1			
 classif.xgboost.gbtree	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
 classif.xgboost.gbtree	nthread	1					
 classif.xgboost.gbtree	booster	gbtree					
@@ -76,24 +73,24 @@ classif.ranger.pow	splitrule	gini, extratrees
 classif.ranger.pow	num.random.splits		1	100		splitrule == "extratrees"	
 classif.ranger.pow	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
 classif.ranger.pow	num.threads	1					
-classif.svm.radial	cost		-10	10	2^x		
-classif.svm.radial	gamma		-10	10	2^x		
-classif.svm.radial	tolerance		-5	-1	2^x		
+classif.svm.radial	cost		-12	12	2^x		
+classif.svm.radial	gamma		-12	12	2^x		
+classif.svm.radial	tolerance		-12	-3	2^x		
 classif.svm.radial	shrinking	TRUE, FALSE					
 classif.svm.radial	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
 classif.svm.radial	fitted	FALSE					
 classif.svm	kernel	linear, polynomial, radial					
-classif.svm	cost		-10	10	2^x		
-classif.svm	gamma		-10	10	2^x	kernel == "radial"	
+classif.svm	cost		-12	12	2^x		
+classif.svm	gamma		-12	12	2^x	kernel == "radial"	
 classif.svm	degree		2	5		kernel == "polynomial"	
-classif.svm	tolerance		0.001	1			
+classif.svm	tolerance		-12	-3	2^x		
 classif.svm	shrinking	TRUE, FALSE					
 classif.svm	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
 classif.svm	fitted	FALSE					
-classif.rpart	cp		0	1			
+classif.rpart	cp		-10	0	2^x		
 classif.rpart	maxdepth		1	30			
-classif.rpart	minbucket		1	60			
-classif.rpart	minsplit		1	60			
+classif.rpart	minbucket		1	100			
+classif.rpart	minsplit		1	100			
 classif.rpart	num.impute.selected.cpo	impute.mean, impute.median, impute.hist					
 classif.glmnet	alpha		0	1	max(0, min(1, x))		
 classif.glmnet	s		-10	10	2^x		
