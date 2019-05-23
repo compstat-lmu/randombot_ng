@@ -73,11 +73,11 @@ repeat {
       simplify = FALSE)
     tosave <- Filter(Negate(is.null), tosave)
   } else {
-    catf("[%s] %s elements in queue before drain", rcon$LLEN(incomingqueue))
+    catf("[%s] %s elements in queue before drain", runindex, rcon$LLEN(incomingqueue))
     tosave <- replicate(500,
       rcon$BRPOPLPUSH(incomingqueue, ownpending, timeout = 0),
       simplify = FALSE)
-    catf("[%s] %s elements in queue after drain", rcon$LLEN(incomingqueue))
+    catf("[%s] %s elements in queue after drain", runindex, rcon$LLEN(incomingqueue))
   }
   rcon$LPUSH("BUCK", "BUCK")
   catf("[%s] Passed the buck.", runindex)
