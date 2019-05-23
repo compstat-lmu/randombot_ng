@@ -137,7 +137,7 @@ Scheduling happens with "Redis". Unless *STRESSTEST* is set, the integer value o
 ** memory usage info
 *** collecting from slurm output
   #+BEGIN_SRC bash
-  cat ../RESULT_REDIS_3/slurm-48771.out | cut -d : -f 1 | sort | uniq > threads
+  cat ../RESULT_REDIS_3/slurm-48771.out | cut -d ']' -f 1 | sort | uniq > threads
 
   ( echo "dataset learner invocation restart point evalno walltime kernelseconds userseconds cpupercent memorykb" ;
     cat threads | \
@@ -311,23 +311,27 @@ repeat {
 ** tabulating results
 #+BEGIN_SRC R
 
-outdir <- "/hppfs/work/pn34jo/di39ram3/RESULT_REDIS_3_PACKAGED"
-resdir <- "/hppfs/work/pn34jo/di39ram3/memanalysis"
-options(warn=1)
-library("data.table")
-library("mlr")
+#!/usr/bin/env Rscript
 
-outfiles <- list.files(outdir, recursive = TRUE, full.names = TRUE, include.dirs = FALSE)
+indir <- "RESULTS"
+options(warn=1)
+suppressPackageStartupMessages({
+  library("data.table")
+  library("mlr")
+})
+
+outfiles <- list.files(indir, recursive = TRUE, full.names = TRUE, include.dirs = FALSE)
+outfiles <- grep("\\.tmp$", outfiles, value = TRUE, invert = TRUE)
 
 result.to.table <- function(filename) {
   content <- readRDS(filename)
-  rbindlist(lapply(names(content), function(idn) {
-    lname <- gsub("_tsk:.*", "", gsub("RESULT_lrn:", "", idn))
-    tname <- gsub("_SD:[0-9].*", "", gsub("RESULT_.*_tsk:", "", idn))
-    seed <- as.integer(gsub("_val:.*", "", gsub("RESULT_.*_SD:", "", idn)))
-    stopifnot(is.finite(seed) && is.integer(seed))
-    point <- gsub(".*_val:", "", idn)
-    rres <- content[[idn]]
+  rbindlist(lapply(content, function(rres) {
+    lname <- rres$METADATA$learner
+    tname <- rres$METADATA$task
+    seed <- rres$METADATA$seed
+    stopifnot(is.finite(seed) && round(seed) == seed)
+    point <- rres$METADATA$point
+
     stopifnot(isTRUE(rres$learner.id == lname))
     stopifnot(isTRUE(rres$task.id == tname))
 
@@ -353,6 +357,9 @@ result.to.table <- function(filename) {
 }
 
 alltable <- rbindlist(parallel::mclapply(outfiles, result.to.table, mc.cores = 70))
+
+saveRDS(alltable, "TABLE/evalresult.rds")
+
 
 #+END_SRC
 #+BEGIN_SRC R
