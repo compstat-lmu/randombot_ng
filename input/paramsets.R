@@ -17,7 +17,7 @@ classif.glmnet = makeParamSet(
 )
 
 classif.rpart = makeParamSet(
-  makeNumericParam("cp", lower = -10, upper = 0, default = 0.01, trafo = function(x) 2^x),
+  makeNumericParam("cp", lower = -10, upper = 0, default = log2(0.01), trafo = function(x) 2^x),
   makeIntegerParam("maxdepth", lower = 1, upper = 30, default = 30),
   makeIntegerParam("minbucket", lower = 1, upper = 100, default = 1),
   makeIntegerParam("minsplit", lower = 1, upper = 100, default = 20)
