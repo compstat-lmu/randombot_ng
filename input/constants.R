@@ -6,7 +6,7 @@ rbn.registerSetting("RESAMPLINGTIMEOUTS",
     1.0, 1.0, 1.1, 1.1, 1.2,
     1.5) * PERCVTIME)
 
-rbn.registerSetting("SUPERRATE", 0.0)
+rbn.registerSetting("SUPERRATE", 0.1)
 
 rbn.registerSetting("SAMPLING_TRAFO", "partnorm(1/6)")
 
