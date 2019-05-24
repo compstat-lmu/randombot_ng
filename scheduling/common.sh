@@ -90,16 +90,16 @@ check_env() {
 }
 
 setup_redis() {
+    connok=
+    buckok=
     while [ "$connok" != "PONG" ] ; do
 	sleep 1
 	connok="$(Rscript -e 'cat(sprintf("auth %s\nping\n", Sys.getenv("REDISPW")))' | \
 	  redis-cli -h "$REDISHOST" -p "$REDISPORT" 2>/dev/null | grep PONG)"		
     done
-    
-    buckok="$(Rscript -e 'cat(sprintf("auth %s\ndel BUCK\nlpush BUCK BUCK\nlpush BUCK BUCK\nlpush BUCK BUCK\nlpush BUCK BUCK\nlindex BUCK 0\n", Sys.getenv("REDISPW")))' | \
-      redis-cli -h "$REDISHOST" -p "$REDISPORT" 2>/dev/null | grep -o BUCK)"   
-    if [ "$buckok" != "BUCK" ] ; then
-	echo "Error setting up redis" >&2
-	exit 20
-    fi
+    while [ "$buckok" != "BUCK" ] ; do 
+        sleep 1
+        buckok="$(Rscript -e 'cat(sprintf("auth %s\ndel BUCK\nlpush BUCK BUCK\nlpush BUCK BUCK\nlpush BUCK BUCK\nlpush BUCK BUCK\nlindex BUCK 0\n", Sys.getenv("REDISPW")))' | \
+          redis-cli -h "$REDISHOST" -p "$REDISPORT" 2>/dev/null | grep -o BUCK)"   
+    done
 }
