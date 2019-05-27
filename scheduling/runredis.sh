@@ -26,7 +26,7 @@ mkdir -p "REDIS/REDISINSTANCE_${CURSHARD}/REDISDIR"
 cd "REDIS/REDISINSTANCE_${CURSHARD}/REDISDIR"
 
 # need to sleep 60 here to make sure redis exists when `pidof` runs
-( sleep 60 ; top -bp $(pidof redis-server) >> TOPOUT.txt ) &
+( top -bu `whoami` >> TOPOUT.txt ) &
 
 cat <<EOF | Rscript - | redis-server -
 cat(sprintf('

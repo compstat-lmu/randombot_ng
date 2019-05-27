@@ -37,19 +37,13 @@ echo "[MAIN]: Using DATADIR $DATADIR"
 check_env DATADIR ONEOFF STRESSTEST STARTSEED SHARDS REDISPORT
 
 # get the nodes on which redis-shards will be running as an array
-readarray -t REDISNODES < <(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n "$SHARDS")
+readarray -t REDISNODES < <(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n "$((SHARDS + (SHARDS + 1) / 2))")
 
 # some constants for redis & drain process quantity and memory usage
 MEM_PER_DRAINER=2048
-DRAIN_PER_SHARD="$((SLURM_MEM_PER_NODE / MEM_PER_DRAINER / 2))"  # use half of memory for drainers, the other half for redis;
-if [ "${DRAIN_PER_SHARD}" -gt "$((SLURM_CPUS_ON_NODE - 2))" ] ; then
-    DRAIN_PER_SHARD="$((SLURM_CPUS_ON_NODE - 2))"
-fi
-
-if [ "$((SLURM_MEM_PER_NODE - DRAIN_PER_SHARD * MEM_PER_DRAINER))" -lt "$((1024 * 4))" ] ; then
-    # we arbitrarily demand 4GB minimum for redis
-    echo "Not enough memory for redis & drainers: change constants in sbatch.cmd." >&2
-    exit 21
+DRAIN_PER_SHARD="$((SLURM_MEM_PER_NODE / MEM_PER_DRAINER))"  # use half a node for drainers per redis shard
+if [ "${DRAIN_PER_SHARD}" -gt "$((SLURM_CPUS_ON_NODE/2 - 2))" ] ; then
+    DRAIN_PER_SHARD="$((SLURM_CPUS_ON_NODE/2 - 2))"
 fi
 
 export REDISPW="$(head -c 128 /dev/urandom | sha1sum -b - | cut -c -40)"
@@ -69,7 +63,7 @@ for ((CURSHARD=0;CURSHARD<SHARDS;CURSHARD++)) ; do
 	if [ -f "REDISINFO_${CURSHARD}" ] ; then rm "REDISINFO_${CURSHARD}" || exit 102 ; fi
 	echo "[MAIN,${CURSHARD}]: Starting Redis on $CURNODE"
 	srun --unbuffered --export=ALL \
-	     --mem="$((SLURM_MEM_PER_NODE - DRAIN_PER_SHARD * MEM_PER_DRAINER))" \
+	     --mem="$SLURM_MEM_PER_NODE" \
 	     --nodes=1 --ntasks=1 --nodelist="$CURNODE" \
 	     "${SCRIPTDIR}/runredis.sh" 2>&1 | \
 	    sed -u "s'^'[REDIS,${CURSHARD}]: '" | \
@@ -84,11 +78,12 @@ for ((CURSHARD=0;CURSHARD<SHARDS;CURSHARD++)) ; do
 	echo "[MAIN,${CURSHARD}]: Trying to connect to redis..."
 	setup_redis  # common.sh
 	echo "[MAIN,${CURSHARD}]: Redis is up."
-	
-	echo "[MAIN,${CURSHARD}]: Launching ${DRAIN_PER_SHARD} drain processes on $CURNODE"
+	DNIDX="$((CURSHARD / 2 + SHARDS))"
+	DRAINNODE="${REDISNODES[$DNIDX]}"
+	echo "[MAIN,${CURSHARD}]: Launching ${DRAIN_PER_SHARD} drain processes on $DRAINNODE"
 	srun --unbuffered --export=ALL --mem-per-cpu="${MEM_PER_DRAINER}" \
 	     --ntasks="$DRAIN_PER_SHARD" --cpus-per-task=1 \
-	     --nodelist="$CURNODE" --nodes=1 \
+	     --nodelist="$DRAINNODE" --nodes=1 \
 	     "${SCRIPTDIR}/drainredis.R" 2>&1 | \
 	    sed -u "s'^'[DRAINREDIS,${CURSHARD}]: '" | \
 	    grep --line-buffered '^' &
@@ -122,7 +117,7 @@ check_env REDISHOSTLIST
 
 echo "[MAIN]: Calculating job step node assignment. This may take a minute or two."
 if [ -e STEPNODES ] ; then rm -r STEPNODES || exit 103 ; fi
-scontrol show hostnames "$SLURM_JOB_NODELIST" | tail -n "+$((SHARDS + 1))" | \
+scontrol show hostnames "$SLURM_JOB_NODELIST" | tail -n "+$((SHARDS + (SHARDS + 1)/2 + 1))" | \
     "${SCRIPTDIR}/assignJobSteps.R"
 echo "[MAIN]: Done calculating."
 

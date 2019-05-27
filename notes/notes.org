@@ -378,6 +378,11 @@ ddx <- data.table::rbindlist(lapply(gsub("=([^-0-9][^,]*),", '="\\1",', alltable
   - [X] plan now: use multiple redis instances, do manual sharding, only drain with one drain thread at a time with common queue
     - [X] using BUCK single element that workers do locking wait for, otherwise keeping their private queues.
   - [X] write sbatch output to its own directory
+  - [-] questions
+    - [X] does write speed differ between SCRATCH and WORK_LIST? NO
+    - [ ] does write speed differ between different number of shards?
+    - [ ] does write speed change when AOF is active?
+    - [ ] does AOF write speed depend on number of shards?
 - [X] info to write out
   - [X] write out slurm step number
   - [X] date / time of day
