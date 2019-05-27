@@ -31,9 +31,8 @@ cd "REDIS/REDISINSTANCE_${CURSHARD}/REDISDIR"
 cat <<EOF | Rscript - | redis-server -
 cat(sprintf('
 protected-mode no
-save 6000 10
+save ""
 
-rdbcompression yes
 tcp-backlog 511
 tcp-backlog 7000
 timeout 0
@@ -43,14 +42,10 @@ supervised no
 loglevel notice
 logfile ""
 databases 1
-stop-writes-on-bgsave-error yes
-rdbchecksum yes
-dbfilename "dump.rdb"
 
 maxclients 150000
 
-appendonly yes
-appendfilename "appendonly.aof"
+appendonly no
 
 appendfsync no
 

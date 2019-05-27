@@ -68,17 +68,18 @@ repeat {
   catf("[%s] Got the buck.", runindex)
   time0 <- as.numeric(Sys.time())
   if (noblock) {
-    tosave <- replicate(500,
+    tosave <- replicate(100,
       rcon$RPOPLPUSH(incomingqueue, ownpending),
       simplify = FALSE)
     tosave <- Filter(Negate(is.null), tosave)
   } else {
     catf("[%s] %s elements in queue before drain", runindex, rcon$LLEN(incomingqueue))
-    tosave <- replicate(500,
+    tosave <- replicate(100,
       rcon$BRPOPLPUSH(incomingqueue, ownpending, timeout = 0),
       simplify = FALSE)
     catf("[%s] %s elements in queue after drain", runindex, rcon$LLEN(incomingqueue))
   }
+  rcon$DEL(ownpending)
   rcon$LPUSH("BUCK", "BUCK")
   catf("[%s] Passed the buck.", runindex)
   if (noblock && !length(tosave)) {
@@ -106,7 +107,6 @@ repeat {
   # from the PENDING_x queue.
   # There is a small chance that we get killed here and as a result some run
   # results get written out twice, but we will live with that.
-  rcon$DEL(ownpending)
   time3 <- as.numeric(Sys.time())
 
   catf("[%s] ToD: %s, retrieve-time [s]: %s, save-time [s]: %s, del-time [s]: %s",
