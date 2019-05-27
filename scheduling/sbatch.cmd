@@ -84,7 +84,7 @@ for ((CURSHARD=0;CURSHARD<SHARDS;CURSHARD++)) ; do
 	srun --unbuffered --export=ALL --mem-per-cpu="${MEM_PER_DRAINER}" \
 	     --ntasks="$DRAIN_PER_SHARD" --cpus-per-task=1 \
 	     --nodelist="$DRAINNODE" --nodes=1 \
-	     "${SCRIPTDIR}/drainredis.R" 2>&1 | \
+	     /bin/sh -c "while true ; do \"${SCRIPTDIR}/drainredis.R\" ; done" 2>&1 | \
 	    sed -u "s'^'[DRAINREDIS,${CURSHARD}]: '" | \
 	    grep --line-buffered '^' &
 	
