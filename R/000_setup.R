@@ -9,7 +9,7 @@ suppressPackageStartupMessages({
   library("digest")
 })
 
-RNGversion("3.3")
+suppressWarnings(RNGversion("3.3"))
 
 configureMlr(
   on.learner.error = "quiet",

@@ -40,8 +40,8 @@ check_env DATADIR ONEOFF STRESSTEST STARTSEED SHARDS REDISPORT
 readarray -t REDISNODES < <(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n "$((SHARDS + (SHARDS + 1) / 2))")
 
 # some constants for redis & drain process quantity and memory usage
-MEM_PER_DRAINER=2048
-DRAIN_PER_SHARD="$((SLURM_MEM_PER_NODE / MEM_PER_DRAINER))"  # use half a node for drainers per redis shard
+MEM_PER_DRAINER=4096
+DRAIN_PER_SHARD="$((SLURM_MEM_PER_NODE / MEM_PER_DRAINER / 2))"  # use half a node for drainers per redis shard
 if [ "${DRAIN_PER_SHARD}" -gt "$((SLURM_CPUS_ON_NODE/2 - 2))" ] ; then
     DRAIN_PER_SHARD="$((SLURM_CPUS_ON_NODE/2 - 2))"
 fi
