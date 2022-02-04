@@ -31,6 +31,47 @@ mm = df %>%
 write.table(mm, "input/memory_requirements.csv")
 
 
+
+
+# Parametrize this differently: 
+task_data = read.csv("input/tasks.csv")  %>% mutate(data.id = as.integer(data.id))
+
+ddf = df %>% 
+  separate(dataset, c("data.name", "data.id"), "\\.(?=[^\\.][:digit:]*$)") %>%
+  mutate(data.id = as.integer(data.id)) %>%
+  full_join(task_data)
+
+library(broom)
+estimates = ddf %>%
+  filter(!is.na(learner)) %>%
+  group_by(learner, data.id) %>%
+  filter(memorykb >= quantile(memorykb, 0.95, na.rm = TRUE)) %>%
+  ungroup() %>%
+  group_by(learner) %>%
+  rename(n = number.of.instances, p = number.of.features, c = number.of.classes) %>%
+  mutate(nsq = n^2, psq = p^2) %>%
+  do(mod = lm(memorykb ~ n * p, data = .))
+
+
+library(tidyr)
+out = sapply(estimates$mod, predict,
+  newdata = rename(
+    filter(ddf, is.na(learner)),
+    n = number.of.instances, p = number.of.features) %>% select(n, p))
+out = data.frame(out)
+colnames(out) = estimates$learner
+out$dataset = datasets$dataset
+gather(out, learner, memorykb, -dataset) %>% write.table("input/memory_requirementsp2.csv")
+
+
+
+
+datasets = ddf %>%
+ filter(is.na(learner)) %>%
+ mutate(dataset = paste0(name, ".", data.id)) %>%
+ select(dataset)
+
+
 # Some initial script to obtain memory requirements for algorithms / datasets.
 # We should extend this in the future.
 library(dplyr)
