@@ -121,7 +121,7 @@ We currently sample numerics using the following strategy:
   2. sample x from N(m, m^2) (i.e. our bounds are mu +/- 1 * sigma)
   3. if x out of technical bounds go back to 2., else return x
 
-Integers and discrete variables are sampled with equal probabilities.
+Integers and discrete variables are sampled with equal probabilities
 
 ## Evaluation Strategies
 - 10-fold stratified CV [OpenML Tasks]
@@ -131,3 +131,15 @@ Integers and discrete variables are sampled with equal probabilities.
 
 
 # We are very open to suggestions by everyone! Feel free to message us or create an issue.
+
+
+## Results:
+
+Results are available from the LRZ Data Science Storage: 
+
+`/dss/dssfs02/lwp-dss-0001/pr74ze/pr74ze-dss-0000/supermuc_project/results`
+
+They contain the following parts: 
+- `evals_`: CV10 evaluations (90% of points)
+- `superevals_`: All 10CV10 evaluations evaluated across a large range of metrics (10% of points)
+- `memory`: Output parsed from logfiles logging memory, runtime etc. Measured quantities stem from UNIX's `/usr/bin/time`
