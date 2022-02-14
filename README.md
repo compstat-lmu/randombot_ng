@@ -137,9 +137,9 @@ Integers and discrete variables are sampled with equal probabilities
 
 Results are available from the LRZ Data Science Storage: 
 
-`/dss/dssfs02/lwp-dss-0001/pr74ze/pr74ze-dss-0000/supermuc_project/results`
+`/dss/dssfs02/lwp-dss-0001/pr74ze/pr74ze-dss-0000/supermuc_project/results_processed`
 
 They contain the following parts: 
 - `evals_`: CV10 evaluations (90% of points)
 - `superevals_`: All 10CV10 evaluations evaluated across a large range of metrics (10% of points)
-- `memory`: Output parsed from logfiles logging memory, runtime etc. Measured quantities stem from UNIX's `/usr/bin/time`
+- `memory_rbv2`: Output parsed from logfiles logging memory, runtime etc. Measured quantities stem from UNIX's `/usr/bin/time`.
